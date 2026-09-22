@@ -1,5 +1,5 @@
 export const rooms = {
- living:{id:'living',labelKey:'living',className:'room-living'},
+ living:{id:'living',labelKey:'hall',className:'room-living',isHub:true},
  kitchen:{id:'kitchen',labelKey:'kitchen',className:'room-kitchen'},
  bathroom:{id:'bathroom',labelKey:'bathroom',className:'room-bathroom'},
  toilet:{id:'toilet',labelKey:'toilet',className:'room-toilet'},
