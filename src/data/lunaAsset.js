@@ -20,6 +20,7 @@ export const LUNA_MAIN = idle;
 export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle' }={}){
   if (sleeping) return LUNA_ASSETS.sleep;
   if (activity === 'petted') return LUNA_ASSETS.pet;
+  // Eating remains on idle until the verified transparent eat asset is committed.
   if (emotion === 'tired') return LUNA_ASSETS.sleepy;
   if (emotion === 'hungry') return LUNA_ASSETS.hungry;
   if (emotion === 'sad') return LUNA_ASSETS.sad;
