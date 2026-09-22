@@ -11,3 +11,16 @@ export function bathe(s){const n=structuredClone(s);n.needs.cleanliness=clamp(n.
 export function useToilet(s){const n=structuredClone(s);n.needs.toilet=clamp(n.needs.toilet+40);n.needs.cleanliness=clamp(n.needs.cleanliness-3);n.economy.xp+=4;return recalc(n)}
 export function play(s){const n=structuredClone(s);n.needs.mood=clamp(n.needs.mood+18);n.needs.energy=clamp(n.needs.energy-8);n.economy.xp+=5;return recalc(n)}
 export function setSleeping(s,v){const n=structuredClone(s);n.sleeping=v;n.sleepStartedAt=v?Date.now():null;return n}
+export function getEmotion(s){
+ if(s.sleeping)return 'sleepy';
+ const n=s.needs;
+ if(n.hunger<35)return 'hungry';
+ if(n.thirst<30)return 'thirsty';
+ if(n.toilet<30)return 'toilet';
+ if(n.cleanliness<35)return 'dirty';
+ if(n.energy<32)return 'tired';
+ if(n.mood>88&&n.happiness>82)return 'joyful';
+ if(n.mood<45)return 'sad';
+ return 'calm';
+}
+export function rewardLevel(s){const n=structuredClone(s);const need=250*n.economy.level;while(n.economy.xp>=need){n.economy.xp-=need;n.economy.level++;n.economy.coins+=75}return n}
