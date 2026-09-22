@@ -3,10 +3,11 @@
 // to the verified transparent idle asset until the matching user-supplied PNG is uploaded.
 const idle = new URL('../../assets/luna/idle.webp', import.meta.url).href;
 const pet = new URL('../../assets/luna/pet.webp', import.meta.url).href;
+const happy = new URL('../../assets/luna/happy.webp', import.meta.url).href;
 
 export const LUNA_ASSETS = {
   idle,
-  happy: idle,
+  happy,
   pet,
   sleepy: idle,
   sleep: idle,
