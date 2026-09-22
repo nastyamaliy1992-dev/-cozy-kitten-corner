@@ -1,0 +1,5 @@
+// Telegram Stars architecture. Production charging stays disabled until bot/backend validation is configured.
+export const payments={provider:'telegram-stars',currency:'XTR',productionEnabled:false};
+export function canStartStarsPurchase(){return payments.productionEnabled&&!!window.Telegram?.WebApp?.initData}
+export function validateInvoiceRequest(item){if(!item?.id||!Number.isInteger(item.stars)||item.stars<1)return{ok:false,reason:'invalid_item'};if(!canStartStarsPurchase())return{ok:false,reason:'production_disabled'};return{ok:true}}
+export function applyVerifiedPurchase(state,purchase){if(!purchase?.successful_payment||purchase.currency!=='XTR'||!purchase.payload)return{state,ok:false};const n=structuredClone(state);n.payments??={processed:[]};const id=purchase.telegram_payment_charge_id||purchase.payload;if(n.payments.processed.includes(id))return{state:n,ok:false,reason:'duplicate'};n.payments.processed.push(id);return{state:n,ok:true}}
