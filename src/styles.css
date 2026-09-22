@@ -180,3 +180,20 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 .activity-petted .pet-stage::before{content:"♥";position:absolute;right:5%;top:12%;z-index:8;color:#f2a4e9;font-size:30px;text-shadow:0 4px 16px #6b2f8d;animation:heartFloat .9s ease-out both}
 @keyframes heartFloat{from{opacity:0;transform:translateY(14px) scale(.7)}35%{opacity:1}to{opacity:0;transform:translateY(-34px) scale(1.18)}}
 .pet-direct-tip{margin-top:4px;pointer-events:none}
+
+/* Full Kitchen vertical slice */
+.room-kitchen .scene{background:radial-gradient(circle at 72% 18%,#ffd99b33,transparent 30%),linear-gradient(180deg,#4d3d48 0 46%,#302a32 46% 100%)}
+.kitchen-premium{inset:0!important;opacity:1!important;filter:none!important;overflow:hidden}
+.kitchen-window{position:absolute;left:7%;top:8%;width:38%;height:35%;border:9px solid #c6b3a5;border-radius:18px;background:linear-gradient(180deg,#45657a,#8db3bd 65%,#e4c28e);box-shadow:0 15px 35px #0004,inset 0 0 30px #d9f2ff44}
+.kitchen-window:before,.kitchen-window:after{content:"";position:absolute;background:#c6b3a5}.kitchen-window:before{width:7px;height:100%;left:48%}.kitchen-window:after{height:7px;width:100%;top:49%}
+.kitchen-window span{position:absolute;left:12%;right:12%;bottom:7%;height:22%;border-radius:50% 50% 0 0;background:#68866b88}
+.kitchen-wall-light{position:absolute;left:4%;right:4%;top:45%;height:4px;background:#ffd998;box-shadow:0 0 24px 8px #ffca7855}
+.kitchen-upper{position:absolute;top:8%;height:31%;width:18%;border-radius:14px;background:linear-gradient(135deg,#a58b7d,#765e59);box-shadow:inset 0 0 0 2px #d7c0ae44,0 16px 28px #0004}.kitchen-upper.u1{right:39%}.kitchen-upper.u2{right:19%}
+.kitchen-counter{position:absolute;left:4%;right:37%;bottom:20%;height:29%;border-radius:16px;background:linear-gradient(#d8c3ad 0 8%,#74594f 8%);box-shadow:0 22px 35px #0005}
+.kitchen-lower{position:absolute;bottom:20%;height:27%;width:27%;border-radius:0 0 12px 12px;background:linear-gradient(90deg,#6f544d,#8d6c5e);box-shadow:inset 0 0 0 2px #c8a88c22}.kitchen-lower.l1{left:5%}.kitchen-lower.l2{left:33%}
+.sink{position:absolute;left:13%;top:4%;width:28%;height:12%;border:4px solid #8e9299;border-radius:50%;background:#41454c}.plant-pot{position:absolute;right:9%;top:-18%;width:35px;height:42px;border-radius:7px 7px 15px 15px;background:#a47c63}.plant-pot:before{content:"";position:absolute;left:-16px;top:-38px;width:65px;height:48px;background:#61785e;clip-path:polygon(50% 100%,0 18%,42% 45%,50% 0,60% 45%,100% 20%)}
+.room-kitchen .fridge-object{right:3%;bottom:20%;width:31%;height:70%}.room-kitchen .fridge-door{background:linear-gradient(105deg,#b8d7d4,#779b9b);box-shadow:inset 0 0 0 2px #eaffff44,0 22px 42px #0006}.fridge-note{position:absolute;left:24%;top:28%;font-size:11px;color:#59455f;background:#f2dfd3;padding:7px 8px;border-radius:4px;transform:rotate(-5deg)}.room-kitchen .fridge-inside{background:linear-gradient(#eafcff,#b8d8da);grid-template-columns:1fr;justify-items:center;font-size:25px}
+.kitchen-bowl{left:14%;right:auto;bottom:12%;top:auto;width:120px;height:70px}.kitchen-bowl .bowl{background:linear-gradient(#9c7de5,#5d4a9a)!important;box-shadow:0 12px 22px #0005,inset 0 5px #c4afff!important}
+.kitchen-rug{position:absolute;left:24%;bottom:2%;width:48%;height:20%;border-radius:50%;background:radial-gradient(ellipse,#705a72,#493e50 70%,transparent 72%);opacity:.75}
+.room-kitchen .pet-button{z-index:12;transform:translate(-12%,4%);max-width:62vw}.room-kitchen .pet-stage{width:min(54vw,260px)}
+.room-kitchen.activity-eating .pet-button{transform:translate(-24%,25%) scale(.82)!important}
