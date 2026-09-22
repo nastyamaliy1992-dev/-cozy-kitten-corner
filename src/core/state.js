@@ -12,7 +12,7 @@ export function useToilet(s){const n=structuredClone(s);n.needs.toilet=clamp(n.n
 export function play(s){const n=structuredClone(s);n.needs.mood=clamp(n.needs.mood+18);n.needs.energy=clamp(n.needs.energy-8);n.economy.xp+=5;return recalc(n)}
 export function setSleeping(s,v){const n=structuredClone(s);n.sleeping=v;n.sleepStartedAt=v?Date.now():null;n.activity={type:v?'sleep':'wake',stage:v?'sleeping':'awake',startedAt:Date.now()};return n}
 export function toggleLamp(s){const n=structuredClone(s);n.bedroom=n.bedroom||{lampOn:true};n.bedroom.lampOn=!n.bedroom.lampOn;return n}
-export function rewardPetting(s){const n=petKitten(s),now=Date.now();n.petting=n.petting||{lastXpAt:0};const rewarded=now-(n.petting.lastXpAt||0)>30000;if(rewarded){n.economy.xp+=2;n.petting.lastXpAt=now}return{state:n,rewarded}}
+export function rewardPetting(s){const n=structuredClone(s),now=Date.now();n.petting=n.petting||{lastXpAt:0};const rewarded=now-(n.petting.lastXpAt||0)>30000;if(rewarded){n.needs.mood=clamp(n.needs.mood+4);n.economy.xp+=2;n.petting.lastXpAt=now;recalc(n)}return{state:n,rewarded}}
 export function getEmotion(s){
  if(s.sleeping)return 'sleepy';
  const n=s.needs;
