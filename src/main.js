@@ -1,7 +1,7 @@
 import { renderWelcome,renderGame } from './ui/appView.js';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,setSleeping,drink,bathe,useToilet,play } from './core/state.js';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
-import { startRoomMusic,stopMusic,sfx,speak,purr } from './core/audio.js';
+import { startRoomMusic,stopMusic,sfx,speak,purr,waterSound,flushSound,eatSound,meow } from './core/audio.js';
 const app=document.querySelector('#app');let state=restoreState(),bubble='',bubbleTimer=null,actionLock=false,soundOn=false;
 const lang=()=>state?.settings?.language||'ru';
 function showBubble(text,ms=1500){bubble=text;clearTimeout(bubbleTimer);render();bubbleTimer=setTimeout(()=>{bubble='';render()},ms)}
@@ -13,9 +13,9 @@ function bindGame(){document.querySelectorAll('[data-room]').forEach(b=>b.addEve
 document.querySelector('[data-action="pet"]')?.addEventListener('click',()=>{if(!state.sleeping){purr();doAction(petKitten,'', 'pet')}});
 document.querySelector('[data-action="feed"]')?.addEventListener('click',()=>{if(actionLock)return;actionLock=true;const r=feedKitten(state);state=r.state;persist();showBubble(r.ok?t('yum',lang()):t('alreadyFull',lang()));setTimeout(()=>actionLock=false,500)});
 document.querySelector('[data-action="drink"]')?.addEventListener('click',()=>doAction(drink,'Водичка!','drink'));
-document.querySelector('[data-action="bathe"]')?.addEventListener('click',()=>doAction(bathe,'Чисто и пушисто!','bath'));
-document.querySelector('[data-action="toilet"]')?.addEventListener('click',()=>doAction(useToilet,'Готово!','toilet'));
-document.querySelector('[data-action="play"]')?.addEventListener('click',()=>doAction(play,'Ещё!','play'));
+document.querySelector('[data-action="bathe"]')?.addEventListener('click',()=>{waterSound();doAction(bathe,'Чисто и пушисто!','bath')});
+document.querySelector('[data-action="toilet"]')?.addEventListener('click',()=>{flushSound();doAction(useToilet,'Готово!','toilet')});
+document.querySelector('[data-action="play"]')?.addEventListener('click',()=>doAction(play,'Ещё!','play'));document.querySelector('[data-action="draw"]')?.addEventListener('click',()=>{state.activity={type:'draw',stage:'drawing',startedAt:Date.now()};persist();sfx('play');showBubble('Рисую!')});document.querySelector('[data-action="fish"]')?.addEventListener('click',()=>{state.activity={type:'fish',stage:'casting',startedAt:Date.now()};persist();sfx('play');showBubble('Забрасываю удочку…')});
 document.querySelector('[data-action="sound"]')?.addEventListener('click',()=>{soundOn=!soundOn;if(soundOn){startRoomMusic(state.room);showBubble('Музыка включена')}else{stopMusic();showBubble('Музыка выключена')}});
 document.querySelector('[data-action="sleep"]')?.addEventListener('click',()=>{if(actionLock)return;state=setSleeping(state,!state.sleeping);persist();showBubble(state.sleeping?t('goodNight',lang()):'Доброе утро!')})}
 setInterval(()=>{if(state){state=tickState(state,10);persist();render()}},10000);document.addEventListener('visibilitychange',()=>{if(document.hidden)persist()});window.addEventListener('pagehide',persist);render();
