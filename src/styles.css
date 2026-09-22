@@ -250,3 +250,9 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 .pet-stage::after{display:none!important}
 /* No fake eyelid overlays: blink waits for a real Luna state asset. */
 .luna-photo{animation:none}
+
+
+/* Mobile Luna interaction isolation: character layer owns strokes, room objects do not. */
+.pet-button{touch-action:none!important;-webkit-tap-highlight-color:transparent!important}
+.pet-button,.pet-stage,.luna-photo{user-select:none!important;-webkit-user-select:none!important;-webkit-touch-callout:none!important}
+.pet-button{background:transparent!important;border:0!important;padding:0!important}
