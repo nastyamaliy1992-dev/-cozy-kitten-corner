@@ -106,3 +106,18 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
   .pet-stage{width:90vw;max-width:390px}
   .status-panel{margin-left:10px;margin-right:10px}
 }
+
+
+/* Luna state motion layer */
+.pet-life-glow{position:absolute;inset:8%;border-radius:32%;pointer-events:none;opacity:.18;box-shadow:0 0 54px rgba(104,226,224,.45);animation:lifeGlow 3.8s ease-in-out infinite}
+@keyframes lifeGlow{0%,100%{opacity:.12;transform:scale(.98)}50%{opacity:.28;transform:scale(1.02)}}
+.emotion-joyful{animation:joyfulLuna 1.9s ease-in-out infinite}
+.emotion-hungry{animation:hungryLuna 2.8s ease-in-out infinite}
+.emotion-tired{animation:tiredLuna 4.2s ease-in-out infinite}
+.emotion-toilet{animation:toiletLuna 2.2s ease-in-out infinite}
+.emotion-dirty{animation:dirtyLuna 3.2s ease-in-out infinite}
+@keyframes joyfulLuna{0%,100%{transform:translateY(0) rotate(0)}45%{transform:translateY(-8px) rotate(-1deg)}55%{transform:translateY(-8px) rotate(1deg)}}
+@keyframes hungryLuna{0%,100%{transform:translateX(0)}40%{transform:translateX(-3px) rotate(-.5deg)}70%{transform:translateX(3px) rotate(.5deg)}}
+@keyframes tiredLuna{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(4px) scale(.994)}}
+@keyframes toiletLuna{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@keyframes dirtyLuna{0%,100%{transform:rotate(0)}50%{transform:rotate(-.8deg)}}
