@@ -2,10 +2,12 @@
 // Every state is a separate character layer. Missing state art intentionally falls back
 // to the verified transparent idle asset until the matching user-supplied PNG is uploaded.
 const idle = new URL('../../assets/luna/idle.webp', import.meta.url).href;
+const pet = new URL('../../assets/luna/pet.webp', import.meta.url).href;
 
 export const LUNA_ASSETS = {
   idle,
   happy: idle,
+  pet,
   sleepy: idle,
   sleep: idle,
   hungry: idle,
@@ -16,7 +18,7 @@ export const LUNA_MAIN = idle;
 
 export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle' }={}){
   if (sleeping) return LUNA_ASSETS.sleep;
-  if (activity === 'petted') return LUNA_ASSETS.happy;
+  if (activity === 'petted') return LUNA_ASSETS.pet;
   if (emotion === 'tired') return LUNA_ASSETS.sleepy;
   if (emotion === 'hungry') return LUNA_ASSETS.hungry;
   if (emotion === 'sad') return LUNA_ASSETS.sad;
