@@ -197,3 +197,34 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 .kitchen-rug{position:absolute;left:24%;bottom:2%;width:48%;height:20%;border-radius:50%;background:radial-gradient(ellipse,#705a72,#493e50 70%,transparent 72%);opacity:.75}
 .room-kitchen .pet-button{z-index:12;transform:translate(-12%,4%);max-width:62vw}.room-kitchen .pet-stage{width:min(54vw,260px)}
 .room-kitchen.activity-eating .pet-button{transform:translate(-24%,25%) scale(.82)!important}
+
+/* Two-room final slice composition */
+.game-shell{background:#171522}
+.topbar{position:relative;z-index:60}
+.mini-needs{position:absolute;z-index:70;right:12px;top:74px;display:flex;gap:5px}
+.mini-needs>div{width:57px;min-height:62px;border-radius:17px;background:#1b1928eF;border:1px solid #ffffff16;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 10px 26px #0005}
+.mini-needs b{font-size:20px;color:#e78be4;line-height:18px}.mini-needs>div:nth-child(2) b{color:#f3d6b0}.mini-needs>div:nth-child(3) b{color:#7fe8ff}.mini-needs>div:nth-child(4) b{color:#a88cff}
+.mini-needs strong{font-size:12px}.mini-needs small{font-size:8px;color:#ddd8ea}
+.status-panel{display:none!important}
+.scene{height:calc(100dvh - 69px)!important;min-height:680px!important;padding:0!important;margin:0!important;overflow:hidden}
+.room-title{left:92px;top:18px;z-index:22;background:#1b1928d9}
+.side-nav{position:absolute;left:10px;top:24px;z-index:45;display:flex;flex-direction:column;gap:8px}
+.side-nav button{width:72px;height:72px;border:1px solid #ffffff1c;border-radius:19px;background:#1b1928eF;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 10px 22px #0004}
+.side-nav button.active{border-color:#a767ff;background:linear-gradient(145deg,#7040bdeF,#33244eeF);box-shadow:0 0 0 1px #bb8aff55,0 12px 28px #0005}
+.side-nav b{font-size:25px}.side-nav small{font-size:11px;font-weight:850}
+.room-living .real-room,.room-kitchen .kitchen-premium{inset:0!important}
+.room-living .room-background{object-position:center;height:100%}
+.pet-button{position:absolute!important;left:50%!important;bottom:126px!important;top:auto!important;margin:0!important;width:min(52vw,280px)!important;transform:translateX(-50%)!important;z-index:30!important}
+.pet-stage{width:100%!important;max-height:none!important}
+.pet-name{position:absolute!important;left:50%;bottom:103px;transform:translateX(-50%);z-index:32;margin:0!important;font-size:17px}
+.object-tip{position:absolute!important;z-index:36!important;left:50%!important;bottom:78px!important;transform:translateX(-50%);white-space:nowrap;margin:0!important;background:#1b1928eF!important}
+.speech-bubble{z-index:42!important;top:auto!important;bottom:52%!important;right:8%!important;max-width:46%!important}
+.primary-actions{position:absolute;left:92px;right:12px;bottom:12px;z-index:50;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.primary-actions button{height:67px;border:1px solid #ffffff22;border-radius:20px;background:#1b1928ef;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;box-shadow:0 10px 28px #0005}
+.primary-actions button span{font-size:11px;font-weight:900;margin-top:3px}
+.room-kitchen .pet-button{left:45%!important;bottom:118px!important;transform:translateX(-50%)!important;width:min(48vw,250px)!important}
+.room-kitchen.activity-eating .pet-button{left:35%!important;bottom:82px!important;transform:translateX(-50%) scale(.88)!important;transition:all .5s ease}
+.room-kitchen .fridge-panel{left:92px!important;right:12px!important;bottom:88px!important;z-index:55!important}
+.room-kitchen .object-tip{bottom:86px!important}
+.bottom-nav,.quick-actions,.room-help{display:none!important}
+@media(max-width:430px){.mini-needs{top:72px;right:7px;gap:3px}.mini-needs>div{width:48px;min-height:57px}.scene{min-height:0!important;height:calc(100dvh - 68px)!important}.side-nav{top:90px}.side-nav button{width:64px;height:64px}.room-title{top:90px;left:82px}.pet-button{bottom:118px!important;width:min(58vw,265px)!important}.primary-actions{left:82px}.speech-bubble{bottom:48%!important}.room-kitchen .pet-button{width:min(49vw,230px)!important}}
