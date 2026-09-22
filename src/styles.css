@@ -153,3 +153,10 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 .room-kitchen .pet-button{transform:translateX(-12%)}.room-kitchen.activity-eating .pet-button{transform:translate(20%,20%) scale(.88);transition:transform .55s ease}.room-kitchen .fridge-panel{position:absolute;bottom:72px;left:4%;right:4%;width:auto;z-index:35}.room-kitchen .object-tip{position:absolute;bottom:80px}
 @media(max-width:430px){.topbar{height:68px}.status-panel{margin:5px 9px 0}.scene{min-height:0;height:calc(100dvh - 196px)}.pet-stage{width:min(72vw,310px)}.quick-actions{display:none}.room-help{display:none}.bottom-nav.room-scroll{height:68px}}
 @media(prefers-reduced-motion:reduce){.pet-stage,.pet-life-glow,.emotion-joyful,.emotion-hungry,.emotion-tired,.emotion-toilet,.emotion-dirty{animation:none!important}}
+
+
+/* Canonical transparent Luna character: never crop/mask into a photo card */
+.pet-stage{aspect-ratio:auto!important;height:auto!important;background:transparent!important;border-radius:0!important;overflow:visible!important}
+.luna-photo{width:100%!important;height:auto!important;object-fit:contain!important;object-position:center!important;border-radius:0!important;background:transparent!important;clip-path:none!important;mask:none!important;-webkit-mask:none!important}
+.pet-stage::after{display:none!important}
+.pet-life-glow{inset:12% 18%;border-radius:50%;z-index:-1}
