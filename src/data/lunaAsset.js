@@ -4,6 +4,7 @@
 const idle = new URL('../../assets/luna/idle.webp', import.meta.url).href;
 const pet = new URL('../../assets/luna/pet.webp', import.meta.url).href;
 const happy = new URL('../../assets/luna/happy.webp', import.meta.url).href;
+const sad = new URL('../../assets/luna/sad.webp', import.meta.url).href;
 
 export const LUNA_ASSETS = {
   idle,
@@ -12,7 +13,7 @@ export const LUNA_ASSETS = {
   sleepy: idle,
   sleep: idle,
   hungry: idle,
-  sad: idle,
+  sad,
 };
 
 export const LUNA_MAIN = idle;
