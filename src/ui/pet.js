@@ -1,0 +1,2 @@
+import { LUNA_MAIN } from '../data/lunaAsset.js';
+export function renderPet({sleeping=false}={}){return `<div class="pet-stage ${sleeping?'is-sleeping':''}" aria-label="Luna"><img class="luna-photo" src="${LUNA_MAIN}" alt="Пушистая серо-белая Luna" draggable="false">${sleeping?'<div class="sleep-z">Z <span>z</span></div>':''}</div>`;}
