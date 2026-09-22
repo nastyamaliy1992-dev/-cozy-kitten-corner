@@ -19,8 +19,13 @@ export function saveGame(state) {
     schemaVersion: SCHEMA_VERSION,
     updatedAt: Date.now()
   };
-  localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
-  return payload;
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
+    return payload;
+  } catch (error) {
+    console.warn('Save unavailable', error);
+    return null;
+  }
 }
 
 export function clearSave() {
