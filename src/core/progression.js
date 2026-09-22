@@ -1,0 +1,7 @@
+export const quests=[
+{id:'care3',name:'Забота',goal:3,reward:35},{id:'play2',name:'Время игры',goal:2,reward:30},{id:'fish1',name:'Первая рыбалка',goal:1,reward:45}
+];
+export function ensureProgress(s){const n=structuredClone(s);n.progress??={streak:0,lastDaily:null,actions:{care:0,play:0,fish:0},claimed:[],achievements:[]};return n}
+export function track(s,type,amount=1){const n=ensureProgress(s);n.progress.actions[type]=(n.progress.actions[type]||0)+amount;return n}
+export function dailyReward(s){const n=ensureProgress(s),today=new Date().toISOString().slice(0,10);if(n.progress.lastDaily===today)return{state:n,ok:false};const yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);n.progress.streak=n.progress.lastDaily===yesterday?n.progress.streak+1:1;n.progress.lastDaily=today;const reward=40+Math.min(60,n.progress.streak*5);n.economy.coins+=reward;return{state:n,ok:true,reward}}
+export function claimQuest(s,id){const n=ensureProgress(s),q=quests.find(x=>x.id===id);if(!q||n.progress.claimed.includes(id))return{state:n,ok:false};const key=id.startsWith('care')?'care':id.startsWith('play')?'play':'fish';if((n.progress.actions[key]||0)<q.goal)return{state:n,ok:false};n.progress.claimed.push(id);n.economy.coins+=q.reward;n.economy.xp+=15;return{state:n,ok:true,reward:q.reward}}
