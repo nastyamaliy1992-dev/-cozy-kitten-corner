@@ -1,8 +1,8 @@
 import { renderWelcome,renderGame } from './ui/appView.js';
-import { createInitialState,restoreState,tickState,petKitten,feedKitten,setSleeping,drink,bathe,useToilet,play } from './core/state.js';
+import { createInitialState,restoreState,tickState,petKitten,feedKitten,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech } from './core/state.js';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,sfx,speak,purr,waterSound,flushSound,eatSound,meow } from './core/audio.js';
-const app=document.querySelector('#app');let state=restoreState(),bubble='',bubbleTimer=null,actionLock=false,soundOn=false;
+const app=document.querySelector('#app');let state=restoreState(),bubble='',bubbleTimer=null,actionLock=false,soundOn=false,lastWant=null,lastWantAt=0;
 const lang=()=>state?.settings?.language||'ru';
 function showBubble(text,ms=1500){bubble=text;clearTimeout(bubbleTimer);render();bubbleTimer=setTimeout(()=>{bubble='';render()},ms)}
 function persist(){if(!state)return;state.lastSeenAt=Date.now();saveGame(state)}
@@ -18,4 +18,4 @@ document.querySelector('[data-action="toilet"]')?.addEventListener('click',()=>{
 document.querySelector('[data-action="play"]')?.addEventListener('click',()=>doAction(play,'Ещё!','play'));document.querySelector('[data-action="draw"]')?.addEventListener('click',()=>{state.activity={type:'draw',stage:'drawing',startedAt:Date.now()};persist();sfx('play');showBubble('Рисую!')});document.querySelector('[data-action="fish"]')?.addEventListener('click',()=>{state.activity={type:'fish',stage:'casting',startedAt:Date.now()};persist();sfx('play');showBubble('Забрасываю удочку…')});
 document.querySelector('[data-action="sound"]')?.addEventListener('click',()=>{soundOn=!soundOn;if(soundOn){startRoomMusic(state.room);showBubble('Музыка включена')}else{stopMusic();showBubble('Музыка выключена')}});
 document.querySelector('[data-action="sleep"]')?.addEventListener('click',()=>{if(actionLock)return;state=setSleeping(state,!state.sleeping);persist();showBubble(state.sleeping?t('goodNight',lang()):'Доброе утро!')})}
-setInterval(()=>{if(state){state=tickState(state,10);persist();render()}},10000);document.addEventListener('visibilitychange',()=>{if(document.hidden)persist()});window.addEventListener('pagehide',persist);render();
+setInterval(()=>{if(state){state=tickState(state,10);const want=getWant(state),now=Date.now();if(want&&(want!==lastWant||now-lastWantAt>90000)){lastWant=want;lastWantAt=now;meow(want);speak(wantSpeech[want]);showBubble(wantSpeech[want],2400)}persist();render()}},10000);document.addEventListener('visibilitychange',()=>{if(document.hidden)persist()});window.addEventListener('pagehide',persist);render();
