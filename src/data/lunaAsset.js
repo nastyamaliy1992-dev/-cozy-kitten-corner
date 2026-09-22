@@ -5,6 +5,7 @@ const idle = new URL('../../assets/luna/idle.webp', import.meta.url).href;
 const pet = new URL('../../assets/luna/pet.webp', import.meta.url).href;
 const happy = new URL('../../assets/luna/happy.webp', import.meta.url).href;
 const sad = new URL('../../assets/luna/sad.webp', import.meta.url).href;
+const eat = new URL('../../assets/luna/eat.webp', import.meta.url).href;
 
 export const LUNA_ASSETS = {
   idle,
@@ -14,6 +15,7 @@ export const LUNA_ASSETS = {
   sleep: idle,
   hungry: idle,
   sad,
+  eat,
 };
 
 export const LUNA_MAIN = idle;
@@ -21,7 +23,7 @@ export const LUNA_MAIN = idle;
 export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle' }={}){
   if (sleeping) return LUNA_ASSETS.sleep;
   if (activity === 'petted') return LUNA_ASSETS.pet;
-  // Eating remains on idle until the verified transparent eat asset is committed.
+  if (activity === 'eating') return LUNA_ASSETS.eat;
   if (emotion === 'tired') return LUNA_ASSETS.sleepy;
   if (emotion === 'hungry') return LUNA_ASSETS.hungry;
   if (emotion === 'sad') return LUNA_ASSETS.sad;
