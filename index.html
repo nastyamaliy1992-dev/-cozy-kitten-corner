@@ -6,6 +6,15 @@
   <meta name="theme-color" content="#25243b" />
   <title>Cozy Kitten Corner</title>
   <link rel="stylesheet" href="./src/styles.css" />
+  <style>
+    html.alpha-test .decor,html.alpha-test .scene-light{display:none!important}
+    html.alpha-test .scene{background:rgb(0,255,90)!important}
+    html.alpha-test .pet-life-glow{display:none!important}
+  </style>
+  <script>
+    const params = new URLSearchParams(location.search);
+    if (params.has("alpha-test")) document.documentElement.classList.add("alpha-test");
+  </script>
 </head>
 <body>
   <div id="app"></div>
