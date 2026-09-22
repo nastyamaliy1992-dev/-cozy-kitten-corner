@@ -228,3 +228,18 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 .room-kitchen .object-tip{bottom:86px!important}
 .bottom-nav,.quick-actions,.room-help{display:none!important}
 @media(max-width:430px){.mini-needs{top:72px;right:7px;gap:3px}.mini-needs>div{width:48px;min-height:57px}.scene{min-height:0!important;height:calc(100dvh - 68px)!important}.side-nav{top:90px}.side-nav button{width:64px;height:64px}.room-title{top:90px;left:82px}.pet-button{bottom:118px!important;width:min(58vw,265px)!important}.primary-actions{left:82px}.speech-bubble{bottom:48%!important}.room-kitchen .pet-button{width:min(49vw,230px)!important}}
+
+/* Luna state animation layer — same canonical character, no replacement cats */
+.pet-face-fx{position:absolute;inset:0;pointer-events:none;z-index:7;opacity:0}
+.pose-happy{animation:lunaHappy .72s cubic-bezier(.2,.8,.25,1) both}
+.pose-happy .luna-photo{filter:brightness(1.035) saturate(1.06)}
+.pose-eat{animation:lunaEat .38s ease-in-out infinite alternate}
+.pose-eat .luna-photo{transform-origin:50% 78%}
+.emotion-tired{animation:lunaSleepy 2.8s ease-in-out infinite}
+.emotion-hungry:not(.pose-eat){animation:lunaHungry 1.8s ease-in-out infinite}
+@keyframes lunaHappy{0%{transform:translateY(0) rotate(0)}35%{transform:translateY(-12px) rotate(-2deg) scale(1.035)}68%{transform:translateY(-3px) rotate(2deg) scale(1.02)}100%{transform:translateY(0) rotate(0)}}
+@keyframes lunaEat{from{transform:translateY(0) rotate(-1deg)}to{transform:translateY(7px) rotate(1deg)}}
+@keyframes lunaSleepy{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(4px) rotate(-1.2deg)}}
+@keyframes lunaHungry{0%,100%{transform:translateX(0)}45%{transform:translateX(-4px) rotate(-1deg)}70%{transform:translateX(4px) rotate(1deg)}}
+.activity-eating .kitchen-bowl:after{content:"•••";position:absolute;left:38px;top:8px;color:#7b4d2e;font-size:20px;letter-spacing:2px;animation:kibble .45s ease-in-out infinite alternate}
+@keyframes kibble{to{transform:translateY(3px) scale(.96)}}
