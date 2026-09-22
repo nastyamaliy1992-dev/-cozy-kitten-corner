@@ -23,4 +23,8 @@ export function getEmotion(s){
  if(n.mood<45)return 'sad';
  return 'calm';
 }
+export function getWant(s){const n=s.needs;if(n.hunger<42)return 'food';if(n.toilet<42)return 'toilet';if(n.cleanliness<42)return 'bath';if(n.energy<42)return 'sleep';if(n.mood<55)return s.room==='lake'?'fish':'play';return null}
+export function setActivity(s,type,stage='active'){const n=structuredClone(s);n.activity={type,stage,startedAt:Date.now()};return n}
+export function clearActivity(s){const n=structuredClone(s);n.activity=null;return n}
+
 export function rewardLevel(s){const n=structuredClone(s);const need=250*n.economy.level;while(n.economy.xp>=need){n.economy.xp-=need;n.economy.level++;n.economy.coins+=75}return n}
