@@ -1,0 +1,8 @@
+let ctx=null,master=null,timer=null,currentRoom=null;
+const roomNotes={living:[261.63,329.63,392],kitchen:[293.66,369.99,440],bathroom:[220,277.18,329.63],toilet:[246.94,311.13,369.99],bedroom:[196,246.94,293.66],wardrobe:[277.18,349.23,415.3],playroom:[329.63,415.3,493.88],lake:[174.61,220,261.63]};
+function ensure(){if(ctx)return;ctx=new (window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.gain.value=.035;master.connect(ctx.destination)}
+function tone(freq,dur=.9,vol=.15,type='sine'){ensure();const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0,ctx.currentTime);g.gain.linearRampToValueAtTime(vol,ctx.currentTime+.08);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(master);o.start();o.stop(ctx.currentTime+dur)}
+export function startRoomMusic(room){ensure();if(ctx.state==='suspended')ctx.resume();if(currentRoom===room&&timer)return;currentRoom=room;clearInterval(timer);let i=0;const play=()=>{const notes=roomNotes[currentRoom]||roomNotes.living;tone(notes[i++%notes.length],1.7,.09,'sine')};play();timer=setInterval(play,1900)}
+export function stopMusic(){clearInterval(timer);timer=null}
+export function sfx(kind){const f={pet:520,feed:620,drink:720,bath:440,toilet:350,play:800,sleep:260}[kind]||500;tone(f,.28,.24,kind==='play'?'triangle':'sine')}
+export function speak(text){if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ru-RU';u.pitch=1.55;u.rate=.92;u.volume=.42;window.speechSynthesis.speak(u)}
