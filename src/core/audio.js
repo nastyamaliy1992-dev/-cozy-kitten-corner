@@ -6,3 +6,5 @@ export function startRoomMusic(room){ensure();if(ctx.state==='suspended')ctx.res
 export function stopMusic(){clearInterval(timer);timer=null}
 export function sfx(kind){const f={pet:520,feed:620,drink:720,bath:440,toilet:350,play:800,sleep:260}[kind]||500;tone(f,.28,.24,kind==='play'?'triangle':'sine')}
 export function speak(text){if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ru-RU';u.pitch=1.55;u.rate=.92;u.volume=.42;window.speechSynthesis.speak(u)}
+
+export function purr(duration=2.4){ensure();if(ctx.state==='suspended')ctx.resume();const end=ctx.currentTime+duration;const o=ctx.createOscillator(),g=ctx.createGain(),lfo=ctx.createOscillator(),lg=ctx.createGain();o.type='sawtooth';o.frequency.value=27;lfo.frequency.value=23;lg.gain.value=.045;lfo.connect(lg);lg.connect(g.gain);g.gain.value=.055;o.connect(g);g.connect(master);o.start();lfo.start();g.gain.setValueAtTime(.01,ctx.currentTime);g.gain.linearRampToValueAtTime(.09,ctx.currentTime+.2);g.gain.linearRampToValueAtTime(.01,end);o.stop(end);lfo.stop(end)}
