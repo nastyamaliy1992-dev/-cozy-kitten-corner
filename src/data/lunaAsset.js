@@ -1,2 +1,2 @@
-// Canonical Luna-only character asset. Absolute Pages path avoids module-relative /src/data/assets resolution.
-export const LUNA_MAIN = '/-cozy-kitten-corner/assets/luna.webp';
+// Canonical Luna-only character asset. Resolve from the document URL so GitHub Pages project paths work.
+export const LUNA_MAIN = new URL('assets/luna.webp', document.baseURI).href;
