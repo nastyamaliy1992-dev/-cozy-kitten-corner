@@ -11,6 +11,8 @@ export function purr(duration=2.8){ensure();if(ctx.state==='suspended')ctx.resum
 
 function noise(duration=.8,vol=.07,filterFreq=1800){ensure();const len=Math.floor(ctx.sampleRate*duration),buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*(1-i/len);const src=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),g=ctx.createGain();src.buffer=buf;filter.type='lowpass';filter.frequency.value=filterFreq;g.gain.value=vol;src.connect(filter);filter.connect(g);g.connect(master);src.start()}
 export function waterSound(){noise(2.2,.16,2600)}
+export function fartSound(){ensure();if(ctx.state==='suspended')ctx.resume();tone(92,.16,.20,'sawtooth');setTimeout(()=>tone(64,.24,.16,'sawtooth'),105)}
 export function flushSound(){noise(1.4,.22,1100);setTimeout(()=>tone(110,.7,.13,'sine'),250)}
+export function applauseSound(){ensure();if(ctx.state==='suspended')ctx.resume();for(let i=0;i<9;i++)setTimeout(()=>noise(.12,.10,3200),i*105);setTimeout(()=>tone(659,.18,.14,'triangle'),160);setTimeout(()=>tone(784,.28,.16,'triangle'),360)}
 export function eatSound(){for(let i=0;i<4;i++)setTimeout(()=>tone(180+i*22,.12,.12,'triangle'),i*180)}
 export function meow(kind='want'){const map={food:[420,520],sleep:[350,300],toilet:[480,390],bath:[520,440],play:[620,760],fish:[560,690],want:[440,540]};const n=map[kind]||map.want;tone(n[0],.22,.2,'triangle');setTimeout(()=>tone(n[1],.3,.18,'triangle'),170)}
