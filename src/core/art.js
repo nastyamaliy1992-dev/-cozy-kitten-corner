@@ -1,0 +1,2 @@
+export function canDraw(s){const o=s.inventory.owned||[];return o.includes('art_0')&&(o.includes('art_1')||o.includes('art_3')||o.includes('art_4')||o.includes('art_5'))}
+export function saveDrawing(s,data){const n=structuredClone(s);n.art??={drawings:[]};n.art.drawings.push({id:'drawing_'+Date.now(),data,createdAt:Date.now()});n.economy.xp+=8;n.needs.mood=Math.min(100,n.needs.mood+8);return n}
