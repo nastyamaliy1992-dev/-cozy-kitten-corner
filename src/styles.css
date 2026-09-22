@@ -27,3 +27,12 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 .luna-art.emotion-joyful .eye{transform:scaleY(.88)}.luna-art.emotion-hungry{animation:luna-hungry 1.15s ease-in-out infinite}.luna-art.emotion-thirsty .muzzle{transform:translateY(2px)}.luna-art.emotion-tired .eye,.luna-art.emotion-sad .eye{transform:scaleY(.55)}.luna-art.emotion-dirty{filter:drop-shadow(0 22px 18px #09071370) saturate(.72)}.luna-art.emotion-toilet{animation:luna-need .65s ease-in-out infinite}.luna-art.emotion-calm .ear{animation:ear-twitch 5s ease-in-out infinite}
 .pet-button:active .luna-art{transform:scale(.96)}button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:active{filter:brightness(1.08)}
 @keyframes luna-hungry{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}@keyframes luna-need{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}@keyframes ear-twitch{0%,86%,100%{margin-top:0}90%{margin-top:-5px}94%{margin-top:0}}
+
+/* Main Hall — central home hub */
+.hall-decor .hall-window{position:absolute;left:8%;top:12%;width:25%;height:30%;border:7px solid rgba(255,255,255,.58);border-radius:22px;background:linear-gradient(#a9d8ee,#ead7ff);box-shadow:0 12px 35px #3d286a33}
+.hall-window:before,.hall-window:after{content:"";position:absolute;background:#ffffff99}.hall-window:before{width:5px;height:100%;left:50%}.hall-window:after{height:5px;width:100%;top:50%}
+.hall-table{position:absolute;right:20%;bottom:21%;width:22%;height:7%;border-radius:50%;background:#6b4c48;box-shadow:0 8px 0 #493738}
+.hall-decor .cat-tree{right:4%;bottom:15%;height:42%;width:13%;opacity:.92}
+.toy-basket{position:absolute;left:6%;bottom:15%;width:16%;height:10%;border-radius:8px 8px 24px 24px;background:linear-gradient(135deg,#a77bc6,#74518f);box-shadow:inset 0 4px #d7b9e9}
+.hall-door{position:absolute;top:22%;width:12%;height:35%;border-radius:14px 14px 3px 3px;background:linear-gradient(90deg,#654c70,#9472a0);box-shadow:inset 0 0 0 4px #ffffff22}
+.kitchen-door{right:2%}.bedroom-door{left:36%}
