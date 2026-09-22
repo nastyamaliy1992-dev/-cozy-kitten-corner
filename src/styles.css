@@ -62,3 +62,47 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 @keyframes petHappy{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(-2deg)}}
 .sound-button{box-shadow:0 0 0 2px #ffffff10}
 @media(max-width:430px){.status-panel{padding:14px}.scene{min-height:620px}.quick-actions{grid-template-columns:repeat(4,1fr)}}
+
+
+/* === 2026-09-22 visual correction: premium Luna reference, no oval/card cutout === */
+.game-shell{min-height:100dvh}
+.scene{min-height:650px;height:auto;justify-content:flex-start;padding-top:44px;padding-bottom:122px;overflow:hidden}
+.pet-button{width:min(92vw,430px);margin-top:4px;display:flex;justify-content:center;align-items:center}
+.pet-stage{width:min(88vw,410px);height:auto;aspect-ratio:1/1;animation:pet-breathe-premium 3.6s ease-in-out infinite}
+.luna-photo{
+  width:100%;height:100%;object-fit:cover;object-position:center;
+  border-radius:28px;
+  -webkit-mask-image:none;mask-image:none;
+  filter:drop-shadow(0 22px 28px rgba(7,5,20,.48));
+}
+.pet-stage::after{
+  content:"";position:absolute;inset:0;border-radius:28px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),inset 0 -70px 70px rgba(19,16,36,.18);
+  pointer-events:none
+}
+.room-living .living-decor{opacity:.28;filter:blur(1px)}
+.pet-name{margin-top:8px;font-size:22px;position:relative;z-index:15}
+.room-help{max-width:420px;font-size:12px;margin-top:4px}
+.action-stack{margin-top:8px}
+.action-button{min-width:180px;border-radius:18px;font-size:17px;font-weight:900}
+.speech-bubble{top:54px;right:6%;left:auto;max-width:58%;font-size:14px;box-shadow:0 12px 30px #0005}
+.status-panel{margin-bottom:2px}
+.quick-actions{margin-top:10px}
+@keyframes pet-breathe-premium{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-5px) scale(1.012)}
+}
+.activity-petted .pet-stage{animation:petHappyPremium .5s cubic-bezier(.2,.8,.2,1) 2}
+@keyframes petHappyPremium{
+  0%,100%{transform:translateY(0) rotate(0) scale(1)}
+  45%{transform:translateY(-10px) rotate(-1.5deg) scale(1.018)}
+}
+.pet-stage.is-sleeping{animation:sleepBreath 4.8s ease-in-out infinite}
+.pet-stage.is-sleeping .luna-photo{transform:none;filter:brightness(.58) saturate(.82) drop-shadow(0 22px 28px rgba(7,5,20,.5))}
+@keyframes sleepBreath{0%,100%{transform:scale(1)}50%{transform:scale(.992)}}
+@media(max-width:430px){
+  .scene{min-height:640px;padding-top:34px}
+  .pet-button{width:94vw}
+  .pet-stage{width:90vw;max-width:390px}
+  .status-panel{margin-left:10px;margin-right:10px}
+}
