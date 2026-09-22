@@ -129,3 +129,18 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 .food-choice{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.food-card{min-height:92px;border:1px solid #ffffff20;border-radius:18px;background:linear-gradient(155deg,#ffffff12,#ffffff07);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;box-shadow:inset 0 1px #ffffff16}.food-card:active{transform:scale(.97)}.food-card b{font-size:12px}.food-card small{font-size:10px;color:#cfc9e3}.food-emoji{font-size:28px;filter:drop-shadow(0 5px 7px #0005)}.food-card.locked{opacity:.68;border-style:dashed}
 .room-kitchen .fridge{box-shadow:0 0 0 1px #fff2,0 22px 45px #0005}.room-kitchen .bowl{box-shadow:0 0 24px #bba4ff55}
 .topbar{grid-template-columns:1fr auto auto auto}
+
+
+/* Interactive scene architecture: visible objects are real controls */
+.scene-object{position:absolute;border:0;padding:0;background:transparent;color:inherit;z-index:3;cursor:pointer}
+.scene-object:focus-visible{outline:3px solid #9ce8e5;outline-offset:4px}
+.fridge-object{right:5%;bottom:11%;width:32%;height:73%;perspective:500px}.fridge-door{position:absolute;inset:0;border-radius:18px;background:linear-gradient(100deg,#e6e7eb,#9ca1aa);box-shadow:0 20px 36px #0005;transform-origin:right center;transition:transform .42s ease;z-index:2}.fridge-door:after{content:"";position:absolute;left:0;right:0;top:44%;height:2px;background:#666a73}.fridge-object.open .fridge-door{transform:rotateY(-76deg)}.fridge-object .fridge-handle{position:absolute;left:10%;top:18%;width:4px;height:20%;background:#696d75}.fridge-inside{position:absolute;inset:3%;border-radius:16px;background:linear-gradient(#dff6ff,#a9c8d1);display:grid;grid-template-columns:1fr 1fr;align-content:center;gap:14px;font-size:28px;box-shadow:inset 0 0 30px #4d7c8a55}.fridge-inside i{font-style:normal}
+.bowl-object{right:8%;top:-30px;width:95px;height:60px}.bowl-object .bowl{inset:auto 8px 8px;position:absolute;width:80px;height:34px}
+.bed-object{left:5%;bottom:8%;width:90%;height:35%}.bed-object .bed{position:absolute;inset:0;width:auto;height:auto;left:0}.bed-object .pillow{position:absolute}.bed-object .blanket{position:absolute}
+.tub-object{left:9%;bottom:8%;width:82%;height:31%}.tub-object .tub{position:absolute;inset:0;width:auto;height:auto;left:0}.foam{position:absolute;left:18%;right:18%;top:5%;font-size:25px;color:#fff;opacity:.8}
+.litter-object{left:20%;bottom:10%;width:60%;height:29%}.litter-object .litter-box{position:absolute;inset:0;width:auto;height:auto;left:0}
+.closet-object{left:5%;top:8%;width:43%;height:75%}.closet-object .closet{position:absolute;inset:0;width:auto;height:auto;left:0}
+.toy-object{right:7%;bottom:12%;width:31%;height:25%;border-radius:14px;background:#85689a;font-size:42px}.water-object{left:0;right:0;bottom:0;height:45%;width:100%}.water-object .water{position:absolute;inset:0;width:auto;height:auto;left:0}
+.object-tip{position:relative;z-index:26;margin:10px auto;padding:10px 14px;border-radius:16px;background:#171725b8;border:1px solid #ffffff1c;font-size:12px;font-weight:800}
+.activity-eating .pet-stage{animation:eatingLuna .38s ease-in-out infinite}
+@keyframes eatingLuna{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(7px) rotate(-1deg)}}
