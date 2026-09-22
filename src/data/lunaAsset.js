@@ -1,2 +1,2 @@
-// Canonical Luna-only character asset. Transparent WebP; no room/background baked in.
-export const LUNA_MAIN = './assets/luna.webp';
+// Canonical Luna-only character asset. Absolute Pages path avoids module-relative /src/data/assets resolution.
+export const LUNA_MAIN = '/-cozy-kitten-corner/assets/luna.webp';
