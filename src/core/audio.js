@@ -8,3 +8,9 @@ export function sfx(kind){const f={pet:520,feed:620,drink:720,bath:440,toilet:35
 export function speak(text){if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ru-RU';u.pitch=1.55;u.rate=.92;u.volume=.42;window.speechSynthesis.speak(u)}
 
 export function purr(duration=2.4){ensure();if(ctx.state==='suspended')ctx.resume();const end=ctx.currentTime+duration;const o=ctx.createOscillator(),g=ctx.createGain(),lfo=ctx.createOscillator(),lg=ctx.createGain();o.type='sawtooth';o.frequency.value=27;lfo.frequency.value=23;lg.gain.value=.045;lfo.connect(lg);lg.connect(g.gain);g.gain.value=.055;o.connect(g);g.connect(master);o.start();lfo.start();g.gain.setValueAtTime(.01,ctx.currentTime);g.gain.linearRampToValueAtTime(.09,ctx.currentTime+.2);g.gain.linearRampToValueAtTime(.01,end);o.stop(end);lfo.stop(end)}
+
+function noise(duration=.8,vol=.07,filterFreq=1800){ensure();const len=Math.floor(ctx.sampleRate*duration),buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*(1-i/len);const src=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),g=ctx.createGain();src.buffer=buf;filter.type='lowpass';filter.frequency.value=filterFreq;g.gain.value=vol;src.connect(filter);filter.connect(g);g.connect(master);src.start()}
+export function waterSound(){noise(2.2,.16,2600)}
+export function flushSound(){noise(1.4,.22,1100);setTimeout(()=>tone(110,.7,.13,'sine'),250)}
+export function eatSound(){for(let i=0;i<4;i++)setTimeout(()=>tone(180+i*22,.12,.12,'triangle'),i*180)}
+export function meow(kind='want'){const map={food:[420,520],sleep:[350,300],toilet:[480,390],bath:[520,440],play:[620,760],fish:[560,690],want:[440,540]};const n=map[kind]||map.want;tone(n[0],.22,.2,'triangle');setTimeout(()=>tone(n[1],.3,.18,'triangle'),170)}
