@@ -7,5 +7,5 @@ export function renderRoomDecor(room){
  if(room==='wardrobe')return `<div class="decor wardrobe-decor">${common}<div class="closet"></div><div class="mirror"></div></div>`;
  if(room==='playroom')return `<div class="decor playroom-decor">${common}<div class="toy-box"></div><div class="play-rug"></div><div class="cat-tree"></div></div>`;
  if(room==='lake')return `<div class="decor lake-decor"><div class="sky"></div><div class="hills"></div><div class="water"></div><div class="dock"></div></div>`;
- return `<div class="decor living-decor">${common}<div class="wall-panel p1"></div><div class="wall-panel p2"></div><div class="sofa"><span></span><span></span></div><div class="plant"><i></i><i></i><i></i><b></b></div><div class="rug"></div></div>`;
+ return `<div class="decor living-decor hall-decor">${common}<div class="hall-window"><i></i><i></i></div><div class="wall-panel p1"></div><div class="wall-panel p2"></div><div class="sofa"><span></span><span></span></div><div class="plant"><i></i><i></i><i></i><b></b></div><div class="rug"></div><div class="hall-table"></div><div class="cat-tree"></div><div class="toy-basket"></div><div class="hall-door kitchen-door" data-door="kitchen"></div><div class="hall-door bedroom-door" data-door="bedroom"></div></div>`;
 }
