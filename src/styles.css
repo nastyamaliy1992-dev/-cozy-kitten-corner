@@ -171,3 +171,12 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 .room-living .scene{background:#2d2836}
 .room-living .scene-light{display:none}
 .room-living .pet-button{z-index:12}
+
+/* Direct tactile Luna interaction */
+.pet-button{border:0;background:transparent;padding:0;cursor:grab}
+.pet-button.is-stroking{cursor:grabbing}
+.pet-button.is-stroking .pet-stage{transform:translateX(var(--stroke-x,0)) translateY(-5px) rotate(-1deg) scale(1.018)!important;transition:transform .08s linear}
+.pet-button.is-stroking .pet-life-glow{opacity:.42!important;box-shadow:0 0 68px rgba(170,128,255,.62)}
+.activity-petted .pet-stage::before{content:"♥";position:absolute;right:5%;top:12%;z-index:8;color:#f2a4e9;font-size:30px;text-shadow:0 4px 16px #6b2f8d;animation:heartFloat .9s ease-out both}
+@keyframes heartFloat{from{opacity:0;transform:translateY(14px) scale(.7)}35%{opacity:1}to{opacity:0;transform:translateY(-34px) scale(1.18)}}
+.pet-direct-tip{margin-top:4px;pointer-events:none}
