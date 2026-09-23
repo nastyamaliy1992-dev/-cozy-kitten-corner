@@ -41,6 +41,7 @@ export const ROOM_POINTS={
  toilet:{idle:[50,78],litter:[55,76]},
  wardrobe:{idle:[50,78],closet:[46,66]},
  playroom:{idle:[50,78],toy:[58,72],art:[30,72]},
+ store:{idle:[50,78],shop:[52,68]},
  lake:{idle:[50,78],water:[62,72]}
 };
 export function moveLuna(s,target){const n=structuredClone(s),p=ROOM_POINTS[n.room]?.[target]||ROOM_POINTS[n.room]?.idle||[50,78];n.movement??={x:50,y:78,target:null,facing:1};n.movement.facing=p[0]<(n.movement.x??50)?-1:1;n.movement.x=p[0];n.movement.y=p[1];n.movement.target=target;n.movement.startedAt=Date.now();return n}
