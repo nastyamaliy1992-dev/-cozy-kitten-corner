@@ -35,10 +35,10 @@ export function rewardLevel(s){const n=structuredClone(s);while(n.economy.xp>=25
 
 export const ROOM_POINTS={
  living:{idle:[50,78],toy:[24,76],center:[52,70]},
- kitchen:{idle:[50,78],fridge:[78,56],bowl:[28,79],water:[42,79]},
- bedroom:{idle:[50,78],bed:[63,72],lamp:[78,38]},
- bathroom:{idle:[50,78],tub:[58,73]},
- toilet:{idle:[50,78],litter:[55,76]},
+ kitchen:{idle:[50,78],fridge:[78,56],bowl:[50,66],water:[42,79]},
+ bedroom:{idle:[50,78],bed:[63,55],lamp:[78,38]},
+ bathroom:{idle:[50,78],tub:[61,55]},
+ toilet:{idle:[50,78],litter:[57,57]},
  wardrobe:{idle:[50,78],closet:[46,66]},
  playroom:{idle:[50,78],toy:[58,72],art:[30,72]},
  store:{idle:[50,78],shop:[52,68]},
