@@ -7,3 +7,6 @@ export function initTelegram(){
 export function bindTelegramBack(handler){const b=window.Telegram?.WebApp?.BackButton;if(!b)return;try{b.show();b.onClick(handler)}catch{}}
 export function haptic(kind='light'){try{window.Telegram?.WebApp?.HapticFeedback?.impactOccurred(kind)}catch{}}
 export function safeInsets(){const tg=window.Telegram?.WebApp;return{top:tg?.safeAreaInset?.top||0,bottom:tg?.safeAreaInset?.bottom||0}}
+
+export function telegramContext(){const tg=window.Telegram?.WebApp;return {platform:tg?.platform||'web',version:tg?.version||null,colorScheme:tg?.colorScheme||'dark',isExpanded:!!tg?.isExpanded}}
+export function openTelegramInvoice(url,callback){const tg=window.Telegram?.WebApp;if(!tg?.openInvoice)return false;try{tg.openInvoice(url,callback);return true}catch{return false}}
