@@ -10,6 +10,7 @@ export const ROOM_BACKGROUNDS = {
   wardrobe: new URL('../../assets/rooms/wardrobe.webp', import.meta.url).href,
   playroom: new URL('../../assets/rooms/playroom.webp', import.meta.url).href,
   lake: new URL('../../assets/rooms/lake.webp', import.meta.url).href,
+  store: new URL('../../assets/rooms/store.webp', import.meta.url).href,
 };
 
 export function preloadRoomBackgrounds(current='living'){
