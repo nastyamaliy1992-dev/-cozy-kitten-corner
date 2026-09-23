@@ -23,6 +23,8 @@ export function splashSound(){noise(.55,.19,2900);setTimeout(()=>noise(.32,.13,2
 export function bubbleSound(){for(let i=0;i<7;i++)setTimeout(()=>tone(720+i*38,.09,.07,'sine'),i*85)}
 export function giggleSound(){[720,850,760,930].forEach((f,i)=>setTimeout(()=>tone(f,.12,.12,'triangle','voice'),i*105))}
 export function sadWhimper(){[430,365,310].forEach((f,i)=>setTimeout(()=>tone(f,.26,.11,'triangle','voice'),i*180))}
+export function drumSound(){[150,205,150,205,150,260].forEach((f,i)=>setTimeout(()=>{tone(f,.13,.22,'triangle');noise(.07,.05,1000)},i*145))}
+export function introTheme(){[392,523,659,784,659,523].forEach((f,i)=>setTimeout(()=>tone(f,.34,.055,'sine','music'),i*260))}
 export function sleepyChime(){[392,330,262].forEach((f,i)=>setTimeout(()=>tone(f,.5,.08),i*260))}
 
 export function unlockAudio(){ensure();if(ctx?.state==='suspended')return ctx.resume();return Promise.resolve()}
