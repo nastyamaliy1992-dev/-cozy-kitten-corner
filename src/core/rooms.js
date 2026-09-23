@@ -6,5 +6,6 @@ export const rooms = {
  bedroom:{id:'bedroom',labelKey:'bedroom',className:'room-bedroom'},
  wardrobe:{id:'wardrobe',labelKey:'wardrobe',className:'room-wardrobe'},
  playroom:{id:'playroom',labelKey:'playroom',className:'room-playroom'},
+ store:{id:'store',labelKey:'store',className:'room-store'},
  lake:{id:'lake',labelKey:'lake',className:'room-lake'}
 };
