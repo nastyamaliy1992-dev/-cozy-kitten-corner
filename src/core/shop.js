@@ -42,6 +42,7 @@ make('bath_bomb_violet','Бомбочка «Лаванда»','bath',65,'Uncommo
 make('toy_feather','Палочка с перьями','toys',65,'Uncommon',1,{mood:20},'coins',{room:'playroom',interaction:'chase'}),
 make('toy_mouse_live','Заводная мышка','toys',58,'Common',1,{mood:18},'coins',{room:'playroom',interaction:'chase'}),
 make('toy_ball_bell','Мячик с бубенчиком','toys',52,'Common',1,{mood:18},'coins',{room:'playroom',interaction:'ball'}),
+make('toy_drum','Барабан Luna','toys',110,'Rare',3,{mood:24},'coins',{room:'playroom',interaction:'drum'}),
 make('sleep_pajama_moon','Пижама «Луна»','pajamas',95,'Uncommon',1,null,'coins',{room:'bedroom',slot:'body',interaction:'sleepwear'})
 );
 export const categories=[...new Set(catalog.map(x=>x.category))];
