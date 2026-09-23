@@ -339,3 +339,5 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 @keyframes servePop{from{opacity:0;transform:scale(.5) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
 button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:saturate(.45)}
 .settings-links{display:grid;grid-template-columns:1fr 1fr;gap:7px}.settings-links button{border:1px solid #ffffff18;background:#28233a;color:#fff;border-radius:12px;padding:9px}
+
+.hall-decor-hotspot{right:8%;bottom:8%;width:28%;height:30%}.placed-decor{position:absolute;z-index:8;width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:30px;background:#8d70cfcc;border:1px solid #ffffff55;box-shadow:0 10px 24px #0007}.decor-0{right:14%;bottom:14%}.decor-1{left:22%;bottom:11%}.decor-2{right:20%;top:18%}.decor-3{left:32%;top:22%}
