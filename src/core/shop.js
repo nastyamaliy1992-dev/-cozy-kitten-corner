@@ -34,6 +34,16 @@ catalog.push(
 ...['Лежанка-сердце','Лежанка-пончик','Домик-луна'].map((n,i)=>make('bed_more_'+i,n,'beds',145+i*38,'Uncommon',3,{decorate:true},'coins',{room:'bedroom',interaction:'place'})),
 ...['Поплавок','Блесна','Сачок','Черви','Рыбная приманка'].map((n,i)=>make('fishgear_more_'+i,n,'fishing',20+i*14,'Common',1,null,'coins',{room:'lake',interaction:'fish'}))
 );
+catalog.push(
+make('bath_soap','Мыло с пеной','bath',45,'Common',1,{cleanliness:28,mood:8},'coins',{room:'bathroom',interaction:'soap'}),
+make('bath_bomb_pink','Бомбочка «Клубника»','bath',55,'Common',1,{cleanliness:12,mood:12},'coins',{room:'bathroom',interaction:'bathBomb',bathColor:'#ff8fb8'}),
+make('bath_bomb_blue','Бомбочка «Океан»','bath',60,'Uncommon',2,{cleanliness:12,mood:12},'coins',{room:'bathroom',interaction:'bathBomb',bathColor:'#68c9ff'}),
+make('bath_bomb_violet','Бомбочка «Лаванда»','bath',65,'Uncommon',2,{cleanliness:12,mood:14},'coins',{room:'bathroom',interaction:'bathBomb',bathColor:'#a98bff'}),
+make('toy_feather','Палочка с перьями','toys',65,'Uncommon',1,{mood:20},'coins',{room:'playroom',interaction:'chase'}),
+make('toy_mouse_live','Заводная мышка','toys',58,'Common',1,{mood:18},'coins',{room:'playroom',interaction:'chase'}),
+make('toy_ball_bell','Мячик с бубенчиком','toys',52,'Common',1,{mood:18},'coins',{room:'playroom',interaction:'ball'}),
+make('sleep_pajama_moon','Пижама «Луна»','pajamas',95,'Uncommon',1,null,'coins',{room:'bedroom',slot:'body',interaction:'sleepwear'})
+);
 export const categories=[...new Set(catalog.map(x=>x.category))];
 const wearable=i=>['pajamas','outfits','costumes','hats','glasses','accessories','shoes','collars','seasonal','rare','premium'].includes(i.category);
 export function buyItem(state,id){const n=structuredClone(state),item=catalog.find(x=>x.id===id);if(!item)return{state:n,ok:false,reason:'missing'};if(item.currency==='XTR')return{state:n,ok:false,reason:'premium'};n.inventory.owned??=[];n.inventory.food??={};n.inventory.clothes??=[];n.inventory.furniture??=[];const stackable=['food','drinks','treats','fishing'].includes(item.category);if(n.inventory.owned.includes(id)&&!stackable)return{state:n,ok:false,reason:'owned'};if(n.economy.level<item.level)return{state:n,ok:false,reason:'level'};if(n.economy.coins<item.price)return{state:n,ok:false,reason:'coins'};n.economy.coins-=item.price;if(stackable){n.inventory.food[id]=(n.inventory.food[id]||0)+1}else{n.inventory.owned.push(id);if(wearable(item))n.inventory.clothes.push(id);if(['furniture','beds','kitchen','decor'].includes(item.category))n.inventory.furniture.push(id)}n.economy.xp+=4;n.activity={type:'celebrate',stage:'jump',itemId:id,startedAt:Date.now()};n.needs.mood=Math.min(100,n.needs.mood+5);return{state:n,ok:true,item}}
