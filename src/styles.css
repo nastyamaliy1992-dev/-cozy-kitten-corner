@@ -272,3 +272,22 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 .activity-bath .pet-stage .luna-photo{animation:luna-wash .7s ease-in-out infinite!important}
 .activity-sleep .pet-stage .luna-photo,.pet-stage.is-sleeping .luna-photo{animation:luna-sleep 3.6s ease-in-out infinite!important}
 @media (prefers-reduced-motion:reduce){.pet-stage .luna-photo{animation-duration:6s!important}}
+
+
+/* Room artwork is the scene. Keep it crisp and unobstructed. */
+.real-room{background:#171522!important;filter:none!important;opacity:1!important}
+.room-background{filter:none!important;opacity:1!important;transform:none!important;image-rendering:auto!important}
+.room-vignette,.floor-glow{display:none!important}
+.kitchen-window,.kitchen-wall-light,.kitchen-upper,.kitchen-counter,.kitchen-lower,.kitchen-rug,
+.shower,.bath-shelf,.nightstand,.mirror,.play-rug,.cat-tree,.sky,.hills,.dock{display:none!important}
+.scene-object{background:transparent!important;border:0!important;box-shadow:none!important}
+.scene-object>span{visibility:hidden!important}
+.kitchen-fridge-hotspot{right:0;top:12%;width:34%;height:62%}
+.kitchen-bowl-hotspot{left:12%;bottom:7%;width:34%;height:24%}
+.bedroom-lamp-hotspot{right:3%;top:8%;width:28%;height:40%}
+.bedroom-bed-hotspot{left:18%;right:8%;bottom:5%;height:40%}
+.bathroom-tub-hotspot{left:10%;right:5%;bottom:4%;height:43%}
+.toilet-litter-hotspot{left:12%;right:8%;bottom:4%;height:36%}
+.wardrobe-closet-hotspot{left:10%;right:8%;top:8%;bottom:8%}
+.playroom-toy-hotspot{left:12%;right:8%;bottom:5%;height:38%}
+.lake-water-hotspot{left:0;right:0;bottom:0;height:55%}
