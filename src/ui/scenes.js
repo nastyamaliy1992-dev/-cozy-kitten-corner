@@ -3,7 +3,7 @@ import { HALL_BG, ROOM_BACKGROUNDS } from '../data/roomAssets.js';
 export function renderRoomDecor(room,ui={}){
  const bg=ROOM_BACKGROUNDS[room] || HALL_BG;
  const background=`<img class="room-background" src="${bg}" alt="" draggable="false">`;
- if(room==='kitchen')return `<div class="decor kitchen-decor real-room">${background}<button class="scene-hotspot kitchen-fridge-hotspot" data-object="fridge" aria-label="Открыть холодильник"></button><button class="scene-hotspot kitchen-bowl-hotspot" data-object="bowl" aria-label="Миска"></button></div>`;
+ if(room==='kitchen')return `<div class="decor kitchen-decor real-room">${background}<button class="scene-hotspot kitchen-fridge-hotspot" data-object="fridge" aria-label="Открыть холодильник"></button><button class="scene-hotspot kitchen-bowl-hotspot" data-object="bowl" aria-label="Миска"></button><button class="scene-hotspot kitchen-water-hotspot" data-object="drink" aria-label="Вода"></button></div>`;
  if(room==='bedroom')return `<div class="decor bedroom-decor real-room">${background}<button class="scene-hotspot bedroom-lamp-hotspot" data-object="lamp" aria-label="Лампа"></button><button class="scene-hotspot bedroom-bed-hotspot" data-object="bed" aria-label="Кровать"></button></div>`;
  if(room==='bathroom')return `<div class="decor bathroom-decor real-room">${background}<button class="scene-hotspot bathroom-tub-hotspot" data-object="tub" aria-label="Ванна"></button></div>`;
  if(room==='toilet')return `<div class="decor toilet-decor real-room">${background}<button class="scene-hotspot toilet-litter-hotspot" data-object="litter" aria-label="Лоток"></button></div>`;
