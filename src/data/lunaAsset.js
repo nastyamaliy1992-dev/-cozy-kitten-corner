@@ -8,12 +8,6 @@ const sad = new URL('../../assets/luna/sad.webp', import.meta.url).href;
 const sleepy = new URL('../../assets/luna/sleepy.webp', import.meta.url).href;
 const sleep = new URL('../../assets/luna/sleep.webp', import.meta.url).href;
 const eat = new URL('../../assets/luna/eat.webp', import.meta.url).href;
-const angry = new URL('../../assets/luna/angry.webp', import.meta.url).href;
-const love = new URL('../../assets/luna/love.webp', import.meta.url).href;
-const excited = new URL('../../assets/luna/excited.webp', import.meta.url).href;
-const surprised = new URL('../../assets/luna/surprised.webp', import.meta.url).href;
-const play = new URL('../../assets/luna/play.webp', import.meta.url).href;
-const annoyed = new URL('../../assets/luna/annoyed.webp', import.meta.url).href;
 
 export const LUNA_ASSETS = {
   idle,
@@ -24,7 +18,6 @@ export const LUNA_ASSETS = {
   hungry: idle,
   sad,
   eat,
-  angry,love,excited,surprised,play,annoyed,
 };
 
 export const LUNA_MAIN = idle;
@@ -33,9 +26,6 @@ export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle' }
   if (sleeping) return LUNA_ASSETS.sleep;
   if (activity === 'petted') return LUNA_ASSETS.pet;
   if (activity === 'eating') return LUNA_ASSETS.eat;
-  if (activity === 'play') return LUNA_ASSETS.play;
-  if (activity === 'celebrate' || activity === 'happy') return LUNA_ASSETS.excited;
-  if (activity === 'petted') return LUNA_ASSETS.love;
   if (emotion === 'tired') return LUNA_ASSETS.sleepy;
   if (emotion === 'hungry') return LUNA_ASSETS.hungry;
   if (emotion === 'sad') return LUNA_ASSETS.sad;
