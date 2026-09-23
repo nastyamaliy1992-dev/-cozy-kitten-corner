@@ -3,13 +3,13 @@ import { createInitialState,restoreState,tickState,petKitten,feedKitten,setSleep
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,meow,configureAudio } from './core/audio.js';
 import { buyItem,equipItem } from './core/shop.js';
-import { dailyReward,claimQuest,track,unlockAchievement,addDrawing } from './core/progression.js';
+import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels } from './core/progression.js';
 import { castLine,catchFish } from './core/fishing.js';
 import { preloadRoomBackgrounds } from './data/roomAssets.js';
 const app=document.querySelector('#app');let state=restoreState(),bubble='',bubbleTimer=null,actionLock=false,soundOn=false,lastWant=null,lastWantAt=0,petReactionTimer=null,ui={fridgeOpen:false,settingsOpen:false,panel:null};
 const lang=()=>state?.settings?.language||'ru';
 function showBubble(text,ms=1500){bubble=text;clearTimeout(bubbleTimer);render();bubbleTimer=setTimeout(()=>{bubble='';render()},ms)}
-function persist(){if(!state)return;state.lastSeenAt=Date.now();saveGame(state)}
+function persist(){if(!state)return;const lv=processLevels(state);state=lv.state;if(lv.leveled.length){state.activity={type:'levelup',stage:'celebrate',startedAt:Date.now()};happyJingle();sfx('level');const last=lv.leveled.at(-1);bubble=`Уровень ${last.level}! +${last.coins} 🪙`}state.lastSeenAt=Date.now();saveGame(state)}
 function render(){if(state)configureAudio(state.settings);if(!state){app.innerHTML=renderWelcome('ru');bindWelcome();return}app.innerHTML=renderGame(state,bubble,ui);bindGame()}
 function bindWelcome(){const input=document.querySelector('#pet-name'),start=document.querySelector('#start-game');input.addEventListener('input',()=>start.disabled=!input.value.trim());start.addEventListener('click',()=>{const name=input.value.trim();if(!name)return;state=createInitialState(name,'ru');persist();render();setTimeout(()=>showBubble('Мяу! ♥'),250)})}
 function moveTo(target,after,ms=620){if(actionLock)return;actionLock=true;state=moveLuna(state,target);state.activity={type:'walk',stage:'moving',startedAt:Date.now()};persist();render();setTimeout(()=>{state.activity={type:'idle',stage:'arrived',startedAt:Date.now()};persist();render();actionLock=false;after?.()},ms)}
