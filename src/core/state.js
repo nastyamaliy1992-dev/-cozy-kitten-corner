@@ -1,8 +1,8 @@
 import { loadSave, saveGame } from './persistence.js';
 const clamp=v=>Math.max(0,Math.min(100,v));
 const recalc=n=>{n.needs.happiness=Math.round((n.needs.hunger+n.needs.thirst+n.needs.cleanliness+n.needs.mood+n.needs.energy+n.needs.toilet+n.needs.health)/7);return n};
-export function createInitialState(name,lang='ru'){return {schemaVersion:1,createdAt:Date.now(),updatedAt:Date.now(),name,room:'living',sleeping:false,sleepStartedAt:null,lastSeenAt:Date.now(),needs:{hunger:78,thirst:82,cleanliness:88,mood:86,energy:80,toilet:84,health:100,happiness:88},economy:{coins:250,xp:0,level:1},inventory:{food:{dryFood:4,wetFood:2,fishTreat:1},clothes:[],furniture:[],owned:[],equipped:null},bedroom:{lampOn:true},petting:{lastXpAt:0},settings:{language:lang,reduceMotion:false}}}
-export function restoreState(){const s=loadSave();if(!s)return null;const now=Date.now(),m=Math.max(0,now-(s.lastSeenAt||s.updatedAt||now))/60000,n=structuredClone(s);n.lastSeenAt=now;n.needs.hunger=clamp(n.needs.hunger-Math.min(18,m*.08));n.needs.thirst=clamp(n.needs.thirst-Math.min(14,m*.06));n.needs.toilet=clamp(n.needs.toilet-Math.min(14,m*.05));if(n.sleeping){n.needs.energy=clamp(n.needs.energy+Math.min(48,m*.28));if(n.needs.energy>=96||m>=240){n.sleeping=false;n.sleepStartedAt=null}}else n.needs.energy=clamp(n.needs.energy-Math.min(12,m*.04));recalc(n);saveGame(n);return n}
+export function createInitialState(name,lang='ru'){return {schemaVersion:1,createdAt:Date.now(),updatedAt:Date.now(),name,room:'living',sleeping:false,sleepStartedAt:null,lastSeenAt:Date.now(),needs:{hunger:78,thirst:82,cleanliness:88,mood:86,energy:80,toilet:84,health:100,happiness:88},economy:{coins:250,xp:0,level:1},inventory:{food:{dryFood:4,wetFood:2,fishTreat:1},clothes:[],furniture:[],owned:[],equipped:null},bedroom:{lampOn:true},petting:{lastXpAt:0},settings:{language:lang,reduceMotion:false},movement:{x:50,y:78,target:null,facing:1}}}}
+export function restoreState(){const s=loadSave();if(!s)return null;n.movement??={x:50,y:78,target:null,facing:1};n.inventory??={food:{},clothes:[],furniture:[],owned:[],equipped:{}};n.inventory.food??={};n.settings??={language:'ru',reduceMotion:false};const now=Date.now(),m=Math.max(0,now-(s.lastSeenAt||s.updatedAt||now))/60000,n=structuredClone(s);n.lastSeenAt=now;n.needs.hunger=clamp(n.needs.hunger-Math.min(18,m*.08));n.needs.thirst=clamp(n.needs.thirst-Math.min(14,m*.06));n.needs.toilet=clamp(n.needs.toilet-Math.min(14,m*.05));if(n.sleeping){n.needs.energy=clamp(n.needs.energy+Math.min(48,m*.28));if(n.needs.energy>=96||m>=240){n.sleeping=false;n.sleepStartedAt=null}}else n.needs.energy=clamp(n.needs.energy-Math.min(12,m*.04));recalc(n);saveGame(n);return n}
 export function tickState(s,seconds=10){const n=structuredClone(s),f=seconds/10;n.needs.hunger=clamp(n.needs.hunger-.18*f);n.needs.thirst=clamp(n.needs.thirst-.12*f);n.needs.toilet=clamp(n.needs.toilet-.08*f);n.needs.energy=clamp(n.needs.energy+(n.sleeping ? 0.8 : -0.07)*f);n.lastSeenAt=Date.now();return recalc(n)}
 export function petKitten(s){const n=structuredClone(s);n.needs.mood=clamp(n.needs.mood+4);return recalc(n)}
 export function feedKitten(s,id='dryFood'){const n=structuredClone(s),count=n.inventory.food?.[id]||0;if(count<=0)return{state:n,ok:false,reason:'empty'};if(n.needs.hunger>=96)return{state:n,ok:false,reason:'full'};const disliked=['food_7','food_15'];if(disliked.includes(id)&&Math.random()<.72){n.needs.mood=clamp(n.needs.mood-1);return{state:recalc(n),ok:false,reason:'refused'}};const favorite=['wetFood','fishTreat','food_0','food_1','food_4'];n.inventory.food[id]--;n.needs.hunger=clamp(n.needs.hunger+(favorite.includes(id)?28:22));n.needs.mood=clamp(n.needs.mood+(favorite.includes(id)?6:3));n.needs.toilet=clamp(n.needs.toilet-4);n.economy.xp+=6;return{state:recalc(n),ok:true,favorite:favorite.includes(id)}}
@@ -31,3 +31,16 @@ export function setActivity(s,type,stage='active'){const n=structuredClone(s);n.
 export function clearActivity(s){const n=structuredClone(s);n.activity=null;return n}
 
 export function rewardLevel(s){const n=structuredClone(s);while(n.economy.xp>=250*n.economy.level){const need=250*n.economy.level;n.economy.xp-=need;n.economy.level++;n.economy.coins+=75}return n}
+
+
+export const ROOM_POINTS={
+ living:{idle:[50,78],toy:[24,76],center:[52,70]},
+ kitchen:{idle:[50,78],fridge:[78,56],bowl:[28,79],water:[42,79]},
+ bedroom:{idle:[50,78],bed:[63,72],lamp:[78,38]},
+ bathroom:{idle:[50,78],tub:[58,73]},
+ toilet:{idle:[50,78],litter:[55,76]},
+ wardrobe:{idle:[50,78],closet:[46,66]},
+ playroom:{idle:[50,78],toy:[58,72],art:[30,72]},
+ lake:{idle:[50,78],water:[62,72]}
+};
+export function moveLuna(s,target){const n=structuredClone(s),p=ROOM_POINTS[n.room]?.[target]||ROOM_POINTS[n.room]?.idle||[50,78];n.movement??={x:50,y:78,target:null,facing:1};n.movement.facing=p[0]<(n.movement.x??50)?-1:1;n.movement.x=p[0];n.movement.y=p[1];n.movement.target=target;n.movement.startedAt=Date.now();return n}
