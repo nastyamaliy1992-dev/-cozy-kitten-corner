@@ -4,7 +4,7 @@ import { renderRoomDecor } from './scenes.js';
 import { getEmotion } from '../core/state.js';
 import { renderPet } from './pet.js';
 import { catalog,categories } from '../core/shop.js';
-import { quests,achievements } from '../core/progression.js';
+import { quests,achievements,levelData } from '../core/progression.js';
 const labels={hunger:'Сытость',thirst:'Жажда',cleanliness:'Чистота',mood:'Настрой',energy:'Энергия',toilet:'Лоток',health:'Здоровье'};
 const meter=(k,v)=>`<div class="need-line"><div class="need-label"><span class="need-mark ${k}"></span><span>${labels[k]}</span><strong>${Math.round(v)}</strong></div><div class="meter"><i style="width:${v}%"></i></div></div>`;
 export function renderWelcome(lang='ru'){return `<main class="welcome-screen"><div class="brand-mark">CK</div><h1>${t('title',lang)}</h1><p>${t('tagline',lang)}</p><section class="name-card"><label for="pet-name">${t('namePrompt',lang)}</label><input id="pet-name" maxlength="16" autocomplete="off" placeholder="${t('namePlaceholder',lang)}"><button id="start-game" class="primary" disabled>${t('start',lang)}</button></section></main>`;}
