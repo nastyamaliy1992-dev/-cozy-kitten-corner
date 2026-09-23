@@ -291,3 +291,30 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 .wardrobe-closet-hotspot{left:10%;right:8%;top:8%;bottom:8%}
 .playroom-toy-hotspot{left:12%;right:8%;bottom:5%;height:38%}
 .lake-water-hotspot{left:0;right:0;bottom:0;height:55%}
+
+/* Fast game-first cleanup: room art + Luna dominate the mobile viewport. */
+.scene{position:relative!important;height:calc(100dvh - 68px)!important;min-height:0!important;background:#171522!important}
+.real-room{position:absolute!important;inset:0!important;overflow:hidden!important;filter:none!important;opacity:1!important}
+.room-background{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;filter:none!important;opacity:1!important;transform:none!important}
+.room-title,.object-tip,.pet-direct-tip,.pet-name,.primary-actions,.scene-light{display:none!important}
+.pet-button{left:50%!important;bottom:54px!important;width:min(48vw,245px)!important;transform:translateX(-50%)!important;z-index:30!important}
+.pet-stage{width:100%!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.luna-photo{width:100%!important;height:auto!important;max-height:42dvh!important;object-fit:contain!important;background:transparent!important;filter:none!important}
+.side-nav{left:8px!important;top:74px!important;gap:5px!important;max-height:calc(100dvh - 155px)!important;overflow-y:auto!important;scrollbar-width:none}
+.side-nav::-webkit-scrollbar{display:none}
+.side-nav button{width:54px!important;height:54px!important;border-radius:16px!important;background:#171522d9!important;backdrop-filter:blur(4px)}
+.side-nav b{font-size:19px!important}.side-nav small{font-size:9px!important}
+.side-nav button.active{background:#5d35a8e8!important}
+.mini-needs{top:72px!important;right:6px!important;gap:3px!important}
+.mini-needs>div{width:43px!important;min-height:48px!important;border-radius:14px!important;background:#171522d9!important;backdrop-filter:blur(4px)}
+.mini-needs b{font-size:15px!important}.mini-needs strong{font-size:10px!important}.mini-needs small{display:none!important}
+.fridge-panel{left:66px!important;right:8px!important;bottom:8px!important;z-index:60!important;max-height:38dvh!important;overflow:auto!important}
+.fridge-head{display:flex!important;justify-content:space-between!important;align-items:center!important}
+.fridge-close{border:0;background:#ffffff18;color:white;border-radius:50%;width:32px;height:32px;font-size:22px}
+.scene-hotspot{background:transparent!important;border:0!important;box-shadow:none!important;color:transparent!important}
+@media(max-width:430px){
+ .pet-button{bottom:36px!important;width:min(51vw,225px)!important}
+ .luna-photo{max-height:39dvh!important}
+ .side-nav{top:68px!important}
+ .mini-needs{top:69px!important}
+}
