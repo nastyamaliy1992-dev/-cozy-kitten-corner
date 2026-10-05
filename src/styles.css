@@ -366,3 +366,18 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 
 /* Strong, readable interaction feedback */
 .activity-petted .pet-stage{animation:lunaEnjoy .42s ease-in-out infinite alternate!important}.activity-petted .pet-stage:after{content:'♥  ♥  ♥';position:absolute;left:50%;top:-16%;transform:translateX(-50%);font-size:28px;letter-spacing:9px;filter:drop-shadow(0 2px 8px #fff);animation:heartsUp 1.1s ease-out infinite}.activity-bath .pet-button{z-index:18}.activity-toilet .pet-button{z-index:18}.activity-eating .pet-button{z-index:18}.activity-sleep .pet-button{z-index:18}.shop-item:disabled{opacity:.82!important;filter:none!important}.shop-item:disabled:after{content:'🔒 Уровень';display:block;margin-top:6px;font-size:11px;opacity:.75}.shop-item-icon{font-size:34px!important;line-height:1.15!important}.served-item{font-size:52px!important;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}@keyframes lunaEnjoy{to{transform:scaleX(var(--luna-facing,1)) translateY(-5px) rotate(-2deg) scale(1.035)}}@keyframes heartsUp{0%{opacity:.2;transform:translate(-50%,12px) scale(.8)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-25px) scale(1.15)}}
+
+/* Interactive character-in-room actions */
+.activity-bathReady .pet-button,.activity-soap .pet-button,.activity-bathBomb .pet-button{z-index:16}
+.activity-bathReady .pet-stage,.activity-soap .pet-stage,.activity-bathBomb .pet-stage{transform:translate(-50%,-50%) scale(.92);transform-origin:center bottom}
+.activity-bathReady .luna-photo,.activity-soap .luna-photo,.activity-bathBomb .luna-photo{animation:lunaBathFloat 1.7s ease-in-out infinite alternate}
+.tub-water-fx{position:absolute;left:43%;top:54%;width:38%;height:15%;z-index:17;border-radius:50%;background:linear-gradient(180deg,#c8f7ff88,#75d8efaa);box-shadow:inset 0 3px 12px #fff8;pointer-events:none;animation:waterRipple 1.4s ease-in-out infinite alternate}
+.activity-soap .foam-fx{z-index:19;font-size:34px;letter-spacing:-9px;animation:foamWash .75s ease-in-out infinite alternate}
+.activity-soap .foam-fx span{display:block;font-size:30px;transform:rotate(-18deg)}
+.activity-sleep .pet-stage,.is-sleeping.pet-stage{transform:translate(-50%,-50%) rotate(-7deg) scale(.92)}
+.luna-wearables{pointer-events:none;position:absolute;inset:0;z-index:5}
+.wearable-label{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);min-width:86px;padding:8px 10px;border-radius:40% 40% 48% 48%;background:#9d82d9cc;border:2px solid #ffffff99;font-size:28px;line-height:1}
+.wearable-label i{display:block;max-width:92px;margin-top:3px;font-size:8px;font-style:normal;font-weight:800;color:#fff;text-shadow:0 1px 2px #000}
+@keyframes lunaBathFloat{from{transform:translateY(1px) rotate(-1deg)}to{transform:translateY(-5px) rotate(1deg)}}
+@keyframes waterRipple{from{transform:scaleX(.96);opacity:.72}to{transform:scaleX(1.04);opacity:.94}}
+@keyframes foamWash{from{transform:translate(-50%,-50%) rotate(-4deg) scale(.94)}to{transform:translate(-50%,-54%) rotate(4deg) scale(1.08)}}
