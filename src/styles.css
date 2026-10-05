@@ -70,14 +70,14 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
 .pet-button{width:min(92vw,430px);margin-top:4px;display:flex;justify-content:center;align-items:center}
 .pet-stage{width:min(88vw,410px);height:auto;aspect-ratio:1/1;animation:pet-breathe-premium 3.6s ease-in-out infinite}
 .luna-photo{
-  width:100%;height:100%;object-fit:cover;object-position:center;
-  border-radius:28px;
+  width:100%;height:100%;object-fit:contain;object-position:center;
+  border-radius:0;
   -webkit-mask-image:none;mask-image:none;
   filter:drop-shadow(0 22px 28px rgba(7,5,20,.48));
 }
 .pet-stage::after{
-  content:"";position:absolute;inset:0;border-radius:28px;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),inset 0 -70px 70px rgba(19,16,36,.18);
+  content:"";position:absolute;inset:0;border-radius:0;
+  box-shadow:none;
   pointer-events:none
 }
 .room-living .living-decor{opacity:.28;filter:blur(1px)}
@@ -98,7 +98,7 @@ html,body,#app{width:100%;height:100%;margin:0}body{overflow:hidden;background:#
   45%{transform:translateY(-10px) rotate(-1.5deg) scale(1.018)}
 }
 .pet-stage.is-sleeping{animation:sleepBreath 4.8s ease-in-out infinite}
-.pet-stage.is-sleeping .luna-photo{transform:none;filter:brightness(.58) saturate(.82) drop-shadow(0 22px 28px rgba(7,5,20,.5))}
+.pet-stage.is-sleeping .luna-photo{transform:none;filter:drop-shadow(0 16px 20px rgba(7,5,20,.42))}
 @keyframes sleepBreath{0%,100%{transform:scale(1)}50%{transform:scale(.992)}}
 @media(max-width:430px){
   .scene{min-height:640px;padding-top:34px}
@@ -357,7 +357,7 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .shop-panel .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px!important}.shop-item{min-height:112px!important;border-color:#f1d4ff1f!important;background:linear-gradient(145deg,#352641,#241b31)!important;text-align:center!important;box-shadow:0 9px 20px #0003,inset 0 1px #fff1}.shop-item-icon{font-size:34px!important;filter:drop-shadow(0 4px 7px #0005)}.shop-item b{font-size:12px}.shop-item small{font-size:9px}
 .wardrobe-panel .equipped-summary{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px}.equipped-summary span{white-space:nowrap;background:#7d55b633;border:1px solid #d8b6ff33;border-radius:999px;padding:6px 9px;font-size:10px}.wardrobe-panel button.equipped{outline:2px solid #a86de8;background:#49325f!important}.wardrobe-panel .shop-item-icon{font-size:27px}
 
-.luna-wearables{position:absolute;inset:0;z-index:12;pointer-events:none;transform:scaleX(var(--luna-facing,1))}.luna-wearables span{position:absolute;filter:drop-shadow(0 3px 4px #0005)}.wear-body{left:28%;right:27%;top:51%;height:27%;border-radius:40% 40% 28% 28%;background:linear-gradient(145deg,#a982e8cc,#6848a8cc);border:2px solid #f0ddff99;mix-blend-mode:multiply}.wear-head{left:50%;top:8%;font-size:34px;transform:translateX(-50%)}.wear-eyes{left:50%;top:27%;font-size:42px;transform:translateX(-50%) scaleX(1.18)}.wear-neck{left:50%;top:48%;font-size:25px;transform:translateX(-50%)}.wear-feet{left:50%;bottom:12%;font-size:29px;transform:translateX(-50%);letter-spacing:38px}.wear-accessory{right:17%;top:55%;font-size:30px}
+.luna-wearables{position:absolute;inset:0;z-index:12;pointer-events:none;transform:scaleX(var(--luna-facing,1))}.luna-wearables span{position:absolute;filter:drop-shadow(0 3px 4px #0005)}.wear-body{left:33%;right:32%;top:54%;height:22%;border-radius:42% 42% 32% 32%;background:linear-gradient(145deg,#b89cf0aa,#7654b8aa);border:1px solid #f0ddff66;mix-blend-mode:normal}.wear-head{left:50%;top:8%;font-size:34px;transform:translateX(-50%)}.wear-eyes{left:50%;top:27%;font-size:42px;transform:translateX(-50%) scaleX(1.18)}.wear-neck{left:50%;top:48%;font-size:25px;transform:translateX(-50%)}.wear-feet{left:50%;bottom:12%;font-size:29px;transform:translateX(-50%);letter-spacing:38px}.wear-accessory{right:17%;top:55%;font-size:30px}
 
 .room-items-button{position:absolute;right:10px;top:120px;z-index:46;border:1px solid #ffffff35;background:#171522e8;color:#fff;border-radius:17px;padding:8px 10px;display:grid;place-items:center;font-size:20px;box-shadow:0 10px 25px #0007}.room-items-button small{font-size:8px;font-weight:900}.bath-fx{position:absolute;z-index:35;left:50%;bottom:19%;transform:translateX(-50%);pointer-events:none}.foam-fx{font-size:46px;letter-spacing:-14px;animation:foamPop .55s ease-in-out infinite alternate}.bomb-fx{width:170px;height:75px;border-radius:50%;display:grid;place-items:center;font-size:28px;background:color-mix(in srgb,var(--bath-color) 72%,transparent);box-shadow:0 0 45px var(--bath-color);animation:bathFizz .45s ease-in-out infinite alternate}.play-fx{position:absolute;z-index:34;left:24%;bottom:20%;font-size:34px;animation:toyBounce .45s ease-in-out infinite alternate;pointer-events:none}@keyframes foamPop{to{transform:translateX(-50%) translateY(-9px) scale(1.08)}}@keyframes bathFizz{to{transform:translateX(-50%) scale(1.08);filter:brightness(1.18)}}@keyframes toyBounce{to{transform:translate(70px,-28px) rotate(15deg)}}.activity-soap .luna-photo,.activity-bathBomb .luna-photo{animation:luna-play .55s ease-in-out infinite alternate!important}
 
@@ -376,8 +376,8 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .activity-soap .foam-fx span{display:block;font-size:30px;transform:rotate(-18deg)}
 .activity-sleep .pet-stage,.is-sleeping.pet-stage{transform:translate(-50%,-50%) rotate(-7deg) scale(.92)}
 .luna-wearables{pointer-events:none;position:absolute;inset:0;z-index:5}
-.wearable-label{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);min-width:86px;padding:8px 10px;border-radius:40% 40% 48% 48%;background:#9d82d9cc;border:2px solid #ffffff99;font-size:28px;line-height:1}
-.wearable-label i{display:block;max-width:92px;margin-top:3px;font-size:8px;font-style:normal;font-weight:800;color:#fff;text-shadow:0 1px 2px #000}
+.wearable-label{position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);min-width:0;padding:0;border-radius:0;background:transparent;border:0;font-size:22px;line-height:1}
+.wearable-label i{display:none}
 @keyframes lunaBathFloat{from{transform:translateY(1px) rotate(-1deg)}to{transform:translateY(-5px) rotate(1deg)}}
 @keyframes waterRipple{from{transform:scaleX(.96);opacity:.72}to{transform:scaleX(1.04);opacity:.94}}
 @keyframes foamWash{from{transform:translate(-50%,-50%) rotate(-4deg) scale(.94)}to{transform:translate(-50%,-54%) rotate(4deg) scale(1.08)}}
