@@ -28,7 +28,7 @@ export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle' }
   if (activity === 'eating') return LUNA_ASSETS.eat;
   if (activity === 'toiletNeed') return LUNA_ASSETS.sad;
   if (activity === 'happy' || activity === 'play' || activity === 'drum') return LUNA_ASSETS.happy;
-  if (activity === 'bath' || activity === 'soap' || activity === 'bathBomb') return LUNA_ASSETS.happy;
+  if (activity === 'bath' || activity === 'bathReady' || activity === 'soap' || activity === 'bathBomb') return LUNA_ASSETS.happy;
   if (activity === 'toilet') return LUNA_ASSETS.pet;
   if (emotion === 'tired') return LUNA_ASSETS.sleepy;
   if (emotion === 'hungry') return LUNA_ASSETS.hungry;
