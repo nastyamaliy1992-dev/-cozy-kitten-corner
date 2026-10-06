@@ -8,9 +8,9 @@ import { castLine,catchFish } from './core/fishing.js';
 import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js';
 import { preloadRoomBackgrounds } from './data/roomAssets.js';
 const telegram=initTelegram();
-if(state&&telegram.available){const grant=readTelegramPurchaseGrant();if(grant){const g=grantPremiumItem(state,grant.item,grant.receipt);state=g.state;saveGame(state);clearTelegramPurchaseGrant();if(g.ok)setTimeout(()=>showBubble('Оплата Stars подтверждена ⭐ Предмет уже в гардеробе!',2600),500)}}
 let launchIntroPending=true;
 const app=document.querySelector('#app');let state=restoreState(),bubble='',bubbleTimer=null,actionLock=false,soundOn=false,lastWant=null,lastWantAt=0,petReactionTimer=null,ui={fridgeOpen:false,settingsOpen:false,panel:null,shopCategory:'all'};
+if(state&&telegram.available){const grant=readTelegramPurchaseGrant();if(grant){const g=grantPremiumItem(state,grant.item,grant.receipt);state=g.state;saveGame(state);clearTelegramPurchaseGrant();if(g.ok)setTimeout(()=>showBubble('Оплата Stars подтверждена ⭐ Предмет уже в гардеробе!',2600),500)}}
 const lang=()=>state?.settings?.language||'ru';
 let audioUnlocked=false;async function unlockGameAudio(){if(audioUnlocked||!state)return;audioUnlocked=true;try{await unlockAudio();soundOn=true;startRoomMusic(state.room)}catch{audioUnlocked=false}}
 document.addEventListener('pointerdown',async()=>{await unlockGameAudio();if(launchIntroPending&&state){launchIntroPending=false;introTheme();setTimeout(()=>{meow('happy');speakLuna('Добро пожаловать! Я Луна. Я тебя ждала!')},420)}},{once:false,passive:true});
