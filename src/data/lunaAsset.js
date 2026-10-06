@@ -13,6 +13,18 @@ const actionYarn = asset('action-yarn.webp');
 const actionBath = asset('action-bath.webp');
 const actionJump = asset('action-jump.webp');
 const actionToilet = asset('action-toilet.webp');
+const feedFrames = Object.fromEntries(Array.from({length:12},(_,i)=>{
+  const stage=`feed${String(i+1).padStart(2,'0')}`;
+  return [stage,asset(`kitchen/feed/${stage}.png`)];
+}));
+const drinkFrames = Object.fromEntries(Array.from({length:6},(_,i)=>{
+  const stage=`drink${String(i+1).padStart(2,'0')}`;
+  return [stage,asset(`kitchen/drink/${stage}.png`)];
+}));
+const sleepFrames = Object.fromEntries(Array.from({length:10},(_,i)=>{
+  const stage=`sleep${String(i+1).padStart(2,'0')}`;
+  return [stage,asset(`bedroom/sleep/${stage}.png`)];
+}));
 
 export const LUNA_ASSETS = {
   idle, pet, happy, sad, sleepy, sleep, eat,
@@ -32,6 +44,9 @@ export const LUNA_ASSETS = {
 export const LUNA_MAIN = idle;
 
 const stageMap = {
+  ...feedFrames,
+  ...drinkFrames,
+  ...sleepFrames,
   idle,
   arrived:idle,
   asking:sad,
@@ -86,8 +101,8 @@ const stageMap = {
 export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle', stage='idle' }={}){
   const type = typeof activity === 'object' ? (activity.type || 'idle') : activity;
   const phase = typeof activity === 'object' ? (activity.stage || stage || 'idle') : stage;
-  if (sleeping || type === 'sleep' || phase === 'sleeping') return sleep;
   if (stageMap[phase]) return stageMap[phase];
+  if (sleeping || type === 'sleep' || phase === 'sleeping') return sleep;
   if (type === 'petting' || type === 'petted') return pet;
   if (type === 'eating' || type === 'drink') return eat;
   if (type === 'toiletNeed') return sad;
@@ -105,7 +120,7 @@ export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle', 
   return idle;
 }
 
-export const LUNA_PRELOAD = [...new Set(Object.values(LUNA_ASSETS))];
+export const LUNA_PRELOAD = [...new Set([...Object.values(LUNA_ASSETS),...Object.values(stageMap)])];
 
 let preloadPromise;
 export function preloadLunaFrames(){

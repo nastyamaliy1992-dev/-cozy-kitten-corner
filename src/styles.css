@@ -755,3 +755,88 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .activity-play .pet-stage::after,
 .activity-draw .pet-stage::after{display:none!important;content:none!important}
 .game-shell:not(.activity-walk):not(.activity-idle) .pet-button{transition:none!important}
+
+/* Individual transparent action frames: one fixed anchor, no sprite jumping. */
+.room-kitchen.activity-eating .pet-button,
+.room-kitchen.activity-drink .pet-button{
+  left:50%!important;
+  bottom:140px!important;
+  width:min(52vw,255px)!important;
+  height:min(64vw,315px)!important;
+}
+.activity-eating .pet-stage,
+.activity-drink .pet-stage,
+.activity-sleepSequence .pet-stage,
+.activity-eating .luna-photo,
+.activity-drink .luna-photo,
+.activity-sleepSequence .luna-photo{
+  animation:none!important;
+  transition:none!important;
+  transform:none!important;
+}
+.room-bedroom.activity-sleepSequence .pet-button{
+  left:62%!important;
+  bottom:34%!important;
+  width:min(60vw,300px)!important;
+  height:min(54vw,270px)!important;
+  z-index:18!important;
+}
+.activity-sleepSequence .bed-blanket-fg{display:none!important}
+
+.feeding-sequence-layer{
+  position:absolute;
+  left:50%;
+  bottom:137px;
+  width:min(52vw,255px);
+  height:min(64vw,315px);
+  transform:translateX(-50%);
+  z-index:37;
+  pointer-events:none;
+}
+.feeding-bowl-layer{
+  position:absolute;
+  left:50%;
+  bottom:-5px;
+  width:72px;
+  height:25px;
+  transform:translateX(-50%);
+  border-radius:50% 50% 42% 42%;
+  background:linear-gradient(180deg,#eee 0 28%,#aeb5c3 30% 62%,#6f7786 64%);
+  border:2px solid #fff9;
+  box-shadow:0 7px 10px #0005,inset 0 4px 6px #fff8;
+}
+.feeding-food-layer,.feeding-hand-layer{
+  position:absolute;
+  opacity:0;
+  transition:opacity .05s linear;
+  filter:drop-shadow(0 5px 7px #0005);
+}
+.feeding-food-layer{left:47%;top:29%;font-size:25px}
+.feeding-hand-layer{right:7%;top:35%;font-size:45px;transform:rotate(-28deg)}
+.feeding-sequence-layer[data-stage="feed03"] .feeding-food-layer,
+.feeding-sequence-layer[data-stage="feed04"] .feeding-food-layer,
+.feeding-sequence-layer[data-stage="feed05"] .feeding-food-layer,
+.feeding-sequence-layer[data-stage="feed06"] .feeding-food-layer,
+.feeding-sequence-layer[data-stage="feed02"] .feeding-hand-layer,
+.feeding-sequence-layer[data-stage="feed03"] .feeding-hand-layer,
+.feeding-sequence-layer[data-stage="feed04"] .feeding-hand-layer,
+.feeding-sequence-layer[data-stage="feed05"] .feeding-hand-layer,
+.feeding-sequence-layer[data-stage="feed06"] .feeding-hand-layer{opacity:1}
+.feeding-sequence-layer[data-stage="feed06"] .feeding-food-layer{transform:translate(-6px,10px) scale(.78)}
+.activity-drink .served-item{
+  left:52%!important;
+  bottom:58%!important;
+  width:auto!important;
+  height:auto!important;
+  padding:0!important;
+  background:transparent!important;
+  font-size:31px!important;
+  z-index:38!important;
+  animation:none!important;
+}
+
+@media(max-width:430px){
+  .room-kitchen.activity-eating .pet-button,
+  .room-kitchen.activity-drink .pet-button{bottom:138px!important}
+  .feeding-sequence-layer{bottom:135px}
+}

@@ -37,7 +37,8 @@ export function renderGame(state,bubble='',ui={}){
  let equippedItems=Object.entries(eq).map(([slot,id])=>({slot,item:catalog.find(x=>x.id===id)})).filter(x=>x.item);
  const previewItem=catalog.find(x=>x.id===ui.previewItem);
  if(previewItem){const slot=previewItem.slot||'body';equippedItems=equippedItems.filter(x=>x.slot!==slot);equippedItems.push({slot,item:previewItem});}
- const wearables=equippedItems.length?`<div class="luna-wearables" aria-label="Надетая одежда">${equippedItems.map(({slot,item})=>{
+ const bakedActionFrame=['eating','drink','sleepSequence'].includes(state.activity?.type);
+ const wearables=!bakedActionFrame&&equippedItems.length?`<div class="luna-wearables" aria-label="Надетая одежда">${equippedItems.map(({slot,item})=>{
    const name=(item.name||'').toLowerCase();
    if(slot==='body')return `<span class="wear-body wear-${item.id}" title="${item.name}"><i>${itemIcon(item)}</i></span>`;
    if(slot==='head')return `<span class="wear-head" title="${item.name}">${name.includes('корон')?'👑':name.includes('берет')?'🧢':name.includes('панам')?'👒':'🎩'}</span>`;

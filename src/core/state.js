@@ -19,7 +19,9 @@ const mealFlags=id=>{const disliked=['food_7','food_15'];const favorite=['wetFoo
 export function consumeFoodUnit(s,id='dryFood'){const n=structuredClone(s),count=n.inventory.food?.[id]||0;if(count<=0)return{state:n,ok:false,reason:'empty'};n.inventory.food[id]--;return{state:n,ok:true,...mealFlags(id)}}
 export function finishMeal(s,id='dryFood'){const n=structuredClone(s),flags=mealFlags(id);n.needs.hunger=clamp(n.needs.hunger+(flags.favorite?28:22));n.needs.mood=clamp(n.needs.mood+(flags.favorite?6:3));n.needs.toilet=clamp(n.needs.toilet-4);n.economy.xp+=6;if(flags.disliked)n.needs.mood=clamp(n.needs.mood-1);return{state:recalc(n),ok:true,...flags}}
 export function feedKitten(s,id='dryFood'){const used=consumeFoodUnit(s,id);if(!used.ok)return used;return finishMeal(used.state,id)}
-export function drink(s,id=null){const n=structuredClone(s);if(id){const count=n.inventory.food?.[id]||0;if(count<=0)return{state:n,ok:false,reason:'empty'};n.inventory.food[id]--}n.needs.thirst=clamp(n.needs.thirst+25);n.economy.xp+=3;const out=recalc(n);return id?{state:out,ok:true}:out}
+export function consumeDrinkUnit(s,id){const n=structuredClone(s),count=n.inventory.food?.[id]||0;if(count<=0)return{state:n,ok:false,reason:'empty'};n.inventory.food[id]--;return{state:n,ok:true}}
+export function finishDrink(s){const n=structuredClone(s);n.needs.thirst=clamp(n.needs.thirst+25);n.economy.xp+=3;return{state:recalc(n),ok:true}}
+export function drink(s,id=null){if(id){const used=consumeDrinkUnit(s,id);if(!used.ok)return used;return finishDrink(used.state)}return finishDrink(s).state}
 export function bathe(s){const n=structuredClone(s);n.needs.cleanliness=clamp(n.needs.cleanliness+35);n.needs.mood=clamp(n.needs.mood+2);n.economy.xp+=5;return recalc(n)}
 export function useToilet(s){const n=structuredClone(s);n.needs.toilet=clamp(n.needs.toilet+40);n.needs.cleanliness=clamp(n.needs.cleanliness-3);n.economy.xp+=4;return recalc(n)}
 export function play(s){const n=structuredClone(s);n.needs.mood=clamp(n.needs.mood+18);n.needs.energy=clamp(n.needs.energy-8);n.economy.xp+=5;return recalc(n)}
