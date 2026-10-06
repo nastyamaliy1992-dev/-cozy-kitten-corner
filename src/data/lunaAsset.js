@@ -10,11 +10,12 @@ const actionDraw = new URL('../../assets/luna/action-draw.webp', import.meta.url
 const actionYarn = new URL('../../assets/luna/action-yarn.webp', import.meta.url).href;
 const actionBath = new URL('../../assets/luna/action-bath.webp', import.meta.url).href;
 const actionJump = new URL('../../assets/luna/action-jump.webp', import.meta.url).href;
+const actionToilet = new URL('../../assets/luna/action-toilet.webp', import.meta.url).href;
 
 export const LUNA_ASSETS = {
   idle, happy, pet, sleepy, sleep,
   hungry:eat, sad, eat,
-  play:actionYarn, draw:actionDraw, bath:actionBath, toilet:pet, fish:happy, jump:actionJump
+  play:actionYarn, draw:actionDraw, bath:actionBath, toilet:actionToilet, fish:happy, jump:actionJump
 };
 
 export const LUNA_MAIN = idle;
