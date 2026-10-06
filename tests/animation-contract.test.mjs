@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { lunaAssetFor } from '../src/data/lunaAsset.js';
 import { createInitialState, consumeDrinkUnit, finishDrink } from '../src/core/state.js';
 import { renderGame } from '../src/ui/appView.js';
+import { readFile } from 'node:fs/promises';
 
 test('kitchen feeding stages use twelve distinct transparent frame files', () => {
   const frames = Array.from({ length: 12 }, (_, index) =>
@@ -44,4 +45,10 @@ test('baked action frames hide emoji wearables', () => {
   state.activity = { type: 'sleepSequence', stage: 'sleep03' };
   const html = renderGame(state);
   assert.doesNotMatch(html, /luna-wearables/);
+});
+
+test('kitchen action frames stay above the food panel', async () => {
+  const css = await readFile(new URL('../src/styles.css',import.meta.url),'utf8');
+  assert.match(css,/\.room-kitchen\.activity-eating \.pet-button,[\s\S]*?bottom:210px!important/);
+  assert.match(css,/\.feeding-sequence-layer\{[\s\S]*?bottom:207px/);
 });

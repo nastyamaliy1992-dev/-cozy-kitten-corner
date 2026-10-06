@@ -12,6 +12,7 @@ test('entry point and changed animation modules use the same cache version', asy
     readFile(new URL('../src/ui/pet.js',import.meta.url),'utf8')
   ]);
   assert.match(index,new RegExp(`main\\.js\\?${version}`));
+  assert.match(index,/styles\.css\?v=20261006-frames2/);
   assert.match(main,new RegExp(`appView\\.js\\?${version}`));
   assert.match(main,new RegExp(`state\\.js\\?${version}`));
   assert.match(main,new RegExp(`lunaAsset\\.js\\?${version}`));

@@ -760,7 +760,7 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .room-kitchen.activity-eating .pet-button,
 .room-kitchen.activity-drink .pet-button{
   left:50%!important;
-  bottom:140px!important;
+  bottom:210px!important;
   width:min(52vw,255px)!important;
   height:min(64vw,315px)!important;
 }
@@ -786,7 +786,7 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .feeding-sequence-layer{
   position:absolute;
   left:50%;
-  bottom:137px;
+  bottom:207px;
   width:min(52vw,255px);
   height:min(64vw,315px);
   transform:translateX(-50%);
@@ -837,6 +837,6 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 
 @media(max-width:430px){
   .room-kitchen.activity-eating .pet-button,
-  .room-kitchen.activity-drink .pet-button{bottom:138px!important}
-  .feeding-sequence-layer{bottom:135px}
+  .room-kitchen.activity-drink .pet-button{bottom:210px!important}
+  .feeding-sequence-layer{bottom:207px}
 }
