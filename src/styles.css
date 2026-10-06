@@ -857,7 +857,7 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .room-bathroom.activity-bathBomb .pet-button,
 .room-bathroom.activity-shower .pet-button{
   left:44%!important;
-  bottom:55%!important;
+  bottom:50.5%!important;
   width:min(42vw,205px)!important;
   height:min(48vw,235px)!important;
   z-index:16!important;
@@ -876,3 +876,4 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
   width:min(34vw,170px)!important;
   height:min(43vw,215px)!important;
 }
+.room-bathroom .tub-water-fx{display:none!important}
