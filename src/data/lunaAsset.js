@@ -9,11 +9,12 @@ const eat = new URL('../../assets/luna/eat.webp', import.meta.url).href;
 const actionDraw = new URL('../../assets/luna/action-draw.webp', import.meta.url).href;
 const actionYarn = new URL('../../assets/luna/action-yarn.webp', import.meta.url).href;
 const actionBath = new URL('../../assets/luna/action-bath.webp', import.meta.url).href;
+const actionJump = new URL('../../assets/luna/action-jump.webp', import.meta.url).href;
 
 export const LUNA_ASSETS = {
   idle, happy, pet, sleepy, sleep,
   hungry:eat, sad, eat,
-  play:actionYarn, draw:actionDraw, bath:actionBath, toilet:pet, fish:happy, jump:happy
+  play:actionYarn, draw:actionDraw, bath:actionBath, toilet:pet, fish:happy, jump:actionJump
 };
 
 export const LUNA_MAIN = idle;
@@ -27,7 +28,8 @@ export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle' }
   if (activity === 'bath' || activity === 'bathReady' || activity === 'soap' || activity === 'shampoo' || activity === 'shower' || activity === 'bathBomb' || activity === 'towel') return LUNA_ASSETS.bath;
   if (activity === 'draw') return LUNA_ASSETS.draw;
   if (activity === 'fish') return LUNA_ASSETS.fish;
-  if (activity === 'play' || activity === 'drum' || activity === 'jump' || activity === 'happy' || activity === 'celebrate' || activity === 'levelup') return LUNA_ASSETS.happy;
+  if (activity === 'jump' || activity === 'celebrate' || activity === 'levelup') return LUNA_ASSETS.jump;
+  if (activity === 'play' || activity === 'drum' || activity === 'happy') return LUNA_ASSETS.happy;
   if (activity === 'sad') return LUNA_ASSETS.sad;
   if (emotion === 'tired') return LUNA_ASSETS.sleepy;
   if (emotion === 'hungry') return LUNA_ASSETS.hungry;
