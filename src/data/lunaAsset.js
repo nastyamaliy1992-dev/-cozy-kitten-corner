@@ -1,6 +1,6 @@
 // Canonical Luna runtime asset registry.
 const idle = new URL('../../assets/luna/idle.webp', import.meta.url).href;
-const pet = new URL('../../assets/luna/pet.webp', import.meta.url).href;
+const pet = idle; // no asset swap on stroking: avoids any rectangular/square pet sprite
 const happy = new URL('../../assets/luna/happy.webp', import.meta.url).href;
 const sad = new URL('../../assets/luna/sad.webp', import.meta.url).href;
 const sleepy = new URL('../../assets/luna/sleepy.webp', import.meta.url).href;
@@ -20,7 +20,7 @@ export const LUNA_MAIN = idle;
 
 export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle' }={}){
   if (sleeping || activity === 'sleep') return LUNA_ASSETS.sleep;
-  if (activity === 'petted' || activity === 'petting') return LUNA_ASSETS.pet;
+  if (activity === 'petted' || activity === 'petting') return LUNA_ASSETS.idle;
   if (activity === 'eating' || activity === 'drink') return LUNA_ASSETS.eat;
   if (activity === 'toiletNeed') return LUNA_ASSETS.sad;
   if (activity === 'toilet') return LUNA_ASSETS.toilet;
