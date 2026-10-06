@@ -1,40 +1,121 @@
-// Canonical Luna runtime asset registry.
-const idle = new URL('../../assets/luna/idle.webp', import.meta.url).href;
-const pet = idle; // no asset swap on stroking: avoids any rectangular/square pet sprite
-const happy = new URL('../../assets/luna/happy.webp', import.meta.url).href;
-const sad = new URL('../../assets/luna/sad.webp', import.meta.url).href;
-const sleepy = new URL('../../assets/luna/sleepy.webp', import.meta.url).href;
-const sleep = new URL('../../assets/luna/sleep.webp', import.meta.url).href;
-const eat = new URL('../../assets/luna/eat.webp', import.meta.url).href;
-const actionDraw = new URL('../../assets/luna/action-draw.webp', import.meta.url).href;
-const actionYarn = new URL('../../assets/luna/action-yarn.webp', import.meta.url).href;
-const actionBath = new URL('../../assets/luna/action-bath.webp', import.meta.url).href;
-const actionJump = new URL('../../assets/luna/action-jump.webp', import.meta.url).href;
-const actionToilet = new URL('../../assets/luna/action-toilet.webp', import.meta.url).href;
+// Canonical Luna runtime asset registry + deterministic state/frame mapping.
+const asset = name => new URL(`../../assets/luna/${name}`, import.meta.url).href;
+
+const idle = asset('idle.webp');
+const pet = asset('happy.webp');
+const happy = asset('happy.webp');
+const sad = asset('sad.webp');
+const sleepy = asset('sleepy.webp');
+const sleep = asset('sleep.webp');
+const eat = asset('eat.webp');
+const actionDraw = asset('action-draw.webp');
+const actionYarn = asset('action-yarn.webp');
+const actionBath = asset('action-bath.webp');
+const actionJump = asset('action-jump.webp');
+const actionToilet = asset('action-toilet.webp');
 
 export const LUNA_ASSETS = {
-  idle, happy, pet, sleepy, sleep,
-  hungry:eat, sad, eat,
-  play:actionYarn, draw:actionDraw, bath:actionBath, toilet:actionToilet, fish:happy, jump:actionJump
+  idle, pet, happy, sad, sleepy, sleep, eat,
+  hungry:eat,
+  play:actionYarn,
+  draw:actionDraw,
+  bath:actionBath,
+  toilet:actionToilet,
+  fish:idle,
+  jump:actionJump,
+  proud:happy,
+  laugh:happy,
+  surprised:idle,
+  annoyed:sad
 };
 
 export const LUNA_MAIN = idle;
 
-export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle' }={}){
-  if (sleeping || activity === 'sleep') return LUNA_ASSETS.sleep;
-  if (activity === 'petted' || activity === 'petting') return LUNA_ASSETS.idle;
-  if (activity === 'eating' || activity === 'drink') return LUNA_ASSETS.eat;
-  if (activity === 'toiletNeed') return LUNA_ASSETS.sad;
-  if (activity === 'toilet') return LUNA_ASSETS.toilet;
-  if (activity === 'bath' || activity === 'bathReady' || activity === 'soap' || activity === 'shampoo' || activity === 'shower' || activity === 'bathBomb' || activity === 'towel') return LUNA_ASSETS.bath;
-  if (activity === 'draw') return LUNA_ASSETS.draw;
-  if (activity === 'fish') return LUNA_ASSETS.fish;
-  if (activity === 'jump' || activity === 'celebrate' || activity === 'levelup') return LUNA_ASSETS.jump;
-  if (activity === 'play' || activity === 'drum' || activity === 'happy') return LUNA_ASSETS.happy;
-  if (activity === 'sad') return LUNA_ASSETS.sad;
-  if (emotion === 'tired') return LUNA_ASSETS.sleepy;
-  if (emotion === 'hungry') return LUNA_ASSETS.hungry;
-  if (emotion === 'sad' || emotion === 'toilet') return LUNA_ASSETS.sad;
-  if (emotion === 'joyful') return LUNA_ASSETS.happy;
-  return LUNA_ASSETS.idle;
+const stageMap = {
+  idle,
+  arrived:idle,
+  asking:sad,
+  stroking:pet,
+  happy:happy,
+  satisfied:happy,
+  celebrate:actionJump,
+  newOutfit:actionJump,
+  mouthOpen:eat,
+  bite:eat,
+  chew1:eat,
+  chew2:eat,
+  swallow:eat,
+  lick:happy,
+  drinking:eat,
+  sleepy:sleepy,
+  yawn:sleepy,
+  lying:sleep,
+  sleeping:sleep,
+  wake:sleepy,
+  stretch:happy,
+  approaching:idle,
+  sitting:actionToilet,
+  using:actionToilet,
+  finished:happy,
+  inTub:actionBath,
+  readyToScrub:actionBath,
+  scrubbing:actionBath,
+  rinsing:actionBath,
+  wet:actionBath,
+  drying:actionBath,
+  fresh:happy,
+  drawSit:actionDraw,
+  drawStart:actionDraw,
+  drawing:actionDraw,
+  drawFinish:actionDraw,
+  showDrawing:actionDraw,
+  proud:happy,
+  cast:idle,
+  waiting:idle,
+  biteFish:idle,
+  reeling:idle,
+  catch:actionJump,
+  miss:sad,
+  preview:idle,
+  equipped:actionJump,
+  jumping:actionJump,
+  chasing:actionYarn,
+  drumming:happy
+};
+
+export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle', stage='idle' }={}){
+  const type = typeof activity === 'object' ? (activity.type || 'idle') : activity;
+  const phase = typeof activity === 'object' ? (activity.stage || stage || 'idle') : stage;
+  if (sleeping || type === 'sleep' || phase === 'sleeping') return sleep;
+  if (stageMap[phase]) return stageMap[phase];
+  if (type === 'petting' || type === 'petted') return pet;
+  if (type === 'eating' || type === 'drink') return eat;
+  if (type === 'toiletNeed') return sad;
+  if (type === 'toilet') return actionToilet;
+  if (['bath','bathReady','soap','shampoo','shower','bathBomb','towel'].includes(type)) return actionBath;
+  if (type === 'draw') return actionDraw;
+  if (type === 'play') return actionYarn;
+  if (type === 'jump' || type === 'celebrate' || type === 'levelup') return actionJump;
+  if (type === 'happy' || type === 'dress' || type === 'drum') return happy;
+  if (type === 'sad') return sad;
+  if (emotion === 'tired') return sleepy;
+  if (emotion === 'hungry') return eat;
+  if (emotion === 'sad' || emotion === 'toilet' || emotion === 'dirty') return sad;
+  if (emotion === 'joyful') return happy;
+  return idle;
+}
+
+export const LUNA_PRELOAD = [...new Set(Object.values(LUNA_ASSETS))];
+
+let preloadPromise;
+export function preloadLunaFrames(){
+  if (preloadPromise) return preloadPromise;
+  preloadPromise = Promise.all(LUNA_PRELOAD.map(src => new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve({src,ok:true});
+    img.onerror = () => resolve({src,ok:false});
+    img.decoding = 'async';
+    img.src = src;
+  })));
+  return preloadPromise;
 }
