@@ -33,26 +33,21 @@ export function clearSave() {
 }
 
 function migrate(data) {
-  const version = Number(data.schemaVersion || 0);
-  if (version === SCHEMA_VERSION) return data;
-  if (version === 1) {
-    return {
-      ...data,
-      schemaVersion: 2,
-      inventory: {...(data.inventory||{}), equipped:(data.inventory?.equipped && typeof data.inventory.equipped==='object')?data.inventory.equipped:{}},
-      roomDecor: data.roomDecor || {},
-      fishing: data.fishing || {collection:[],casts:0},
-      progress: data.progress || {streak:0,lastDaily:null,actions:{care:0,play:0,fish:0},claimed:[],achievements:[],drawings:[],levelClaims:[],milestones:[]}
+  let n={...data};
+  let version=Number(n.schemaVersion||0);
+  if(version<1){
+    n={...n,schemaVersion:1,settings:n.settings||{language:'ru',reduceMotion:false}};
+    version=1;
+  }
+  if(version<2){
+    n={
+      ...n,
+      schemaVersion:2,
+      inventory:{...(n.inventory||{}),equipped:(n.inventory?.equipped&&typeof n.inventory.equipped==='object')?n.inventory.equipped:{}},
+      roomDecor:n.roomDecor||{},
+      fishing:n.fishing||{collection:[],casts:0},
+      progress:n.progress||{streak:0,lastDaily:null,actions:{care:0,play:0,fish:0},claimed:[],achievements:[],drawings:[],levelClaims:[],milestones:[]}
     };
   }
-
-  // v0 -> v1 migration.
-  if (version === 0) {
-    return {
-      ...data,
-      schemaVersion: 1,
-      settings: data.settings || { language: 'ru', reduceMotion: false }
-    };
-  }
-  return data;
+  return n;
 }
