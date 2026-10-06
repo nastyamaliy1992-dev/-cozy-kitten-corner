@@ -649,3 +649,109 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .room-toilet.activity-toilet::after{display:none!important;content:none!important}
 .bed-blanket-fg{display:none!important}
 .pet-stage::after{background:transparent!important;border:0!important;box-shadow:none!important}
+
+
+/* === Luna deterministic frame system: fixed bottom-center anchor === */
+.pet-button{
+  width:min(48vw,240px)!important;
+  height:min(58vw,290px)!important;
+  left:calc(var(--luna-x,50)*1%)!important;
+  bottom:var(--luna-bottom,22%)!important;
+  top:auto!important;
+  transform:translateX(-50%)!important;
+  transform-origin:50% 100%!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:visible!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  transition:left .42s cubic-bezier(.22,.75,.28,1),bottom .42s cubic-bezier(.22,.75,.28,1)!important;
+}
+.pet-stage,
+.room-kitchen.activity-eating .pet-stage,
+.room-kitchen.activity-drink .pet-stage,
+.room-bedroom.activity-sleep .pet-stage,
+.room-bedroom .pet-stage.is-sleeping,
+.room-toilet.activity-toilet .pet-stage,
+.room-bathroom.activity-bathReady .pet-stage,
+.room-bathroom.activity-soap .pet-stage,
+.room-bathroom.activity-shampoo .pet-stage,
+.room-bathroom.activity-bathBomb .pet-stage,
+.room-bathroom.activity-shower .pet-stage,
+.room-bathroom.activity-towel .pet-stage,
+.activity-play .pet-stage,
+.activity-draw .pet-stage,
+.activity-jump .pet-stage,
+.activity-happy .pet-stage,
+.activity-celebrate .pet-stage,
+.activity-fishGame .pet-stage{
+  position:relative!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  margin:0!important;
+  transform:scaleX(var(--luna-facing,1))!important;
+  transform-origin:50% 100%!important;
+  animation:none!important;
+  transition:none!important;
+  background:transparent!important;
+  filter:none!important;
+}
+.luna-photo,
+.activity-walk .pet-stage .luna-photo,
+.activity-draw .luna-photo,
+.activity-fishGame .luna-photo,
+.room-bedroom.activity-sleep .luna-photo,
+.room-bedroom .is-sleeping .luna-photo,
+.room-bathroom.activity-bathReady .luna-photo,
+.room-bathroom.activity-soap .luna-photo,
+.room-bathroom.activity-shampoo .luna-photo,
+.room-bathroom.activity-bathBomb .luna-photo,
+.room-bathroom.activity-shower .luna-photo,
+.room-bathroom.activity-towel .luna-photo{
+  display:block!important;
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  object-position:50% 100%!important;
+  transform:none!important;
+  transform-origin:50% 100%!important;
+  animation:none!important;
+  transition:opacity .055s linear!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  filter:drop-shadow(0 12px 16px rgba(6,5,18,.28))!important;
+}
+.pet-button.is-stroking .pet-stage{transform:scaleX(var(--luna-facing,1))!important}
+.pet-button.is-stroking .luna-photo{transform:none!important}
+.room-kitchen .pet-button,
+.room-kitchen.activity-eating .pet-button,
+.room-kitchen.activity-drink .pet-button,
+.room-bedroom.activity-sleep .pet-button,
+.room-toilet.activity-toilet .pet-button,
+.room-bathroom.activity-bathReady .pet-button,
+.room-bathroom.activity-soap .pet-button,
+.room-bathroom.activity-shampoo .pet-button,
+.room-bathroom.activity-bathBomb .pet-button,
+.room-bathroom.activity-shower .pet-button,
+.room-bathroom.activity-towel .pet-button,
+.activity-draw .pet-button,
+.activity-fishGame .pet-button{
+  width:min(48vw,240px)!important;
+  height:min(58vw,290px)!important;
+  transform:translateX(-50%)!important;
+}
+.pet-stage::before,.pet-stage::after{display:none!important;content:none!important}
+.room-toilet.activity-toilet::after{display:none!important;content:none!important}
+.activity-fishGame .pet-stage::after,
+.activity-play .pet-stage::after,
+.activity-draw .pet-stage::after{display:none!important;content:none!important}
+.game-shell:not(.activity-walk):not(.activity-idle) .pet-button{transition:none!important}
