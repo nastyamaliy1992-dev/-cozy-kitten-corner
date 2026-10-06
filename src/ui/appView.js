@@ -29,10 +29,23 @@ function settingsPanel(state){const s=state.settings||{};return `<div class="set
 <div class="settings-links"><button data-action="help">Помощь</button><button data-action="support">Поддержка</button><a class="settings-link-button" href="./privacy.html" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a></div></div>`}
 export function renderGame(state,bubble='',ui={}){
  const lang=state.settings?.language||'ru',room=rooms[state.room]||rooms.living,food=state.inventory.food||{};
- const foodIcon=i=>itemIcon(i);
- const fridgeItems=[...catalog.filter(i=>['food','drinks','treats'].includes(i.category)&&food[i.id]>0),...Object.entries(food).filter(([id,q])=>q>0&&!catalog.some(i=>i.id===id)).map(([id])=>({id,name:id==='dryFood'?'Корм':id==='wetFood'?'Влажный корм':'Рыбное лакомство',category:'food'}))];
+ const foodIcon=i=>i?.icon||itemIcon(i);
+ const fridgeItems=[...catalog.filter(i=>['food','drinks','treats'].includes(i.category)&&food[i.id]>0),...Object.entries(food).filter(([id,q])=>q>0&&!catalog.some(i=>i.id===id)).map(([id])=>({id,name:id==='dryFood'?'Корм':id==='wetFood'?'Влажный корм':'Рыбное лакомство',category:'food',icon:id==='dryFood'?'🥣':id==='wetFood'?'🥫':'🐟'}))];
  const eq=state.inventory.equipped&&typeof state.inventory.equipped==='object'?state.inventory.equipped:{};const wearables='';
- const actions={kitchen:ui.fridgeOpen?`<div class="fridge-panel open"><div class="fridge-head"><b>Холодильник</b><button class="fridge-close" data-action="open-fridge" aria-label="Закрыть">×</button></div><div class="food-choice">${fridgeItems.map(i=>`<button class="food-card" data-action="${i.category==='drinks'?'serve-drink':'feed'}" data-food="${i.id}"><span class="food-emoji">${foodIcon(i)}</span><b>${i.name}</b><small>×${food[i.id]||0}</small></button>`).join('')||'<small>Холодильник пуст — загляни в магазин.</small>'}</div></div>`:''};
+ const kitchenSpread=`<div class="kitchen-spread" aria-label="Еда на столе"><div class="kitchen-table-title"><b>🍽️ Стол Луны</b><button data-action="open-fridge">Холодильник</button></div><div class="kitchen-plates">${fridgeItems.map(i=>`<button class="food-plate" data-action="${i.category==='drinks'?'serve-drink':'feed'}" data-food="${i.id}"><span class="plate-dish">${foodIcon(i)}</span><b>${i.name}</b><small>Осталось: ${food[i.id]||0}</small></button>`).join('')||'<button class="empty-table" data-action="shop">🛍️ Еда закончилась — купить ещё</button>'}</div></div>`;
+ const fridgePanel=ui.fridgeOpen?`<div class="fridge-panel open"><div class="fridge-head"><b>Холодильник</b><button class="fridge-close" data-action="open-fridge" aria-label="Закрыть">×</button></div><div class="food-choice">${fridgeItems.map(i=>`<button class="food-card" data-action="${i.category==='drinks'?'serve-drink':'feed'}" data-food="${i.id}"><span class="food-emoji">${foodIcon(i)}</span><b>${i.name}</b><small>×${food[i.id]||0}</small></button>`).join('')||'<small>Холодильник пуст — загляни в магазин.</small>'}</div></div>`:'';
+ const bathOwned=catalog.filter(i=>i.category==='bath'&&(state.inventory.owned||[]).includes(i.id));
+ const bathControls=['bathReady','soap','bathBomb'].includes(state.activity?.type)
+   ? `<div class="room-action-bar bath-tools">${bathOwned.length?bathOwned.map(i=>`<button data-use-item="${i.id}">${i.interaction==='soap'?'🧼':'🫧'}<small>${i.name}</small></button>`).join(''):'<button data-action="shop">🛍️<small>Купить мыло</small></button>'}<button data-action="bath-finish">✨<small>Закончить</small></button></div>`
+   : '<div class="room-action-bar"><button data-action="bath-enter">🛁<small>Залезть в ванну</small></button></div>';
+ const actions={
+   kitchen:kitchenSpread+fridgePanel,
+   bedroom:'<div class="room-action-bar"><button data-action="bed-sleep">🌙<small>Лечь в кровать</small></button></div>',
+   bathroom:bathControls,
+   toilet:'<div class="room-action-bar"><button data-action="toilet-seat">🚽<small>Сесть на унитаз</small></button></div>',
+   playroom:'<div class="room-action-bar play-actions"><button data-play-action="ball">⚽<small>Играть в мяч</small></button><button data-play-action="yarn">🧶<small>Клубок</small></button><button data-play-action="draw">🎨<small>Рисовать</small></button><button data-play-action="jump">✨<small>Прыгать</small></button></div>',
+   lake:'<div class="room-action-bar"><button data-action="lake-fish">🎣<small>Ловить рыбу</small></button></div>'
+ };
  const action=(actions[state.room]||'')+(ui.settingsOpen?settingsPanel(state):'')+(ui.panel==='shop'?shopPanel(state,ui):'')+(ui.panel==='wardrobe'?wardrobePanel(state):'')+(ui.panel==='progress'?progressPanel(state):'')+(ui.panel==='furniture'?furniturePanel(state):'')+(ui.panel==='roomItems'?roomItemsPanel(state,state.room):'');
  const nav=[['living','🏠','Холл'],['kitchen','🍽️','Кухня'],['bedroom','🌙','Спальня'],['bathroom','🛁','Ванная'],['toilet','🚽','Туалет'],['wardrobe','👗','Гардероб'],['playroom','🧶','Игры'],['store','🛍️','Магазин'],['lake','🎣','Озеро']];
  return `<main class="game-shell ${room.className} activity-${state.activity?.type||'idle'} ${state.settings?.reduceMotion?'reduce-motion':''}">
