@@ -598,3 +598,47 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
  .preview-buy{grid-template-columns:1fr auto;}.preview-buy button{min-width:70px}
  .bed-blanket-fg{left:43%;top:51%;width:48%}
 }
+
+
+/* Emergency transparency + tap-responsiveness hotfix */
+.pet-button,
+.pet-stage,
+.pet-stage::before,
+.pet-stage::after,
+.luna-photo{
+  background:transparent!important;
+}
+.pet-button,
+.pet-stage{
+  box-shadow:none!important;
+  outline:0!important;
+  overflow:visible!important;
+}
+.pet-life-glow{display:none!important}
+.luna-photo{
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  -webkit-mask:none!important;
+  mask:none!important;
+  pointer-events:none!important;
+}
+.pet-button{
+  -webkit-tap-highlight-color:transparent!important;
+  touch-action:none!important;
+  will-change:left,bottom,transform!important;
+}
+.side-nav button,
+.room-action-bar button,
+.floating-shop,
+.pet-action,
+.invite-hook,
+.food-plate,
+.game-panel button{
+  touch-action:manipulation!important;
+}
+.pet-button{transition:left .32s cubic-bezier(.2,.75,.3,1),bottom .32s cubic-bezier(.2,.75,.3,1),transform .18s ease!important}
+.game-panel,.settings-panel,.room-action-bar,.kitchen-spread{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
