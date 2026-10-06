@@ -17,6 +17,10 @@ export function fartSound(){tone(92,.16,.20,'sawtooth');setTimeout(()=>tone(64,.
 export function flushSound(){noise(1.4,.22,1100);setTimeout(()=>tone(110,.7,.13),250)}
 export function applauseSound(){for(let i=0;i<9;i++)setTimeout(()=>noise(.12,.10,3200),i*105)}
 export function eatSound(){for(let i=0;i<4;i++)setTimeout(()=>tone(180+i*22,.12,.12,'triangle'),i*180)}
+export function biteSound(){noise(.075,.095,2400);tone(210,.10,.13,'triangle');setTimeout(()=>tone(165,.08,.09,'triangle'),55)}
+export function chewSound(){noise(.08,.055,1200);tone(145,.09,.075,'triangle')}
+export function swallowSound(){tone(235,.09,.085,'sine');setTimeout(()=>tone(155,.18,.10,'sine'),75)}
+export function lickSound(){noise(.11,.035,3200);tone(430,.13,.055,'sine')}
 export function meow(kind='want'){const map={food:[420,520],sleep:[350,300],toilet:[480,390],bath:[520,440],play:[620,760],fish:[560,690],happy:[650,820],sad:[390,320],annoyed:[330,430],want:[440,540]};const n=map[kind]||map.want;tone(n[0],.22,.2,'triangle','voice');setTimeout(()=>tone(n[1],.3,.18,'triangle','voice'),170)}
 export function happyJingle(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.24,.12,'triangle'),i*115))}
 export function splashSound(){noise(.55,.19,2900);setTimeout(()=>noise(.32,.13,2200),190)}
