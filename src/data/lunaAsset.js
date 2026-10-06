@@ -23,8 +23,8 @@ export const LUNA_ASSETS = {
 export const LUNA_MAIN = idle;
 
 export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle' }={}){
-  if (sleeping) return LUNA_ASSETS.sleep;
-  if (activity === 'petted') return LUNA_ASSETS.pet;
+  if (sleeping) return LUNA_ASSETS.idle;
+  if (activity === 'petted') return LUNA_ASSETS.happy;
   if (activity === 'eating') return LUNA_ASSETS.eat;
   if (activity === 'toiletNeed') return LUNA_ASSETS.sad;
   if (activity === 'happy' || activity === 'play' || activity === 'drum') return LUNA_ASSETS.happy;
