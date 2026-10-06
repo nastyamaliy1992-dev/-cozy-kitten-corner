@@ -62,7 +62,7 @@ const sleepFrames = Object.fromEntries(Array.from({length:10},(_,i)=>{
 
 export const LUNA_ASSETS = {
   idle, greetingWave, pet, happy, sad, sleepy, sleep, eat,
-  hungry:eat,
+  hungry:idle,
   play:actionYarn,
   draw:actionDraw,
   bath:actionBath,
@@ -88,7 +88,7 @@ const stageMap = {
   greetingIdle:idle,
   greetingWave,
   arrived:idle,
-  asking:sad,
+  asking:idle,
   stroking:pet,
   happy:happy,
   satisfied:happy,
@@ -145,13 +145,17 @@ export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle', 
   if (type === 'happy' || type === 'dress' || type === 'drum') return happy;
   if (type === 'sad') return sad;
   if (emotion === 'tired') return sleepy;
-  if (emotion === 'hungry') return eat;
+  if (emotion === 'hungry') return idle;
   if (emotion === 'sad' || emotion === 'toilet' || emotion === 'dirty') return sad;
   if (emotion === 'joyful') return happy;
   return idle;
 }
 
 export const LUNA_PRELOAD = [...new Set([...Object.values(LUNA_ASSETS),...Object.values(stageMap)])];
+
+export function sequenceFrameSources(type,frames=[]){
+  return [...new Set(frames.map(frame=>lunaAssetFor({activity:type,stage:frame.stage})))];
+}
 
 let preloadPromise;
 export function preloadLunaFrames(){

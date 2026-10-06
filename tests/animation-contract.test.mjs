@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 
 import { lunaAssetFor } from '../src/data/lunaAsset.js';
 import { createInitialState, consumeDrinkUnit, finishDrink } from '../src/core/state.js';
+import * as lunaAssets from '../src/data/lunaAsset.js';
+import * as stateCore from '../src/core/state.js';
 import { renderGame } from '../src/ui/appView.js';
 import { readFile } from 'node:fs/promises';
 
@@ -109,4 +111,87 @@ test('kitchen action frames stay above the food panel', async () => {
   const css = await readFile(new URL('../src/styles.css',import.meta.url),'utf8');
   assert.match(css,/\.room-kitchen\.activity-eating \.pet-button,[\s\S]*?bottom:210px!important/);
   assert.match(css,/\.feeding-sequence-layer\{[\s\S]*?bottom:207px/);
+});
+
+test('room entry chooses its contextual pose before the first render', async () => {
+  assert.equal(typeof stateCore.roomEntryActivity,'function');
+  assert.deepEqual(stateCore.roomEntryActivity('bathroom',123),{type:'bathWant',stage:'asking',startedAt:123});
+  assert.deepEqual(stateCore.roomEntryActivity('toilet',456),{type:'toiletNeed',stage:'asking',startedAt:456});
+  assert.deepEqual(stateCore.roomEntryActivity('kitchen',789),{type:'idle',stage:'idle',startedAt:789});
+  const main = await readFile(new URL('../src/main.js',import.meta.url),'utf8');
+  const roomHandler = main.slice(main.indexOf("document.querySelectorAll('[data-room]')"));
+  const activityAt = roomHandler.indexOf('state.activity=roomEntryActivity(state.room');
+  const firstRenderAt = roomHandler.indexOf('persist();render()');
+  assert.ok(activityAt >= 0 && activityAt < firstRenderAt,'contextual activity must be assigned before the first room render');
+});
+
+test('slow action timing gives drawing and fishing frames time to read', () => {
+  assert.equal(typeof stateCore.actionFrameDuration,'function');
+  assert.ok(stateCore.actionFrameDuration('draw',200) >= 340);
+  assert.ok(stateCore.actionFrameDuration('fishGame',400) >= 640);
+  assert.ok(stateCore.actionFrameDuration('fishCatch',400) >= 640);
+  assert.ok(stateCore.actionFrameDuration('eating',200) >= 250);
+});
+
+test('frame swaps crossfade a retained previous frame instead of a hard visual cut', async () => {
+  const main = await readFile(new URL('../src/main.js',import.meta.url),'utf8');
+  assert.match(main,/luna-previous-frame/);
+  assert.match(main,/previous\.animate\(\[\{opacity:1\},\{opacity:0\}\]/);
+  assert.match(main,/img\.animate\(\[\{opacity:0\},\{opacity:1\}\]/);
+  assert.match(main,/duration:140,easing:'ease-out'/);
+});
+
+test('sequence assets can be collected before playback begins', () => {
+  assert.equal(typeof lunaAssets.sequenceFrameSources,'function');
+  const frames = lunaAssets.sequenceFrameSources('draw',[
+    {stage:'drawSit'},
+    {stage:'drawHeart'},
+    {stage:'drawSit'}
+  ]);
+  assert.equal(frames.length,2);
+  assert.match(frames[0],/097_09_drawing_seated_sit_blank_paper\.png$/);
+  assert.match(frames[1],/101_09_drawing_seated_draw_heart\.png$/);
+});
+
+test('generic hunger never shows the old bowl and purple-heart sprite', () => {
+  assert.match(lunaAssetFor({emotion:'hungry',activity:'idle',stage:'idle'}),/hall\/luna-main\.png$/);
+  assert.match(lunaAssetFor({activity:'bathWant',stage:'asking'}),/hall\/luna-main\.png$/);
+});
+
+test('soap renders growing foam over Luna', () => {
+  const state = createInitialState('Луна');
+  state.room='bathroom';
+  state.activity={type:'soap',stage:'readyToScrub',scrub:42,foamColor:'#ffffff'};
+  const html=renderGame(state);
+  assert.match(html,/class="foam-cloud"/);
+  assert.match(html,/--foam-progress:42/);
+});
+
+test('Luna is larger and petting uses a heart-free visible reaction', async () => {
+  const [css,appView,shop] = await Promise.all([
+    readFile(new URL('../src/styles.css',import.meta.url),'utf8'),
+    readFile(new URL('../src/ui/appView.js',import.meta.url),'utf8'),
+    readFile(new URL('../src/core/shop.js',import.meta.url),'utf8')
+  ]);
+  assert.match(css,/--luna-size:max\(290px,min\(58vw,330px\)\)/);
+  assert.match(css,/@keyframes lunaPetDelight/);
+  assert.doesNotMatch(css,/\.activity-petted \.pet-stage:after\{content:'♥/);
+  assert.doesNotMatch(appView,/💜/);
+  assert.doesNotMatch(shop,/💜/);
+});
+
+test('bath towel keeps the same fitted scale as the in-tub sequence', async () => {
+  const css = await readFile(new URL('../src/styles.css',import.meta.url),'utf8');
+  const finalBathSizing=css.slice(css.lastIndexOf('.room-bathroom.activity-bath .pet-button'));
+  assert.match(finalBathSizing,/\.room-bathroom\.activity-towel \.pet-button/);
+  assert.match(finalBathSizing,/width:min\(48vw,235px\)!important/);
+  assert.match(finalBathSizing,/height:min\(56vw,275px\)!important/);
+});
+
+test('equipped neck items remain visible without a purple-heart glyph', () => {
+  const state=createInitialState('Луна');
+  state.inventory.equipped={neck:'collar_moon'};
+  const html=renderGame(state);
+  assert.match(html,/class="wear-neck wear-collar_moon"/);
+  assert.doesNotMatch(html,/💜/);
 });

@@ -45,6 +45,28 @@ export const wantSpeech={food:'Хочу есть!',sleep:'Хочу спать!',
 export function setActivity(s,type,stage='active'){const n=structuredClone(s);n.activity={type,stage,startedAt:Date.now()};return n}
 export function clearActivity(s){const n=structuredClone(s);n.activity=null;return n}
 
+export function roomEntryActivity(room,startedAt=Date.now()){
+ if(room==='bathroom')return{type:'bathWant',stage:'asking',startedAt};
+ if(room==='toilet')return{type:'toiletNeed',stage:'asking',startedAt};
+ return{type:'idle',stage:'idle',startedAt};
+}
+
+const ACTION_SPEED={
+ draw:1.8,
+ fishGame:1.7,
+ fishCatch:1.7,
+ eating:1.35,
+ drink:1.4,
+ sleepSequence:1.45,
+ bath:1.65,
+ towel:1.65,
+ toilet:1.65,
+ play:1.35,
+ jump:1.3,
+ greeting:1.15
+};
+export function actionFrameDuration(type,ms){return Math.max(80,Math.round(ms*(ACTION_SPEED[type]||1)))}
+
 export function rewardLevel(s){const n=structuredClone(s);while(n.economy.xp>=250*n.economy.level){const need=250*n.economy.level;n.economy.xp-=need;n.economy.level++;n.economy.coins+=75}return n}
 
 
