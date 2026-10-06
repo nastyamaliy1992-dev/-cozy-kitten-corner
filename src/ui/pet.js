@@ -11,10 +11,10 @@ export function renderPet({sleeping=false,emotion='calm',activity='idle',movemen
     : activity==='play' ? 'play'
     : activity==='draw' ? 'draw'
     : activity==='drum' ? 'drum'
-    : ['bath','bathReady','soap','bathBomb'].includes(activity) ? 'bath'
+    : ['bath','bathReady','soap','shampoo','shower','bathBomb','towel'].includes(activity) ? 'bath'
     : activity==='toilet' ? 'toilet'
     : activity==='toiletNeed' ? 'toilet-need'
-    : activity==='fish' ? 'fish'
+    : ['fish','fishGame'].includes(activity) ? 'fish'
     : activity==='sad' ? 'sad'
     : emotion==='joyful' ? 'happy' : 'idle';
   const assetState = sleeping ? 'sleep' : pose;
