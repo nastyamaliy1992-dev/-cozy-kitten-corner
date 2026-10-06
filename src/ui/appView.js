@@ -26,7 +26,7 @@ function settingsPanel(state){const s=state.settings||{};return `<div class="set
 <label class="toggle">Энергосбережение <input data-setting="batterySaver" type="checkbox" ${s.batterySaver?'checked':''}></label>
 <label class="toggle">Уведомления <input data-setting="notifications" type="checkbox" ${s.notifications?'checked':''}></label>
 <label class="toggle">Подтверждать покупки <input data-setting="purchaseConfirm" type="checkbox" ${s.purchaseConfirm!==false?'checked':''}></label>
-<div class="settings-links"><button data-action="help">Помощь</button><button data-action="support">Поддержка</button></div></div>`}
+<div class="settings-links"><button data-action="help">Помощь</button><button data-action="support">Поддержка</button><a class="settings-link-button" href="./privacy.html" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a></div></div>`}
 export function renderGame(state,bubble='',ui={}){
  const lang=state.settings?.language||'ru',room=rooms[state.room]||rooms.living,food=state.inventory.food||{};
  const foodIcon=i=>itemIcon(i);
