@@ -31,7 +31,18 @@ export function renderGame(state,bubble='',ui={}){
  const lang=state.settings?.language||'ru',room=rooms[state.room]||rooms.living,food=state.inventory.food||{};
  const foodIcon=i=>i?.icon||itemIcon(i);
  const fridgeItems=[...catalog.filter(i=>['food','drinks','treats'].includes(i.category)&&food[i.id]>0),...Object.entries(food).filter(([id,q])=>q>0&&!catalog.some(i=>i.id===id)).map(([id])=>({id,name:id==='dryFood'?'Корм':id==='wetFood'?'Влажный корм':'Рыбное лакомство',category:'food',icon:id==='dryFood'?'🥣':id==='wetFood'?'🥫':'🐟'}))];
- const eq=state.inventory.equipped&&typeof state.inventory.equipped==='object'?state.inventory.equipped:{};const wearables='';
+ const eq=state.inventory.equipped&&typeof state.inventory.equipped==='object'?state.inventory.equipped:{};
+ const equippedItems=Object.entries(eq).map(([slot,id])=>({slot,item:catalog.find(x=>x.id===id)})).filter(x=>x.item);
+ const wearables=equippedItems.length?`<div class="luna-wearables" aria-label="Надетая одежда">${equippedItems.map(({slot,item})=>{
+   const name=(item.name||'').toLowerCase();
+   if(slot==='body')return `<span class="wear-body wear-${item.id}" title="${item.name}"><i>${itemIcon(item)}</i></span>`;
+   if(slot==='head')return `<span class="wear-head" title="${item.name}">${name.includes('корон')?'👑':name.includes('берет')?'🧢':name.includes('панам')?'👒':'🎩'}</span>`;
+   if(slot==='eyes')return `<span class="wear-eyes" title="${item.name}">👓</span>`;
+   if(slot==='neck')return `<span class="wear-neck" title="${item.name}">${name.includes('бантик')?'🎀':'💜'}</span>`;
+   if(slot==='feet')return `<span class="wear-feet" title="${item.name}">👟 👟</span>`;
+   if(slot==='accessory')return `<span class="wear-accessory" title="${item.name}">🎒</span>`;
+   return '';
+ }).join('')}</div>`:'';
  const kitchenSpread=`<div class="kitchen-spread" aria-label="Еда на столе"><div class="kitchen-table-title"><b>🍽️ Стол Луны</b><button data-action="open-fridge">Холодильник</button></div><div class="kitchen-plates">${fridgeItems.map(i=>`<button class="food-plate" data-action="${i.category==='drinks'?'serve-drink':'feed'}" data-food="${i.id}"><span class="plate-dish">${foodIcon(i)}</span><b>${i.name}</b><small>Осталось: ${food[i.id]||0}</small></button>`).join('')||'<button class="empty-table" data-action="shop">🛍️ Еда закончилась — купить ещё</button>'}</div></div>`;
  const fridgePanel=ui.fridgeOpen?`<div class="fridge-panel open"><div class="fridge-head"><b>Холодильник</b><button class="fridge-close" data-action="open-fridge" aria-label="Закрыть">×</button></div><div class="food-choice">${fridgeItems.map(i=>`<button class="food-card" data-action="${i.category==='drinks'?'serve-drink':'feed'}" data-food="${i.id}"><span class="food-emoji">${foodIcon(i)}</span><b>${i.name}</b><small>×${food[i.id]||0}</small></button>`).join('')||'<small>Холодильник пуст — загляни в магазин.</small>'}</div></div>`:'';
  const bathOwned=catalog.filter(i=>i.category==='bath'&&(state.inventory.owned||[]).includes(i.id));
