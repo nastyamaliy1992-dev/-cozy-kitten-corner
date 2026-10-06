@@ -1,4 +1,4 @@
-import { lunaAssetFor } from '../data/lunaAsset.js?v=20261006-frames1';
+import { lunaAssetFor } from '../data/lunaAsset.js?v=20261006-hall1';
 
 export function renderPet({sleeping=false,emotion='calm',activity='idle',stage='idle',movement={x:50,y:78,facing:1}}={}){
   const type = typeof activity === 'object' ? (activity.type || 'idle') : activity;
@@ -6,6 +6,7 @@ export function renderPet({sleeping=false,emotion='calm',activity='idle',stage='
   const stateClass = sleeping ? 'is-sleeping' : `emotion-${emotion}`;
   const lunaAsset = lunaAssetFor({sleeping,emotion,activity:type,stage:phase});
   const pose = sleeping || type==='sleep' ? 'sleep'
+    : type==='greeting' ? 'greeting'
     : type==='eating' ? 'eat'
     : type==='drink' ? 'drink'
     : ['petted','petting'].includes(type) ? 'pet'
@@ -16,7 +17,7 @@ export function renderPet({sleeping=false,emotion='calm',activity='idle',stage='
     : ['bath','bathReady','soap','shampoo','shower','bathBomb','towel'].includes(type) ? 'bath'
     : type==='toilet' ? 'toilet'
     : type==='toiletNeed' ? 'toilet-need'
-    : ['fish','fishGame'].includes(type) ? 'fish'
+    : ['fish','fishGame','fishCatch'].includes(type) ? 'fish'
     : type==='sad' ? 'sad'
     : emotion==='joyful' ? 'happy' : 'idle';
   const x=movement?.x??50,y=movement?.y??78;

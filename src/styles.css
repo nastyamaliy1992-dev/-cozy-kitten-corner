@@ -578,6 +578,7 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 @keyframes fishMarker{from{left:1%}to{left:95%}}
 .fishing-minigame button{width:100%;min-height:48px;margin-top:9px;border:0;border-radius:15px;background:linear-gradient(135deg,#5bd68d,#2fa96d);color:white;font-weight:1000;font-size:16px;box-shadow:0 7px 18px #0004}
 .activity-fishGame .pet-button{left:58%!important;bottom:34%!important;width:min(39vw,190px)!important}
+.activity-fishCatch .pet-button{left:58%!important;bottom:34%!important;width:min(48vw,240px)!important}
 .activity-fishGame .pet-stage:after{content:"🎣  🪣";position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);font-size:36px;white-space:nowrap}
 .activity-fishGame .luna-photo{animation:fishWait .7s ease-in-out infinite alternate!important}
 @keyframes fishWait{to{transform:rotate(-2deg) translateY(-5px)}}
@@ -755,6 +756,13 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .activity-play .pet-stage::after,
 .activity-draw .pet-stage::after{display:none!important;content:none!important}
 .game-shell:not(.activity-walk):not(.activity-idle) .pet-button{transition:none!important}
+
+/* Greeting swaps two aligned transparent poses; the whole kitten never jumps. */
+.activity-greeting .pet-stage,.activity-greeting .luna-photo{
+  animation:none!important;
+  transform:none!important;
+  transition:none!important;
+}
 
 /* Individual transparent action frames: one fixed anchor, no sprite jumping. */
 .room-kitchen.activity-eating .pet-button,

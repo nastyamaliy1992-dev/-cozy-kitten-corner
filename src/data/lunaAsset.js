@@ -1,7 +1,8 @@
 // Canonical Luna runtime asset registry + deterministic state/frame mapping.
 const asset = name => new URL(`../../assets/luna/${name}`, import.meta.url).href;
 
-const idle = asset('idle.webp');
+const idle = asset('hall/luna-main.png');
+const greetingWave = asset('hall/luna-wave.png');
 const pet = asset('happy.webp');
 const happy = asset('happy.webp');
 const sad = asset('sad.webp');
@@ -13,6 +14,37 @@ const actionYarn = asset('action-yarn.webp');
 const actionBath = asset('action-bath.webp');
 const actionJump = asset('action-jump.webp');
 const actionToilet = asset('action-toilet.webp');
+const actionFrame = path => asset(`actions/${path}`);
+const bathroomFrames = {
+  toiletReady:actionFrame('bathroom/037_04_bathroom_bath_toilet_ready.png'),
+  toiletSitDown:actionFrame('bathroom/038_04_bathroom_bath_toilet_sit_down.png'),
+  toiletSitting:actionFrame('bathroom/039_04_bathroom_bath_toilet_sitting.png'),
+  toiletFinished:actionFrame('bathroom/040_04_bathroom_bath_toilet_finished.png'),
+  bathStepIn:actionFrame('bathroom/041_04_bathroom_bath_bath_step_in.png'),
+  inTub:actionFrame('bathroom/042_04_bathroom_bath_bath_sitting.png'),
+  bathSoap:actionFrame('bathroom/043_04_bathroom_bath_bath_soap.png'),
+  bathRinse:actionFrame('bathroom/044_04_bathroom_bath_bath_rinse.png'),
+  bathStepOut:actionFrame('bathroom/045_04_bathroom_bath_bath_step_out.png'),
+  bathShake:actionFrame('bathroom/046_04_bathroom_bath_shake_water.png'),
+  bathTowel:actionFrame('bathroom/047_04_bathroom_bath_dry_towel.png'),
+  bathFinished:actionFrame('bathroom/048_04_bathroom_bath_bath_finished.png')
+};
+const fishingFrames = Object.fromEntries([
+  ['fishingReady','073_07_fishing_empty_bucket_rod.png'],['liftRod','074_07_fishing_lift_rod.png'],
+  ['cast','075_07_fishing_cast_line.png'],['waiting','076_07_fishing_wait_for_fish.png'],
+  ['biteFish','077_07_fishing_fish_bite.png'],['pullRod','078_07_fishing_pull_rod.png'],
+  ['reeling','079_07_fishing_reel_line.png'],['fishOnHook','080_07_fishing_fish_on_hook.png'],
+  ['fishSwing','081_07_fishing_fish_swing.png'],['holdFish','082_07_fishing_hold_fish_empty_bucket.png'],
+  ['bucketFish','083_07_fishing_put_fish_in_bucket.png'],['fullBucket','084_07_fishing_full_bucket_celebrate.png']
+].map(([stage,file])=>[stage,actionFrame(`fishing/${file}`)]));
+const drawingFrames = Object.fromEntries([
+  ['drawSit','097_09_drawing_seated_sit_blank_paper.png'],['drawPickPencil','098_09_drawing_seated_pick_pencil.png'],
+  ['drawStart','099_09_drawing_seated_ready_to_draw.png'],['drawFirstLine','100_09_drawing_seated_first_line.png'],
+  ['drawHeart','101_09_drawing_seated_draw_heart.png'],['drawOutline','102_09_drawing_seated_heart_outline.png'],
+  ['drawColor','103_09_drawing_seated_color_heart.png'],['drawStars','104_09_drawing_seated_add_stars.png'],
+  ['drawInspect','105_09_drawing_seated_inspect_picture.png'],['drawLift','106_09_drawing_seated_lift_picture.png'],
+  ['showDrawing','107_09_drawing_seated_show_picture.png'],['drawProud','108_09_drawing_seated_proud_seated.png']
+].map(([stage,file])=>[stage,actionFrame(`drawing/${file}`)]));
 const feedFrames = Object.fromEntries(Array.from({length:12},(_,i)=>{
   const stage=`feed${String(i+1).padStart(2,'0')}`;
   return [stage,asset(`kitchen/feed/${stage}.png`)];
@@ -27,7 +59,7 @@ const sleepFrames = Object.fromEntries(Array.from({length:10},(_,i)=>{
 }));
 
 export const LUNA_ASSETS = {
-  idle, pet, happy, sad, sleepy, sleep, eat,
+  idle, greetingWave, pet, happy, sad, sleepy, sleep, eat,
   hungry:eat,
   play:actionYarn,
   draw:actionDraw,
@@ -47,7 +79,12 @@ const stageMap = {
   ...feedFrames,
   ...drinkFrames,
   ...sleepFrames,
+  ...bathroomFrames,
+  ...fishingFrames,
+  ...drawingFrames,
   idle,
+  greetingIdle:idle,
+  greetingWave,
   arrived:idle,
   asking:sad,
   stroking:pet,
@@ -69,27 +106,19 @@ const stageMap = {
   wake:sleepy,
   stretch:happy,
   approaching:idle,
-  sitting:actionToilet,
-  using:actionToilet,
-  finished:happy,
-  inTub:actionBath,
-  readyToScrub:actionBath,
-  scrubbing:actionBath,
-  rinsing:actionBath,
-  wet:actionBath,
-  drying:actionBath,
-  fresh:happy,
-  drawSit:actionDraw,
-  drawStart:actionDraw,
-  drawing:actionDraw,
-  drawFinish:actionDraw,
-  showDrawing:actionDraw,
+  sitting:bathroomFrames.toiletSitting,
+  using:bathroomFrames.toiletSitting,
+  finished:bathroomFrames.toiletFinished,
+  readyToScrub:bathroomFrames.bathSoap,
+  scrubbing:bathroomFrames.bathSoap,
+  rinsing:bathroomFrames.bathRinse,
+  wet:bathroomFrames.bathRinse,
+  drying:bathroomFrames.bathTowel,
+  fresh:bathroomFrames.bathFinished,
+  drawing:drawingFrames.drawHeart,
+  drawFinish:drawingFrames.drawInspect,
   proud:happy,
-  cast:idle,
-  waiting:idle,
-  biteFish:idle,
-  reeling:idle,
-  catch:actionJump,
+  catch:fishingFrames.fullBucket,
   miss:sad,
   preview:idle,
   equipped:actionJump,
