@@ -10,3 +10,30 @@ export function safeInsets(){const tg=window.Telegram?.WebApp;return{top:tg?.saf
 
 export function telegramContext(){const tg=window.Telegram?.WebApp;return {platform:tg?.platform||'web',version:tg?.version||null,colorScheme:tg?.colorScheme||'dark',isExpanded:!!tg?.isExpanded}}
 export function openTelegramInvoice(url,callback){const tg=window.Telegram?.WebApp;if(!tg?.openInvoice)return false;try{tg.openInvoice(url,callback);return true}catch{return false}}
+
+
+export function openBotPurchase(itemId){
+ const tg=window.Telegram?.WebApp;
+ const url=`https://t.me/CozyKittenCornerBot?start=buy_${encodeURIComponent(itemId)}`;
+ try{
+   if(tg?.openTelegramLink){tg.openTelegramLink(url);return true}
+   window.location.href=url;return true
+ }catch{return false}
+}
+
+export function readTelegramPurchaseGrant(){
+ const tg=window.Telegram?.WebApp;
+ if(!tg?.initDataUnsafe?.user?.id)return null;
+ const p=new URLSearchParams(location.search);
+ const item=p.get('grant'),receipt=p.get('receipt');
+ if(!item||!receipt)return null;
+ return{item,receipt,userId:String(tg.initDataUnsafe.user.id)};
+}
+
+export function clearTelegramPurchaseGrant(){
+ try{
+   const u=new URL(location.href);
+   u.searchParams.delete('grant');u.searchParams.delete('receipt');
+   history.replaceState(null,'',u.pathname+(u.search?u.search:'')+u.hash);
+ }catch{}
+}
