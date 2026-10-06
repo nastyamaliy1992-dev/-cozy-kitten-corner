@@ -53,3 +53,17 @@ export function buyItem(state,id){const n=structuredClone(state),item=catalog.fi
 export function equipItem(state,id){const n=structuredClone(state),item=catalog.find(x=>x.id===id);if(!item||!n.inventory.clothes.includes(id))return n;if(!n.inventory.equipped||typeof n.inventory.equipped!=='object')n.inventory.equipped={};n.inventory.equipped[item.slot||'body']=id;return n}
 export function applyFurniture(state,id,room=state.room){const n=structuredClone(state);if(!n.inventory.furniture?.includes(id))return n;n.roomDecor??={};n.roomDecor[room]??=[];if(!n.roomDecor[room].includes(id))n.roomDecor[room].push(id);return n}
 export function ownedInteractive(state,category){return catalog.filter(x=>x.category===category&&state.inventory.owned?.includes(x.id))}
+
+
+export function grantPremiumItem(state,id,receiptId=''){
+ const n=structuredClone(state),item=catalog.find(x=>x.id===id&&x.currency==='XTR');
+ if(!item)return{state:n,ok:false,reason:'missing'};
+ n.inventory.owned??=[];n.inventory.clothes??=[];n.payments??={receipts:[]};n.payments.receipts??=[];
+ if(receiptId&&n.payments.receipts.includes(receiptId))return{state:n,ok:false,reason:'duplicate'};
+ if(!n.inventory.owned.includes(id))n.inventory.owned.push(id);
+ if(wearable(item)&&!n.inventory.clothes.includes(id))n.inventory.clothes.push(id);
+ if(receiptId)n.payments.receipts.push(receiptId);
+ n.activity={type:'celebrate',stage:'premium',itemId:id,startedAt:Date.now()};
+ n.needs.mood=Math.min(100,n.needs.mood+10);
+ return{state:n,ok:true,item};
+}
