@@ -1,5 +1,5 @@
-import { renderWelcome,renderGame } from './ui/appView.js';
-import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack } from './core/state.js';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261006-frames1';
+import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack } from './core/state.js?v=20261006-frames1';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,introTheme } from './core/audio.js';
 import { buyItem,equipItem,applyFurniture,catalog,grantPremiumItem } from './core/shop.js';
@@ -7,7 +7,7 @@ import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels
 import { castLine,catchFish } from './core/fishing.js';
 import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js';
 import { preloadRoomBackgrounds } from './data/roomAssets.js';
-import { preloadLunaFrames,lunaAssetFor } from './data/lunaAsset.js';
+import { preloadLunaFrames,lunaAssetFor } from './data/lunaAsset.js?v=20261006-frames1';
 const telegram=initTelegram();
 preloadLunaFrames();
 let launchIntroPending=true;

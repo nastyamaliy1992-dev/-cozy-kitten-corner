@@ -1,8 +1,8 @@
 import { t } from '../data/localization.js';
 import { rooms } from '../core/rooms.js';
 import { renderRoomDecor } from './scenes.js';
-import { getEmotion } from '../core/state.js';
-import { renderPet } from './pet.js';
+import { getEmotion } from '../core/state.js?v=20261006-frames1';
+import { renderPet } from './pet.js?v=20261006-frames1';
 import { catalog,categories,itemIcon } from '../core/shop.js';
 import { quests,achievements,levelData,rewardText } from '../core/progression.js';
 const labels={hunger:'Сытость',thirst:'Жажда',cleanliness:'Чистота',mood:'Настрой',energy:'Энергия',toilet:'Лоток',health:'Здоровье'};
