@@ -493,3 +493,32 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
   .room-action-bar{left:78px;right:6px;bottom:7px}
   .room-kitchen.activity-eating .pet-button,.room-kitchen.activity-drink .pet-button{bottom:142px!important}
 }
+
+
+/* Visible wardrobe layers — equipped items stay on Luna in every room */
+.luna-wearables{position:absolute!important;inset:0!important;z-index:12!important;pointer-events:none!important}
+.luna-wearables .wear-body{
+  display:block!important;left:29%!important;right:29%!important;top:51%!important;height:29%!important;
+  border-radius:48% 48% 34% 34%!important;background:linear-gradient(160deg,#b99cffd9,#6f4bbfd9)!important;
+  border:2px solid #f4eaffaa!important;box-shadow:inset 0 4px 12px #fff3,0 6px 12px #0003!important
+}
+.luna-wearables .wear-body i{display:none!important}
+.luna-wearables .wear-outfit_0,.luna-wearables .wear-sleep_pajama_moon{background:linear-gradient(160deg,#7d72d8dd,#4b3f9edd)!important}
+.luna-wearables .wear-outfit_1{background:linear-gradient(160deg,#d5b1ffdd,#8561badd)!important}
+.luna-wearables .wear-outfit_2{background:linear-gradient(160deg,#8d7fb9dd,#4d426ddd)!important}
+.luna-wearables .wear-outfit_3{background:linear-gradient(160deg,#f2b9dddf,#a75a8fdf)!important}
+.luna-wearables .wear-outfit_4{background:linear-gradient(160deg,#9ec7dedd,#4b7390dd)!important}
+.luna-wearables .wear-outfit_5{background:linear-gradient(160deg,#ffce66df,#a764d8df)!important}
+.luna-wearables [class*="wear-outfit_more_0"]{background:linear-gradient(160deg,#8fe2c9df,#3ca887df)!important}
+.luna-wearables [class*="wear-outfit_more_1"]{background:linear-gradient(160deg,#ffa9c9df,#ce5f94df)!important}
+.luna-wearables [class*="wear-outfit_more_2"]{background:linear-gradient(160deg,#91b5d6df,#486a8ddf)!important}
+.luna-wearables [class*="wear-outfit_more_3"]{background:repeating-linear-gradient(180deg,#fafafaee 0 9px,#9b82d9ee 9px 17px)!important}
+.luna-wearables [class*="wear-outfit_more_4"]{background:linear-gradient(160deg,#ffd5e7ef,#d37ba3ef)!important}
+.luna-wearables [class*="wear-pajama_more_"]{background:linear-gradient(160deg,#aea2f0df,#6960b7df)!important}
+.luna-wearables [class*="wear-costume_more_"]{background:linear-gradient(160deg,#ffcf79e6,#9563d8e6)!important}
+.luna-wearables .wear-head{top:3%!important;z-index:15!important;font-size:40px!important}
+.luna-wearables .wear-eyes{top:24%!important;z-index:16!important;font-size:39px!important}
+.luna-wearables .wear-neck{top:46%!important;z-index:16!important;font-size:28px!important}
+.luna-wearables .wear-feet{bottom:8%!important;z-index:16!important;font-size:24px!important;letter-spacing:4px!important}
+.luna-wearables .wear-accessory{right:12%!important;top:56%!important;z-index:16!important;font-size:32px!important}
+.pose-sleep .luna-wearables{transform:rotate(-7deg) scale(.97)!important}
