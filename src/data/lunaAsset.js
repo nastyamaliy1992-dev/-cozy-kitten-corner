@@ -1,6 +1,4 @@
 // Canonical Luna runtime asset registry.
-// Every state is a separate transparent character layer. Missing state art falls back
-// to the verified transparent idle asset until the matching user-supplied art is connected.
 const idle = new URL('../../assets/luna/idle.webp', import.meta.url).href;
 const pet = new URL('../../assets/luna/pet.webp', import.meta.url).href;
 const happy = new URL('../../assets/luna/happy.webp', import.meta.url).href;
@@ -10,29 +8,27 @@ const sleep = new URL('../../assets/luna/sleep.webp', import.meta.url).href;
 const eat = new URL('../../assets/luna/eat.webp', import.meta.url).href;
 
 export const LUNA_ASSETS = {
-  idle,
-  happy,
-  pet,
-  sleepy,
-  sleep,
-  hungry: idle,
-  sad,
-  eat,
+  idle, happy, pet, sleepy, sleep,
+  hungry:eat, sad, eat,
+  play:happy, draw:happy, bath:happy, toilet:pet, fish:happy, jump:happy
 };
 
 export const LUNA_MAIN = idle;
 
 export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle' }={}){
-  if (sleeping) return LUNA_ASSETS.idle;
-  if (activity === 'petted' || activity === 'petting') return LUNA_ASSETS.idle;
-  if (activity === 'eating') return LUNA_ASSETS.eat;
+  if (sleeping || activity === 'sleep') return LUNA_ASSETS.sleep;
+  if (activity === 'petted' || activity === 'petting') return LUNA_ASSETS.pet;
+  if (activity === 'eating' || activity === 'drink') return LUNA_ASSETS.eat;
   if (activity === 'toiletNeed') return LUNA_ASSETS.sad;
-  if (activity === 'happy' || activity === 'play' || activity === 'drum') return LUNA_ASSETS.happy;
-  if (activity === 'bath' || activity === 'bathReady' || activity === 'soap' || activity === 'bathBomb') return LUNA_ASSETS.happy;
-  if (activity === 'toilet') return LUNA_ASSETS.pet;
+  if (activity === 'toilet') return LUNA_ASSETS.toilet;
+  if (activity === 'bath' || activity === 'bathReady' || activity === 'soap' || activity === 'bathBomb') return LUNA_ASSETS.bath;
+  if (activity === 'draw') return LUNA_ASSETS.draw;
+  if (activity === 'fish') return LUNA_ASSETS.fish;
+  if (activity === 'play' || activity === 'drum' || activity === 'jump' || activity === 'happy' || activity === 'celebrate' || activity === 'levelup') return LUNA_ASSETS.happy;
+  if (activity === 'sad') return LUNA_ASSETS.sad;
   if (emotion === 'tired') return LUNA_ASSETS.sleepy;
   if (emotion === 'hungry') return LUNA_ASSETS.hungry;
-  if (emotion === 'sad') return LUNA_ASSETS.sad;
+  if (emotion === 'sad' || emotion === 'toilet') return LUNA_ASSETS.sad;
   if (emotion === 'joyful') return LUNA_ASSETS.happy;
   return LUNA_ASSETS.idle;
 }
