@@ -522,3 +522,79 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .luna-wearables .wear-feet{bottom:8%!important;z-index:16!important;font-size:24px!important;letter-spacing:4px!important}
 .luna-wearables .wear-accessory{right:12%!important;top:56%!important;z-index:16!important;font-size:32px!important}
 .pose-sleep .luna-wearables{transform:rotate(-7deg) scale(.97)!important}
+
+
+/* Deep interaction pass: no square scene overlays; Luna stays inside each room */
+.shop-item.previewing{outline:3px solid #d5a7ff!important;box-shadow:0 0 0 5px #8b5bd933,0 16px 30px #0006!important}
+.preview-buy{position:sticky;bottom:0;z-index:95;display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:7px;padding:10px;border-radius:18px;background:#21172ff5;border:1px solid #d8b6ff55;box-shadow:0 -10px 32px #0008}
+.preview-buy b{font-size:12px}.preview-buy span{font-size:11px;color:#eadcff}.preview-buy button{min-height:38px;border:0;border-radius:12px;padding:7px 10px;background:#8061d7;color:#fff;font-weight:900}.preview-buy button:last-child{background:#ffffff12}
+.wardrobe-free{padding:9px 11px;margin-bottom:8px;border-radius:14px;background:#74d7ae18;border:1px solid #74d7ae40;color:#d9ffef;font-size:11px;font-weight:850}
+.wardrobe-shop{width:100%;min-height:44px;margin-bottom:9px;border:1px solid #d8b6ff55;border-radius:14px;background:linear-gradient(135deg,#7e5dc9,#5a3f92);color:white;font-weight:900}
+
+.sleep-away{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:20;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:44px;font-weight:1000;letter-spacing:8px;color:#f0e9ff;text-shadow:0 5px 20px #0008;animation:sleepAway 2.6s ease-in-out infinite}
+.sleep-away small{letter-spacing:0;font-size:11px;background:#161526d9;border:1px solid #ffffff25;padding:7px 10px;border-radius:999px}
+@keyframes sleepAway{50%{transform:translate(-50%,-58%);opacity:.72}}
+
+.room-bedroom .pet-button:has(.is-sleeping){left:62%!important;bottom:35%!important;width:min(37vw,185px)!important;z-index:17!important;transform:translateX(-50%) rotate(-7deg)!important}
+.room-bedroom .pet-stage.is-sleeping{transform:none!important;animation:lunaBedBreath 3.4s ease-in-out infinite!important}
+.room-bedroom .pet-stage.is-sleeping .luna-photo{transform:rotate(-7deg) scale(.94)!important;animation:none!important;filter:brightness(.82) drop-shadow(0 9px 12px #08071066)}
+.bed-blanket-fg{position:absolute;left:45%;top:50%;width:43%;height:30%;z-index:20;border-radius:42% 52% 18% 22%;background:linear-gradient(155deg,#779be6dd,#496dbccc 60%,#2f4c91dd);box-shadow:inset 0 7px 14px #bcd2ff33,0 8px 16px #0003;transform:rotate(-4deg);pointer-events:none}
+.bed-blanket-fg:after{content:"✦  ✦";position:absolute;right:17%;top:26%;color:#dce7ff99;font-size:14px}
+@keyframes lunaBedBreath{50%{transform:translateY(3px) scale(1.018,.985)}}
+
+.room-toilet.activity-toilet .pet-button{left:58%!important;bottom:34%!important;width:min(34vw,170px)!important;z-index:18!important}
+.room-toilet.activity-toilet .pet-stage{transform:scale(.9)!important;animation:toiletBounce .55s ease-in-out infinite alternate!important}
+.room-toilet.activity-toilet .luna-photo{animation:none!important}
+.room-toilet.activity-toilet:after{content:"";position:absolute;left:49%;top:54%;width:24%;height:10%;z-index:19;border:7px solid #f5f5f0;border-top:4px solid #d9d9d4;border-radius:50%;box-shadow:0 7px 12px #0004;pointer-events:none}
+@keyframes toiletBounce{to{transform:scale(.9) translateY(3px)}}
+
+.room-bathroom.activity-bathReady .pet-button,
+.room-bathroom.activity-soap .pet-button,
+.room-bathroom.activity-shampoo .pet-button,
+.room-bathroom.activity-bathBomb .pet-button,
+.room-bathroom.activity-shower .pet-button,
+.room-bathroom.activity-towel .pet-button{
+ left:60%!important;bottom:31%!important;width:min(42vw,205px)!important;z-index:16!important
+}
+.room-bathroom.activity-bathReady .luna-photo,
+.room-bathroom.activity-soap .luna-photo,
+.room-bathroom.activity-shampoo .luna-photo,
+.room-bathroom.activity-bathBomb .luna-photo,
+.room-bathroom.activity-shower .luna-photo{animation:bathHappy .58s ease-in-out infinite alternate!important}
+@keyframes bathHappy{to{transform:translateY(-5px) rotate(1.5deg) scale(1.02)}}
+.is-wet .room-bathroom .luna-photo{filter:brightness(.83) saturate(.84) drop-shadow(0 15px 16px #0b274977)!important}
+.foam-fx{min-width:150px;text-align:center;color:var(--foam-color,#f5f1ff);text-shadow:0 0 20px var(--foam-color,#f5f1ff)}
+.foam-fx i{display:block;margin-top:4px;font-style:normal;font-size:12px;font-weight:1000;color:#fff;background:#171522cc;border-radius:999px;padding:4px 8px;letter-spacing:0}
+.shower-fx{position:absolute;right:11%;top:26%;z-index:31;font-size:46px;animation:showerMove .45s ease-in-out infinite alternate;pointer-events:none}
+@keyframes showerMove{to{transform:translate(-15px,10px) rotate(-8deg)}}
+.towel-fx{position:absolute;left:60%;top:58%;transform:translate(-50%,-50%);z-index:34;font-size:86px;filter:drop-shadow(0 8px 12px #0006);animation:towelWrap .55s ease-in-out infinite alternate;pointer-events:none}
+@keyframes towelWrap{to{transform:translate(-50%,-50%) scale(1.06)}}
+
+.fishing-minigame{position:absolute;left:82px;right:8px;bottom:82px;z-index:66;padding:12px;border-radius:20px;background:#10283ceF;border:1px solid #8edfff66;box-shadow:0 14px 35px #0008;backdrop-filter:blur(15px)}
+.fishing-minigame>b{display:block;margin-bottom:8px;font-size:12px;text-align:center}
+.fish-track{height:22px;border-radius:999px;background:linear-gradient(90deg,#6c2334 0 28%,#36bf76 28% 72%,#6c2334 72%);position:relative;overflow:hidden;border:2px solid #ffffff38}
+.fish-track span{position:absolute;left:0;top:-5px;width:16px;height:28px;border-radius:9px;background:#fff;box-shadow:0 0 12px #fff;animation:fishMarker 2.2s linear infinite alternate}
+.fish-track i{position:absolute;left:28%;right:28%;top:0;bottom:0;background:#59e89433}
+@keyframes fishMarker{from{left:1%}to{left:95%}}
+.fishing-minigame button{width:100%;min-height:48px;margin-top:9px;border:0;border-radius:15px;background:linear-gradient(135deg,#5bd68d,#2fa96d);color:white;font-weight:1000;font-size:16px;box-shadow:0 7px 18px #0004}
+.activity-fishGame .pet-button{left:58%!important;bottom:34%!important;width:min(39vw,190px)!important}
+.activity-fishGame .pet-stage:after{content:"🎣  🪣";position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);font-size:36px;white-space:nowrap}
+.activity-fishGame .luna-photo{animation:fishWait .7s ease-in-out infinite alternate!important}
+@keyframes fishWait{to{transform:rotate(-2deg) translateY(-5px)}}
+
+.invite-hook{position:absolute;right:8px;top:118px;z-index:47;border:1px solid #ffd87a66;border-radius:16px;padding:7px 9px;background:linear-gradient(135deg,#7d4ea8ed,#47306ced);color:#fff;font-size:9px;font-weight:900;box-shadow:0 10px 24px #0006;display:flex;flex-direction:column;align-items:center;gap:2px}
+.invite-hook b{color:#ffe789;font-size:10px}
+.invite-hook:active{transform:scale(.96)}
+
+.activity-draw .pet-button{left:37%!important;bottom:31%!important;width:min(45vw,220px)!important}
+.activity-draw .pet-stage:after{content:"";display:none!important}
+.activity-play .pet-button{transition:left .35s ease,bottom .35s ease!important}
+.activity-play .pet-stage{animation:chaseYarn .5s cubic-bezier(.2,.8,.25,1) infinite alternate!important}
+@keyframes chaseYarn{to{transform:scaleX(var(--luna-facing,1)) translate(15px,-12px) rotate(-4deg) scale(1.03)}}
+
+@media(max-width:430px){
+ .invite-hook{top:112px;right:5px}
+ .fishing-minigame{left:78px;right:6px;bottom:78px}
+ .preview-buy{grid-template-columns:1fr auto;}.preview-buy button{min-width:70px}
+ .bed-blanket-fg{left:43%;top:51%;width:48%}
+}
