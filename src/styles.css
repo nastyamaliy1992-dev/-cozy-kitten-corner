@@ -848,3 +848,31 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
   .room-kitchen.activity-drink .pet-button{bottom:210px!important}
   .feeding-sequence-layer{bottom:207px}
 }
+
+/* Bathroom/toilet action sprites contain Luna only; room fixtures remain underneath. */
+.room-bathroom.activity-bath .pet-button,
+.room-bathroom.activity-bathReady .pet-button,
+.room-bathroom.activity-soap .pet-button,
+.room-bathroom.activity-shampoo .pet-button,
+.room-bathroom.activity-bathBomb .pet-button,
+.room-bathroom.activity-shower .pet-button{
+  left:44%!important;
+  bottom:55%!important;
+  width:min(42vw,205px)!important;
+  height:min(48vw,235px)!important;
+  z-index:16!important;
+}
+.room-bathroom.activity-bath .luna-photo,
+.room-bathroom.activity-bathReady .luna-photo,
+.room-bathroom.activity-soap .luna-photo,
+.room-bathroom.activity-shampoo .luna-photo,
+.room-bathroom.activity-bathBomb .luna-photo,
+.room-bathroom.activity-shower .luna-photo{
+  object-position:50% 100%!important;
+}
+.room-toilet.activity-toilet .pet-button{
+  left:58%!important;
+  bottom:34%!important;
+  width:min(34vw,170px)!important;
+  height:min(43vw,215px)!important;
+}

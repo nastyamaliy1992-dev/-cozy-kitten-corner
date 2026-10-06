@@ -15,16 +15,18 @@ const actionBath = asset('action-bath.webp');
 const actionJump = asset('action-jump.webp');
 const actionToilet = asset('action-toilet.webp');
 const actionFrame = path => asset(`actions/${path}`);
+const bathPeekNoFixture = actionFrame('bathroom/bath_peek_no_fixture.webp');
+const toiletSitNoFixture = actionFrame('bathroom/toilet_sit_no_fixture.webp');
 const bathroomFrames = {
-  toiletReady:actionFrame('bathroom/037_04_bathroom_bath_toilet_ready.png'),
-  toiletSitDown:actionFrame('bathroom/038_04_bathroom_bath_toilet_sit_down.png'),
-  toiletSitting:actionFrame('bathroom/039_04_bathroom_bath_toilet_sitting.png'),
-  toiletFinished:actionFrame('bathroom/040_04_bathroom_bath_toilet_finished.png'),
-  bathStepIn:actionFrame('bathroom/041_04_bathroom_bath_bath_step_in.png'),
-  inTub:actionFrame('bathroom/042_04_bathroom_bath_bath_sitting.png'),
-  bathSoap:actionFrame('bathroom/043_04_bathroom_bath_bath_soap.png'),
-  bathRinse:actionFrame('bathroom/044_04_bathroom_bath_bath_rinse.png'),
-  bathStepOut:actionFrame('bathroom/045_04_bathroom_bath_bath_step_out.png'),
+  toiletReady:toiletSitNoFixture,
+  toiletSitDown:toiletSitNoFixture,
+  toiletSitting:toiletSitNoFixture,
+  toiletFinished:actionFrame('bathroom/048_04_bathroom_bath_bath_finished.png'),
+  bathStepIn:bathPeekNoFixture,
+  inTub:bathPeekNoFixture,
+  bathSoap:bathPeekNoFixture,
+  bathRinse:bathPeekNoFixture,
+  bathStepOut:actionFrame('bathroom/046_04_bathroom_bath_shake_water.png'),
   bathShake:actionFrame('bathroom/046_04_bathroom_bath_shake_water.png'),
   bathTowel:actionFrame('bathroom/047_04_bathroom_bath_dry_towel.png'),
   bathFinished:actionFrame('bathroom/048_04_bathroom_bath_bath_finished.png')

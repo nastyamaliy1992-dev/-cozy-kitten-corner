@@ -30,12 +30,13 @@ test('drink stages use six distinct transparent frame files', () => {
   frames.forEach((src, index) => assert.match(src, new RegExp(`kitchen/drink/drink${String(index + 1).padStart(2, '0')}\\.png$`)));
 });
 
-test('bathroom, fishing and drawing actions use their separate transparent frames', () => {
+test('bathroom uses fixture-free Luna frames; fishing and drawing keep separate transparent frames', () => {
   const expected = {
-    bathStepIn: /actions\/bathroom\/041_04_bathroom_bath_bath_step_in\.png$/,
-    inTub: /actions\/bathroom\/042_04_bathroom_bath_bath_sitting\.png$/,
-    bathSoap: /actions\/bathroom\/043_04_bathroom_bath_bath_soap\.png$/,
-    bathRinse: /actions\/bathroom\/044_04_bathroom_bath_bath_rinse\.png$/,
+    bathStepIn: /actions\/bathroom\/bath_peek_no_fixture\.webp$/,
+    inTub: /actions\/bathroom\/bath_peek_no_fixture\.webp$/,
+    bathSoap: /actions\/bathroom\/bath_peek_no_fixture\.webp$/,
+    bathRinse: /actions\/bathroom\/bath_peek_no_fixture\.webp$/,
+    toiletSitting: /actions\/bathroom\/toilet_sit_no_fixture\.webp$/,
     fishingReady: /actions\/fishing\/073_07_fishing_empty_bucket_rod\.png$/,
     waiting: /actions\/fishing\/076_07_fishing_wait_for_fish\.png$/,
     fullBucket: /actions\/fishing\/084_07_fishing_full_bucket_celebrate\.png$/,

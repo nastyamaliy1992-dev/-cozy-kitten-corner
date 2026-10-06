@@ -1,5 +1,5 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261006-hall1';
-import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack } from './core/state.js?v=20261006-hall1';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261006-roomfix1';
+import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack } from './core/state.js?v=20261006-roomfix1';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,introTheme } from './core/audio.js';
 import { buyItem,equipItem,applyFurniture,catalog,grantPremiumItem } from './core/shop.js';
@@ -7,7 +7,7 @@ import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels
 import { castLine,catchFish } from './core/fishing.js';
 import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js';
 import { preloadRoomBackgrounds } from './data/roomAssets.js';
-import { preloadLunaFrames,lunaAssetFor } from './data/lunaAsset.js?v=20261006-hall1';
+import { preloadLunaFrames,lunaAssetFor } from './data/lunaAsset.js?v=20261006-roomfix1';
 const telegram=initTelegram();
 preloadLunaFrames();
 let launchIntroPending=true;
@@ -187,6 +187,7 @@ document.querySelector('[data-action="bath-shop"]')?.addEventListener('click',()
 document.querySelector('[data-action="bath-finish"]')?.addEventListener('click',()=>{
  if(actionLock)return;
  state=bathe(state);state.bath??={};state.bath.wet=false;
+ state=moveLuna(state,'idle');
  runLunaSequence('towel',[
   {stage:'bathStepOut',ms:430},{stage:'bathShake',ms:520},{stage:'bathTowel',ms:650},{stage:'bathFinished',ms:620}
  ],{onFrame:f=>{

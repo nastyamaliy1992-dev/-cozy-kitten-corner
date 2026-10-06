@@ -52,7 +52,7 @@ export const ROOM_POINTS={
  living:{idle:[50,78],toy:[24,76],center:[52,70]},
  kitchen:{idle:[50,78],fridge:[78,56],bowl:[50,66],water:[42,79]},
  bedroom:{idle:[50,78],bed:[63,55],lamp:[78,38]},
- bathroom:{idle:[50,78],tub:[61,55]},
+ bathroom:{idle:[50,78],tub:[44,45]},
  toilet:{idle:[50,78],litter:[57,57]},
  wardrobe:{idle:[50,78],closet:[46,66]},
  playroom:{idle:[50,78],toy:[58,72],art:[30,72]},
