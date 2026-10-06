@@ -381,3 +381,115 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 @keyframes lunaBathFloat{from{transform:translateY(1px) rotate(-1deg)}to{transform:translateY(-5px) rotate(1deg)}}
 @keyframes waterRipple{from{transform:scaleX(.96);opacity:.72}to{transform:scaleX(1.04);opacity:.94}}
 @keyframes foamWash{from{transform:translate(-50%,-50%) rotate(-4deg) scale(.94)}to{transform:translate(-50%,-54%) rotate(4deg) scale(1.08)}}
+
+
+/* 2026-10 interactive room pass */
+.room-action-bar{
+  position:absolute;left:82px;right:10px;bottom:12px;z-index:58;
+  display:flex;gap:7px;overflow-x:auto;padding:7px;border-radius:18px;
+  background:linear-gradient(180deg,#171522ee,#171522f8);
+  border:1px solid #ffffff24;box-shadow:0 12px 30px #0007;backdrop-filter:blur(14px)
+}
+.room-action-bar button{
+  flex:1 0 74px;min-height:58px;border:1px solid #ffffff22;border-radius:15px;
+  background:linear-gradient(155deg,#33294b,#211b32);color:#fff;font-size:23px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px
+}
+.room-action-bar button:active{transform:scale(.96)}
+.room-action-bar small{font-size:9px;font-weight:900;line-height:1.05}
+.play-actions button{min-width:78px}
+.bath-tools{bottom:10px}
+
+.kitchen-spread{
+  position:absolute;left:80px;right:8px;bottom:8px;z-index:56;
+  border-radius:22px 22px 10px 10px;padding:9px 9px 12px;
+  background:linear-gradient(180deg,#5f3a25f2,#2c1b14f5);
+  border:1px solid #e6c19f66;box-shadow:0 -8px 28px #0007,inset 0 3px #c58d5c55
+}
+.kitchen-table-title{display:flex;align-items:center;justify-content:space-between;color:#fff;margin:0 2px 8px}
+.kitchen-table-title b{font-size:13px}
+.kitchen-table-title button{border:0;border-radius:10px;padding:6px 9px;background:#ffffff1c;color:#fff;font-size:10px}
+.kitchen-plates{display:flex;gap:8px;overflow-x:auto;padding:1px 1px 5px}
+.food-plate{
+  flex:0 0 92px;min-height:104px;border:0;border-radius:18px;
+  background:radial-gradient(circle at 50% 36%,#fff 0 33px,#d9dce3 34px 38px,#8c6b55 39px 41px,transparent 42px),
+             linear-gradient(180deg,#ffffff14,#00000016);
+  color:#fff;padding:5px 5px 8px;display:grid;grid-template-rows:55px auto auto;place-items:center
+}
+.food-plate:active{transform:translateY(2px) scale(.97)}
+.plate-dish{font-size:32px;filter:drop-shadow(0 4px 4px #0005)}
+.food-plate b{font-size:10px;line-height:1.05;text-align:center;text-shadow:0 2px 6px #000}
+.food-plate small{font-size:9px;color:#f4dfcf}
+.empty-table{width:100%;min-height:62px;border:1px dashed #ffffff44;border-radius:15px;background:#ffffff0e;color:#fff;font-weight:850}
+
+.room-kitchen .pet-button{z-index:32!important}
+.room-kitchen.activity-eating .pet-button,.room-kitchen.activity-drink .pet-button{
+  width:min(42vw,205px)!important;bottom:145px!important
+}
+.activity-eating .served-item,.activity-drink .served-item{
+  bottom:126px!important;left:44%!important;z-index:49!important
+}
+
+.room-bathroom.activity-bathReady .pet-button,
+.room-bathroom.activity-soap .pet-button,
+.room-bathroom.activity-bathBomb .pet-button{
+  width:min(38vw,190px)!important;z-index:16!important
+}
+.room-bathroom.activity-bathReady .luna-photo,
+.room-bathroom.activity-soap .luna-photo,
+.room-bathroom.activity-bathBomb .luna-photo{
+  animation:lunaBathJoy .65s ease-in-out infinite alternate!important
+}
+.activity-soap .foam-fx{font-size:44px!important;left:60%!important;top:48%!important}
+.activity-bathBomb .bomb-fx{left:61%!important;top:57%!important}
+@keyframes lunaBathJoy{to{transform:translateY(-5px) rotate(-2deg) scale(1.035)}}
+
+.room-toilet.activity-toilet .pet-button{
+  width:min(35vw,175px)!important;z-index:19!important
+}
+.room-toilet.activity-toilet .pet-stage{
+  animation:lunaToiletSit .45s ease-in-out infinite alternate!important
+}
+.room-toilet.activity-toilet:after{
+  content:"";position:absolute;left:48%;top:59%;width:27%;height:9%;z-index:20;
+  border-radius:50%;border:7px solid #f1f0edcc;border-top-width:4px;
+  box-shadow:0 6px 12px #0004;pointer-events:none
+}
+@keyframes lunaToiletSit{from{transform:scaleX(var(--luna-facing,1)) translateY(0) scale(.9)}to{transform:scaleX(var(--luna-facing,1)) translateY(4px) scale(.9,.94)}}
+
+.room-bedroom.activity-sleep .pet-button,.room-bedroom .pet-stage.is-sleeping{
+  width:min(48vw,240px)!important
+}
+.room-bedroom.activity-sleep .luna-photo,.room-bedroom .is-sleeping .luna-photo{
+  animation:lunaBedSleep 3.2s ease-in-out infinite!important
+}
+@keyframes lunaBedSleep{0%,100%{transform:rotate(-7deg) translateY(0) scale(1)}50%{transform:rotate(-7deg) translateY(4px) scale(1.02,.985)}}
+
+.activity-play .pet-stage{animation:lunaToyChase .55s cubic-bezier(.2,.8,.25,1) infinite alternate!important}
+.activity-draw .pet-stage:after{
+  content:"🎨  ✏️";position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);
+  font-size:36px;filter:drop-shadow(0 5px 8px #0008)
+}
+.activity-draw .luna-photo{animation:lunaDraw .52s ease-in-out infinite alternate!important}
+.activity-jump .pet-stage,.activity-happy .pet-stage,.activity-celebrate .pet-stage{animation:lunaRealJump .58s cubic-bezier(.2,.8,.3,1) infinite alternate!important}
+.activity-play .pet-stage:after{
+  content:"⚽";position:absolute;left:-10%;bottom:8%;font-size:38px;animation:ballRun .7s ease-in-out infinite alternate
+}
+.activity-play .pet-stage[data-pose="play"]:after{content:"⚽"}
+@keyframes lunaToyChase{to{transform:scaleX(var(--luna-facing,1)) translate(10px,-12px) rotate(-3deg) scale(1.04)}}
+@keyframes lunaDraw{to{transform:translateY(4px) rotate(1deg) scale(.99)}}
+@keyframes lunaRealJump{from{transform:scaleX(var(--luna-facing,1)) translateY(0) rotate(-2deg)}to{transform:scaleX(var(--luna-facing,1)) translateY(-26px) rotate(3deg) scale(1.05)}}
+@keyframes ballRun{to{transform:translate(68px,-30px) rotate(200deg)}}
+
+.activity-fish .pet-stage:after{
+  content:"🎣  🪣";position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);font-size:35px
+}
+.activity-fish .luna-photo{animation:lunaFishPull .65s ease-in-out infinite alternate!important}
+@keyframes lunaFishPull{to{transform:translateX(-5px) rotate(-3deg) scale(1.02)}}
+
+@media(max-width:430px){
+  .kitchen-spread{left:78px;right:6px;bottom:6px}
+  .food-plate{flex-basis:86px}
+  .room-action-bar{left:78px;right:6px;bottom:7px}
+  .room-kitchen.activity-eating .pet-button,.room-kitchen.activity-drink .pet-button{bottom:142px!important}
+}
