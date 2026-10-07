@@ -31,5 +31,31 @@ export function drumSound(){[150,205,150,205,150,260].forEach((f,i)=>setTimeout(
 export function introTheme(){[392,523,659,784,659,523].forEach((f,i)=>setTimeout(()=>tone(f,.34,.12,'sine','music'),i*260))}
 export function sleepyChime(){[392,330,262].forEach((f,i)=>setTimeout(()=>tone(f,.5,.08),i*260))}
 
+const sequenceCueMap={
+ 'eating:feed07':['bite'],'eating:feed08':['chew'],'eating:feed09':['chew'],
+ 'eating:feed10':['swallow'],'eating:feed11':['lick'],
+ 'drink:drink04':['water'],'drink:drink05':['drink'],
+ 'draw:drawStart':['draw'],'draw:drawFirstLine':['draw'],'draw:drawHeart':['draw'],
+ 'draw:drawOutline':['draw'],'draw:drawColor':['draw'],'draw:drawStars':['draw'],
+ 'jump:jumping':['jump'],'play:chasing':['play'],'bath:bathStepIn':['splash'],
+ 'toilet:toiletSitting':['fart'],'toilet:toiletFinished':['flush'],
+ 'towel:bathStepOut':['splash'],'towel:bathShake':['water'],
+ 'fishGame:cast':['cast','water'],'fishCatch:biteFish':['splash'],'fishCatch:fishOnHook':['catch']
+};
+export function sequenceSoundCue(type,stage){return [...(sequenceCueMap[`${type}:${stage}`]||[])]}
+export function playSequenceFrameSound(type,stage){
+ for(const cue of sequenceSoundCue(type,stage)){
+  if(cue==='bite')biteSound();
+  else if(cue==='chew')chewSound();
+  else if(cue==='swallow')swallowSound();
+  else if(cue==='lick')lickSound();
+  else if(cue==='water')waterSound();
+  else if(cue==='splash')splashSound();
+  else if(cue==='fart')fartSound();
+  else if(cue==='flush')flushSound();
+  else sfx(cue);
+ }
+}
+
 export function unlockAudio(){ensure();if(ctx?.state==='suspended')return ctx.resume();return Promise.resolve()}
 export function speakLuna(text,lang='ru-RU'){if(settings.voiceEnabled===false||!text||!('speechSynthesis' in window))return;try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.94;u.pitch=1.18;u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));const voices=window.speechSynthesis.getVoices?.()||[],prefix=lang.slice(0,2).toLowerCase(),russian=voices.filter(v=>v.lang?.toLowerCase().startsWith(prefix));const preferred=russian.find(v=>/milena|alena|alyona|svetlana|irina|katya|female|google.*рус|siri/i.test(v.name))||russian.find(v=>!/male|yuri|pavel|alexander/i.test(v.name))||russian[0];if(preferred)u.voice=preferred;window.speechSynthesis.speak(u)}catch{}}

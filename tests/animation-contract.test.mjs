@@ -5,8 +5,10 @@ import { lunaAssetFor } from '../src/data/lunaAsset.js';
 import { createInitialState, consumeDrinkUnit, finishDrink } from '../src/core/state.js';
 import * as lunaAssets from '../src/data/lunaAsset.js';
 import * as stateCore from '../src/core/state.js';
+import { sequenceSoundCue } from '../src/core/audio.js';
 import { renderGame } from '../src/ui/appView.js';
 import { readFile } from 'node:fs/promises';
+import { access } from 'node:fs/promises';
 
 test('kitchen feeding stages use twelve distinct transparent frame files', () => {
   const frames = Array.from({ length: 12 }, (_, index) =>
@@ -19,9 +21,37 @@ test('kitchen feeding stages use twelve distinct transparent frame files', () =>
 test('hall uses the exact upright Luna sprite and a separate greeting wave', () => {
   const idle = lunaAssetFor({ activity: 'idle', stage: 'idle' });
   const wave = lunaAssetFor({ activity: 'greeting', stage: 'greetingWave' });
-  assert.match(idle, /hall\/luna-main\.png$/);
-  assert.match(wave, /hall\/luna-wave\.png$/);
+  assert.match(idle, /hall\/luna-main-clean\.png$/);
+  assert.match(wave, /hall\/luna-wave-clean\.png$/);
   assert.notEqual(idle, wave);
+});
+
+test('idle life uses dedicated collar-free blink and tail frames', async () => {
+  const blink = lunaAssetFor({ activity: 'idle', stage: 'idleBlink' });
+  const tail = lunaAssetFor({ activity: 'idle', stage: 'idleTail' });
+  assert.match(blink, /hall\/luna-idle-blink-clean\.png$/);
+  assert.match(tail, /hall\/luna-idle-tail-clean\.png$/);
+  await Promise.all([
+    access(new URL('../assets/luna/hall/luna-main-clean.png',import.meta.url)),
+    access(new URL('../assets/luna/hall/luna-wave-clean.png',import.meta.url)),
+    access(new URL('../assets/luna/hall/luna-idle-blink-clean.png',import.meta.url)),
+    access(new URL('../assets/luna/hall/luna-idle-tail-clean.png',import.meta.url))
+  ]);
+});
+
+test('uploaded emotions are available as transparent in-game reaction stages', () => {
+  const expected={
+    angry:/emotions\/angry\.png$/,
+    annoyed:/emotions\/annoyed\.png$/,
+    pleading:/emotions\/pleading\.png$/,
+    scared:/emotions\/scared\.png$/,
+    sadEmotion:/emotions\/sad\.png$/,
+    surprised:/emotions\/surprised\.png$/,
+    laugh:/emotions\/laugh\.png$/,
+    curious:/emotions\/curious\.png$/,
+    warmHappy:/emotions\/happy\.png$/
+  };
+  for(const [stage,pattern] of Object.entries(expected))assert.match(lunaAssetFor({activity:'emotion',stage}),pattern);
 });
 
 test('drink stages use six distinct transparent frame files', () => {
@@ -93,7 +123,7 @@ test('baked action frames hide emoji wearables', () => {
 test('header avatar uses the same main Luna sprite', () => {
   const state = createInitialState('Луна');
   const html = renderGame(state);
-  assert.match(html, /assets\/luna\/hall\/luna-main\.png/);
+  assert.match(html, /assets\/luna\/hall\/luna-main-clean\.png/);
 });
 
 test('welcome sequence waves and speaks the requested greeting with soft voice settings', async () => {
@@ -154,8 +184,8 @@ test('sequence assets can be collected before playback begins', () => {
 });
 
 test('generic hunger never shows the old bowl and purple-heart sprite', () => {
-  assert.match(lunaAssetFor({emotion:'hungry',activity:'idle',stage:'idle'}),/hall\/luna-main\.png$/);
-  assert.match(lunaAssetFor({activity:'bathWant',stage:'asking'}),/hall\/luna-main\.png$/);
+  assert.match(lunaAssetFor({emotion:'hungry',activity:'idle',stage:'idle'}),/hall\/luna-main-clean\.png$/);
+  assert.match(lunaAssetFor({activity:'bathWant',stage:'asking'}),/emotions\/pleading\.png$/);
 });
 
 test('soap renders growing foam over Luna', () => {
@@ -188,10 +218,27 @@ test('bath towel keeps the same fitted scale as the in-tub sequence', async () =
   assert.match(finalBathSizing,/height:min\(56vw,275px\)!important/);
 });
 
-test('equipped neck items remain visible without a purple-heart glyph', () => {
+test('neck overlays are not rendered over Luna on entry', () => {
   const state=createInitialState('Луна');
   state.inventory.equipped={neck:'collar_moon'};
   const html=renderGame(state);
-  assert.match(html,/class="wear-neck wear-collar_moon"/);
+  assert.doesNotMatch(html,/class="wear-neck/);
   assert.doesNotMatch(html,/💜/);
+});
+
+test('idle life runs only between actions and alternates blink with tail sway', async () => {
+  const main=await readFile(new URL('../src/main.js',import.meta.url),'utf8');
+  assert.match(main,/function scheduleIdleLife/);
+  assert.match(main,/state\.activity\?\.type!=='idle'/);
+  assert.match(main,/idleBlink/);
+  assert.match(main,/idleTail/);
+});
+
+test('sequence sound cues are tied to exact animation frames', () => {
+  assert.deepEqual(sequenceSoundCue('eating','feed07'),['bite']);
+  assert.deepEqual(sequenceSoundCue('eating','feed08'),['chew']);
+  assert.deepEqual(sequenceSoundCue('eating','feed10'),['swallow']);
+  assert.deepEqual(sequenceSoundCue('draw','drawFirstLine'),['draw']);
+  assert.deepEqual(sequenceSoundCue('fishGame','cast'),['cast','water']);
+  assert.deepEqual(sequenceSoundCue('fishCatch','fishOnHook'),['catch']);
 });

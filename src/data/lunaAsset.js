@@ -1,11 +1,19 @@
 // Canonical Luna runtime asset registry + deterministic state/frame mapping.
 const asset = name => new URL(`../../assets/luna/${name}`, import.meta.url).href;
 
-const idle = asset('hall/luna-main.png');
-const greetingWave = asset('hall/luna-wave.png');
+const idle = asset('hall/luna-main-clean.png');
+const greetingWave = asset('hall/luna-wave-clean.png');
+const idleBlink = asset('hall/luna-idle-blink-clean.png');
+const idleTail = asset('hall/luna-idle-tail-clean.png');
+const emotion = name => asset(`emotions/${name}.png`);
+const emotionAssets = {
+  angry:emotion('angry'),annoyed:emotion('annoyed'),pleading:emotion('pleading'),
+  scared:emotion('scared'),sadEmotion:emotion('sad'),surprised:emotion('surprised'),
+  laugh:emotion('laugh'),curious:emotion('curious'),warmHappy:emotion('happy')
+};
 const pet = asset('happy.webp');
 const happy = asset('happy.webp');
-const sad = asset('sad.webp');
+const sad = emotionAssets.sadEmotion;
 const sleepy = asset('sleepy.webp');
 const sleep = asset('sleep.webp');
 const eat = asset('eat.webp');
@@ -61,7 +69,7 @@ const sleepFrames = Object.fromEntries(Array.from({length:10},(_,i)=>{
 }));
 
 export const LUNA_ASSETS = {
-  idle, greetingWave, pet, happy, sad, sleepy, sleep, eat,
+  idle, greetingWave, idleBlink, idleTail, ...emotionAssets, pet, happy, sad, sleepy, sleep, eat,
   hungry:idle,
   play:actionYarn,
   draw:actionDraw,
@@ -85,13 +93,15 @@ const stageMap = {
   ...fishingFrames,
   ...drawingFrames,
   idle,
+  idleBlink,
+  idleTail,
   greetingIdle:idle,
   greetingWave,
   arrived:idle,
-  asking:idle,
+  asking:emotionAssets.pleading,
   stroking:pet,
-  happy:happy,
-  satisfied:happy,
+  happy:emotionAssets.warmHappy,
+  satisfied:emotionAssets.warmHappy,
   celebrate:actionJump,
   newOutfit:actionJump,
   mouthOpen:eat,
@@ -119,9 +129,10 @@ const stageMap = {
   fresh:bathroomFrames.bathFinished,
   drawing:drawingFrames.drawHeart,
   drawFinish:drawingFrames.drawInspect,
-  proud:happy,
+  proud:emotionAssets.warmHappy,
   catch:fishingFrames.fullBucket,
-  miss:sad,
+  miss:emotionAssets.sadEmotion,
+  ...emotionAssets,
   preview:idle,
   equipped:actionJump,
   jumping:actionJump,
