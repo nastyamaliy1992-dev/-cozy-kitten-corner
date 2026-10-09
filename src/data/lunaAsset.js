@@ -108,7 +108,7 @@ const stageMap = {
   toyAnnoyed:emotionAssets.annoyed,
   toyAngry:emotionAssets.angry,
   playReady:emotionAssets.curious,
-  playReach:greetingWave,
+  playReach:actionYarn,
   playCatch:emotionAssets.warmHappy,
   idle,
   idleBlink,
@@ -174,9 +174,12 @@ export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle', 
   if (type === 'happy' || type === 'dress' || type === 'drum') return happy;
   if (type === 'sad') return sad;
   if (emotion === 'tired') return sleepy;
-  if (emotion === 'hungry') return idle;
+  if (emotion === 'hungry' || emotion === 'thirsty') return emotionAssets.pleading;
+  if (emotion === 'dirty') return emotionAssets.annoyed;
+  if (emotion === 'annoyed') return emotionAssets.annoyed;
+  if (emotion === 'angry') return emotionAssets.angry;
   if (emotion === 'sad' || emotion === 'toilet' || emotion === 'dirty') return sad;
-  if (emotion === 'joyful') return happy;
+  if (emotion === 'joyful') return emotionAssets.warmHappy;
   return idle;
 }
 
