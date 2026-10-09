@@ -1,6 +1,6 @@
 import { t } from '../data/localization.js';
 import { rooms } from '../core/rooms.js';
-import { renderRoomDecor } from './scenes.js?v=20261009-actions2';
+import { renderRoomDecor } from './scenes.js?v=20261009-actions3';
 import { getEmotion } from '../core/state.js?v=20261007-life1';
 import { renderPet } from './pet.js?v=20261009-actions2';
 import { catalog,categories,itemIcon } from '../core/shop.js?v=20261007-life1';
