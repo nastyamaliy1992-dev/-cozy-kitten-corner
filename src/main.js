@@ -1,12 +1,12 @@
 import { renderWelcome,renderGame } from './ui/appView.js?v=20261009-repair2';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261009-repair2';
-import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
-import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,introTheme,playSequenceFrameSound } from './core/audio.js';
+import { saveGame } from './core/persistence.js?v=20261009-repair2';import { t } from './data/localization.js?v=20261009-repair2';
+import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261009-repair2';
 import { buyItem,equipItem,applyFurniture,catalog,grantPremiumItem } from './core/shop.js?v=20261009-repair2';
-import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels } from './core/progression.js';
-import { castLine,catchFish } from './core/fishing.js';
-import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js';
-import { preloadRoomBackgrounds } from './data/roomAssets.js';
+import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels } from './core/progression.js?v=20261009-repair2';
+import { castLine,catchFish } from './core/fishing.js?v=20261009-repair2';
+import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js?v=20261009-repair2';
+import { preloadRoomBackgrounds } from './data/roomAssets.js?v=20261009-repair2';
 import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261009-repair2';
 const telegram=initTelegram();
 preloadLunaFrames();
