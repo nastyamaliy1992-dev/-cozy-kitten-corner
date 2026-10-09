@@ -38,6 +38,8 @@ export function getEmotion(s){
  if(n.cleanliness<35)return 'dirty';
  if(n.energy<32)return 'tired';
  if(n.mood>88&&n.happiness>82)return 'joyful';
+ if(n.mood<18)return 'angry';
+ if(n.mood<32)return 'annoyed';
  if(n.mood<45)return 'sad';
  return 'calm';
 }
