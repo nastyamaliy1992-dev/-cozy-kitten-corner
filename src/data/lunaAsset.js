@@ -26,10 +26,11 @@ const actionFrame = path => asset(`actions/${path}`);
 const bathPeekNoFixture = actionFrame('bathroom/bath_peek_no_fixture.webp');
 const toiletSitNoFixture = actionFrame('bathroom/toilet_sit_no_fixture.webp');
 const bathroomFrames = {
-  toiletReady:actionFrame('bathroom/037_04_bathroom_bath_toilet_ready.png'),
-  toiletSitDown:actionFrame('bathroom/038_04_bathroom_bath_toilet_sit_down.png'),
-  toiletSitting:actionFrame('bathroom/039_04_bathroom_bath_toilet_sitting.png'),
-  toiletFinished:actionFrame('bathroom/040_04_bathroom_bath_toilet_finished.png'),
+  // Toilet artwork must NEVER contain a second toilet: the room already has its own fixture.
+  toiletReady:idle,
+  toiletSitDown:toiletSitNoFixture,
+  toiletSitting:toiletSitNoFixture,
+  toiletFinished:greetingWave,
   bathStepIn:bathPeekNoFixture,
   inTub:bathPeekNoFixture,
   bathSoap:bathPeekNoFixture,
