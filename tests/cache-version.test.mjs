@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const version = 'v=20261010-school-play1';
+const version = 'v=20261010-school-play2';
 
 test('entry point and changed animation modules use the same cache version', async () => {
   const [index,main,appView,pet] = await Promise.all([
@@ -12,7 +12,7 @@ test('entry point and changed animation modules use the same cache version', asy
     readFile(new URL('../src/ui/pet.js',import.meta.url),'utf8')
   ]);
   assert.match(index,new RegExp(`main\\.js\\?${version}`));
-  assert.match(index,/styles\.css\?v=20261010-school-play1/);
+  assert.match(index,/styles\.css\?v=20261010-school-play2/);
   assert.match(main,new RegExp(`appView\\.js\\?${version}`));
   assert.match(main,new RegExp(`state\\.js\\?${version}`));
   assert.match(main,new RegExp(`lunaAsset\\.js\\?${version}`));
