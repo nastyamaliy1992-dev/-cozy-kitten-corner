@@ -248,7 +248,7 @@ document.querySelector('[data-action="fish-hook"]')?.addEventListener('click',()
   {stage:'biteFish',ms:320},{stage:'pullRod',ms:330},{stage:'reeling',ms:360},{stage:'fishOnHook',ms:380},
   {stage:'fishSwing',ms:330},{stage:'holdFish',ms:440},{stage:'bucketFish',ms:380},{stage:'fullBucket',ms:650}
  ],{onFrame:f=>{
-  if(f.stage==='fullBucket'){happyJingle();giggleSound();meow('happy');applauseSound();speakLuna('Я поймала рыбку!');showBubble(`Поймала: ${caught.item?.name||'рыбку'}! 🪣♥`,1500)}
+  if(f.stage==='fullBucket'){happyJingle();giggleSound();meow('happy');applauseSound();if(caught.wishGranted){speakLuna('Золотая рыбка исполнила желание! Я больше не голодная!');showBubble('✨ Золотая рыбка исполнила желание! Сытость 100% 🐟',2800)}else{speakLuna('Я поймала рыбку!');showBubble(`Поймала: ${caught.item?.name||'рыбку'}! 🪣♥`,1500)}}
  }});
 });
 document.querySelector('[data-action="fish-shop"]')?.addEventListener('click',()=>{ui.shopCategory='rods';ui.panel='shop';ui.previewItem=null;render()});
