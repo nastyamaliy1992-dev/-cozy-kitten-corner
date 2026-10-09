@@ -32,6 +32,15 @@ test('all new dance, jump, toy and toilet sprites actually exist',async()=>{
  await access(new URL('../assets/rooms/dance.svg',import.meta.url));
 });
 
+test('approved dance room contains a valid embedded WEBP photograph',async()=>{
+ const svg=await readFile(new URL('../assets/rooms/dance.svg',import.meta.url),'utf8');
+ const found=svg.match(/data:image\\/webp;base64,([A-Za-z0-9+/=]+)/);
+ assert.ok(found,'approved studio photograph must be embedded');
+ const data=Buffer.from(found[1],'base64');
+ assert.equal(data.toString('ascii',0,4),'RIFF');
+ assert.equal(data.toString('ascii',8,12),'WEBP');
+ assert.ok(data.length>4000,'photograph cannot be empty');
+});
 test('toilet actually flushes after sitting rather than before',()=>{
  assert.deepEqual(sequenceSoundCue('toilet','toiletSitting'),['fart']);
  assert.deepEqual(sequenceSoundCue('toilet','toiletFlush'),['flush']);
