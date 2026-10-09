@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const version = 'v=20261010-play-toilet1';
+const version = 'v=20261010-school-play1';
 
 test('entry point and changed animation modules use the same cache version', async () => {
   const [index,main,appView,pet] = await Promise.all([
