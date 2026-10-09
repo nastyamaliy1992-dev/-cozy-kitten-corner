@@ -76,4 +76,27 @@ export function playSequenceFrameSound(type,stage){
 }
 
 export function unlockAudio(){ensure();if(ctx?.state==='suspended')return ctx.resume();return Promise.resolve()}
-export function speakLuna(text,lang='ru-RU'){if(settings.voiceEnabled===false||!text||!('speechSynthesis' in window))return;try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=1.04;u.pitch=1.06;u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));const voices=window.speechSynthesis.getVoices?.()||[],prefix=lang.slice(0,2).toLowerCase(),russian=voices.filter(v=>v.lang?.toLowerCase().startsWith(prefix));const preferred=russian.find(v=>/milena|alena|alyona|svetlana|irina|katya|female|google.*рус|siri/i.test(v.name))||russian.find(v=>!/male|yuri|pavel|alexander/i.test(v.name))||russian[0];if(preferred)u.voice=preferred;window.speechSynthesis.speak(u)}catch{}}
+export function speakLuna(text,lang='ru-RU'){
+ if(settings.voiceEnabled===false||!text||typeof window==='undefined'||!('speechSynthesis' in window))return false;
+ try{
+  const synth=window.speechSynthesis;
+  synth.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=lang;
+  const bright=settings.voiceStyle==='bright';
+  u.rate=bright?1.08:.97;
+  u.pitch=bright?1.15:1.03;
+  u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));
+  const all=synth.getVoices?.()||[],prefix=lang.slice(0,2).toLowerCase();
+  const localized=all.filter(v=>String(v.lang||'').toLowerCase().startsWith(prefix));
+  const selected=localized.find(v=>v.name===settings.voiceName);
+  const preferred=selected||localized.find(v=>/premium|enhanced|siri|milena|alena|alyona|svetlana|irina|katya|female/i.test(v.name))
+   ||localized.find(v=>!/male|yuri|pavel|alexander/i.test(v.name))||localized[0];
+  if(preferred)u.voice=preferred;
+  u.onstart=()=>duckMusic(true);
+  u.onend=()=>duckMusic(false);
+  u.onerror=()=>duckMusic(false);
+  synth.speak(u);
+  return true;
+ }catch{return false}
+}
