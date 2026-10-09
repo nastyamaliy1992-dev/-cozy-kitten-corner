@@ -10,7 +10,7 @@ export const ROOM_BACKGROUNDS = {
   wardrobe: new URL('../../assets/rooms/wardrobe.webp', import.meta.url).href,
   playroom: new URL('../../assets/rooms/playroom.webp', import.meta.url).href,
   lake: new URL('../../assets/rooms/lake.webp', import.meta.url).href,
-  dance: new URL('../../assets/rooms/dance.svg', import.meta.url).href,
+  dance: new URL('../../assets/rooms/dance.svg', import.meta.url).href+'?v=20261009-photo2',
   store: new URL('../../assets/rooms/wardrobe.webp', import.meta.url).href, // safe fallback until dedicated store art is bundled
 };
 
@@ -24,3 +24,24 @@ export function preloadRoomBackgrounds(current='living'){
     img.src=ROOM_BACKGROUNDS[id];
   }
 }
+
+/* Resolve the embedded, user-approved dance photograph directly for iOS Safari:
+   some SVG image contexts do not draw nested data-URI images. */
+export async function loadDancePhoto(){
+ if(typeof fetch!=='function')return false;
+ const url=ROOM_BACKGROUNDS.dance;
+ if(url.startsWith('data:'))return true;
+ try{
+  const response=await fetch(url,{cache:'no-store'});
+  if(!response.ok)return false;
+  const source=await response.text();
+  const match=source.match(/data:image\/webp;base64,[A-Za-z0-9+/=]+/);
+  if(!match)return false;
+  ROOM_BACKGROUNDS.dance=match[0];
+  if(typeof document!=='undefined'){
+   document.querySelectorAll('.room-dance .room-background').forEach(image=>{image.src=match[0]});
+  }
+  return true;
+ }catch{return false}
+}
+if(typeof window!=='undefined')void loadDancePhoto();
