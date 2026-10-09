@@ -1,14 +1,14 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-poses-hotfix3';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-fullbody5';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261010-floor-anchor4';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
-import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-school-play2';
+import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-dance-beat5';
 import { buyItem,equipItem,applyFurniture,catalog,grantPremiumItem } from './core/shop.js?v=20261010-school-play2';
 import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels,levelData } from './core/progression.js';
 import { castLine,catchFish } from './core/fishing.js';
 import { ensureSchool, startLesson, answerLesson, unlockLesson } from './core/school.js?v=20261010-school-play2';
 import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js';
 import { preloadRoomBackgrounds } from './data/roomAssets.js?v=20261010-dance-photo1';
-import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261010-poses-hotfix3';
+import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261010-fullbody5';
 const telegram=initTelegram();
 preloadLunaFrames();
 let launchIntroPending=false;
@@ -302,7 +302,10 @@ document.querySelector('[data-action="bath-finish"]')?.addEventListener('click',
 document.querySelectorAll('[data-play-action]').forEach(b=>b.addEventListener('click',()=>runPlayAction(b.dataset.playAction)));
 document.querySelector('[data-play-catch]')?.addEventListener('click',()=>{
  if(!state.playChallenge||state.room!=='playroom'||actionLock)return;
- const challenge=state.playChallenge;challenge.hits++;challenge.target=(challenge.target+1)%5;
+ const challenge=state.playChallenge;
+ const hitX=[74,29,71,35,74][challenge.target%5];
+ state.movement={...(state.movement||{}),x:Math.max(39,Math.min(67,hitX)),y:88,facing:hitX<(state.movement?.x??56)?-1:1,target:'toy'};
+ challenge.hits++;challenge.target=(challenge.target+1)%5;
  state.activity={type:'playGame',stage:challenge.hits%2?'chasing':'toySurprise',playKind:challenge.kind,startedAt:Date.now()};
  sfx('play');if(challenge.hits%2)meow('happy');if(state.settings?.haptics!==false)haptic('light');persist();render();
  if(challenge.hits<3){showBubble('Поймала! '+challenge.hits+'/3 🐾',900);return}
