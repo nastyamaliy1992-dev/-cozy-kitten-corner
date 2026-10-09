@@ -6,7 +6,24 @@ function ensure(){if(ctx)return;ctx=new (window.AudioContext||window.webkitAudio
 function applyVolumes(){if(!ctx)return;musicBus.gain.setTargetAtTime((settings.musicEnabled===false?0:settings.musicVolume*.62),ctx.currentTime,.08);sfxBus.gain.setTargetAtTime((settings.sfxEnabled===false?0:settings.sfxVolume*.56),ctx.currentTime,.05);voiceBus.gain.setTargetAtTime((settings.voiceEnabled===false?0:settings.voiceVolume*.56),ctx.currentTime,.05)}
 export function configureAudio(next={}){settings={...settings,...next};if(ctx)applyVolumes()}
 function tone(freq,dur=.9,vol=.15,type='sine',bus='sfx'){ensure();const o=ctx.createOscillator(),g=ctx.createGain(),out=bus==='music'?musicBus:bus==='voice'?voiceBus:sfxBus;o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.001,ctx.currentTime);g.gain.linearRampToValueAtTime(vol,ctx.currentTime+.06);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(out);o.start();o.stop(ctx.currentTime+dur)}
-export function startRoomMusic(room){ensure();if(ctx.state==='suspended')ctx.resume();if(currentRoom===room&&timer)return;currentRoom=room;clearInterval(timer);let i=0;const play=()=>{const notes=roomNotes[currentRoom]||roomNotes.living;const a=notes[i%notes.length],b=notes[(i+1)%notes.length];tone(a,1.5,.16,'sine','music');setTimeout(()=>tone(b,1.05,.07,'triangle','music'),180);i++};play();timer=setInterval(play,1450)}
+export function startRoomMusic(room){ensure();if(ctx.state==='suspended')ctx.resume();if(currentRoom===room&&timer)return;currentRoom=room;clearInterval(timer);let i=0;const play=()=>{
+ const notes=roomNotes[currentRoom]||roomNotes.living;
+ const a=notes[i%notes.length],b=notes[(i+1)%notes.length];
+ if(currentRoom==='dance'){
+   // A steady four-beat dance groove, rendered via WebAudio; no external audio file.
+   [0,365,730,1095].forEach((ms,beat)=>setTimeout(()=>{
+     if(currentRoom!=='dance'||settings.musicEnabled===false)return;
+     tone(beat%2===0?110:175,.115,.12,'triangle','music');
+     tone(beat%2===0?1960:1450,.055,.024,'sine','music');
+   },ms));
+   tone(a,.34,.13,'triangle','music');
+   setTimeout(()=>tone(b,.36,.115,'triangle','music'),730);
+ }else{
+   tone(a,1.5,.16,'sine','music');
+   setTimeout(()=>tone(b,1.05,.07,'triangle','music'),180);
+ }
+ i++;
+};play();timer=setInterval(play,1450)}
 export function stopMusic(){clearInterval(timer);timer=null;currentRoom=null}
 export function duckMusic(on=true){ensure();musicBus.gain.setTargetAtTime(on ? .10 : (settings.musicEnabled===false ? 0 : settings.musicVolume*.62),ctx.currentTime,.12)}
 export function sfx(kind){const f={pet:520,feed:620,drink:720,bath:440,toilet:350,play:800,sleep:260,step:330,jump:690,draw:570,cast:460,catch:880,miss:260,coin:980,level:1040}[kind]||500;tone(f,.28,.24,kind==='play'?'triangle':'sine')}
@@ -58,4 +75,4 @@ export function playSequenceFrameSound(type,stage){
 }
 
 export function unlockAudio(){ensure();if(ctx?.state==='suspended')return ctx.resume();return Promise.resolve()}
-export function speakLuna(text,lang='ru-RU'){if(settings.voiceEnabled===false||!text||!('speechSynthesis' in window))return;try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.94;u.pitch=1.18;u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));const voices=window.speechSynthesis.getVoices?.()||[],prefix=lang.slice(0,2).toLowerCase(),russian=voices.filter(v=>v.lang?.toLowerCase().startsWith(prefix));const preferred=russian.find(v=>/milena|alena|alyona|svetlana|irina|katya|female|google.*рус|siri/i.test(v.name))||russian.find(v=>!/male|yuri|pavel|alexander/i.test(v.name))||russian[0];if(preferred)u.voice=preferred;window.speechSynthesis.speak(u)}catch{}}
+export function speakLuna(text,lang='ru-RU'){if(settings.voiceEnabled===false||!text||!('speechSynthesis' in window))return;try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.94;u.pitch=1.03;u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));const voices=window.speechSynthesis.getVoices?.()||[],prefix=lang.slice(0,2).toLowerCase(),russian=voices.filter(v=>v.lang?.toLowerCase().startsWith(prefix));const preferred=russian.find(v=>/milena|alena|alyona|svetlana|irina|katya|female|google.*рус|siri/i.test(v.name))||russian.find(v=>!/male|yuri|pavel|alexander/i.test(v.name))||russian[0];if(preferred)u.voice=preferred;window.speechSynthesis.speak(u)}catch{}}
