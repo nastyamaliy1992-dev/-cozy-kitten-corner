@@ -79,4 +79,30 @@ export function playSequenceFrameSound(type,stage){
 }
 
 export function unlockAudio(){ensure();if(ctx?.state==='suspended')return ctx.resume();return Promise.resolve()}
-export function speakLuna(text,lang='ru-RU'){if(settings.voiceEnabled===false||!text||!('speechSynthesis' in window))return;try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.94;u.pitch=1.03;u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));const voices=window.speechSynthesis.getVoices?.()||[],prefix=lang.slice(0,2).toLowerCase(),russian=voices.filter(v=>v.lang?.toLowerCase().startsWith(prefix));const preferred=russian.find(v=>/milena|alena|alyona|svetlana|irina|katya|female|google.*рус|siri/i.test(v.name))||russian.find(v=>!/male|yuri|pavel|alexander/i.test(v.name))||russian[0];if(preferred)u.voice=preferred;window.speechSynthesis.speak(u)}catch{}}
+// Prefer the enhanced neural/local female Russian voices already installed on the device.
+// Never claim cloud-quality speech: the browser chooses which voices it exposes.
+export function speakLuna(text,lang='ru-RU'){
+ if(settings.voiceEnabled===false||!text||!('speechSynthesis' in window))return;
+ try{
+  const synth=window.speechSynthesis;
+  const available=synth.getVoices?.()||[];
+  const prefix=lang.slice(0,2).toLowerCase();
+  const candidates=available.filter(v=>v.lang?.toLowerCase().startsWith(prefix));
+  const rank=v=>{
+   const name=(v.name||'').toLowerCase();
+   return (/enhanced|premium|neural|high quality|улучшенн/.test(name)?100:0)
+    +(/milena|алёна|alyona|alena|katya|irina|svetlana|female|сири|siri/.test(name)?40:0)
+    -(/compact|low quality|male|yuri|pavel|alexander/.test(name)?70:0)
+    +(v.localService?6:0);
+  };
+  candidates.sort((a,b)=>rank(b)-rank(a));
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=lang;u.rate=.94;u.pitch=1.03;
+  u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));
+  if(candidates[0])u.voice=candidates[0];
+  u.onstart=()=>duckMusic(true);
+  u.onend=()=>duckMusic(false);
+  u.onerror=()=>duckMusic(false);
+  synth.cancel();synth.speak(u);
+ }catch{}
+}
