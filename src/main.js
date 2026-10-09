@@ -315,11 +315,11 @@ document.querySelector('[data-action="fish-hook"]')?.addEventListener('click',()
  }});
 });
 document.querySelector('[data-action="fish-shop"]')?.addEventListener('click',()=>{ui.shopCategory='rods';ui.panel='shop';ui.previewItem=null;render()});
-document.querySelectorAll('[data-action="wardrobe-open"]').forEach(b=>b.addEventListener('click',()=>{ui.panel='wardrobe';ui.previewItem=null;render()}));
+document.querySelectorAll('[data-action="wardrobe-open"]').forEach(b=>b.addEventListener('click',()=>{state.room='wardrobe';state=moveLuna(state,'idle');ui.panel='wardrobe';ui.previewItem=null;persist();render();if(state.settings?.musicEnabled!==false)startRoomMusic('wardrobe')}));
 document.querySelector('[data-action="wardrobe-shop"]')?.addEventListener('click',()=>{ui.shopCategory='outfits';ui.panel='shop';ui.previewItem=null;render()});
 document.querySelectorAll('[data-preview]').forEach(b=>b.addEventListener('click',()=>{ui.previewItem=b.dataset.preview;state.activity={type:'dress',stage:'preview',itemId:ui.previewItem,startedAt:Date.now()};giggleSound();showBubble('Примеряю… как тебе? 😸',1200);render()}));
 document.querySelector('[data-clear-preview]')?.addEventListener('click',()=>{ui.previewItem=null;state.activity={type:'idle',stage:'idle',startedAt:Date.now()};render()});
-document.querySelector('[data-buy-preview]')?.addEventListener('click',()=>{const id=ui.previewItem||document.querySelector('[data-buy-preview]')?.dataset.buyPreview;if(!id)return;const r=buyItem(state,id);state=r.state;if(r.ok){ui.previewItem=null;ui.panel='wardrobe';state.activity={type:'dress',stage:'dressHappy',itemId:id,startedAt:Date.now()};persist();sfx('coin');glamourJingle();giggleSound();showBubble('Покупка в гардеробе! Нажми на наряд, чтобы надеть ✨',2400);render()}else if(r.reason==='premium'){openBotPurchase(id)}else{showBubble(r.reason==='coins'?'Не хватает монет':'Пока закрыто',1500);render()}});
+document.querySelector('[data-buy-preview]')?.addEventListener('click',()=>{const id=ui.previewItem||document.querySelector('[data-buy-preview]')?.dataset.buyPreview;if(!id)return;const r=buyItem(state,id);state=r.state;if(r.ok){ui.previewItem=null;state.room='wardrobe';state=moveLuna(state,'idle');ui.panel='wardrobe';state.activity={type:'dress',stage:'dressHappy',itemId:id,startedAt:Date.now()};persist();sfx('coin');glamourJingle();giggleSound();showBubble('Покупка в гардеробе! Нажми на наряд, чтобы надеть ✨',2400);render()}else if(r.reason==='premium'){openBotPurchase(id)}else{showBubble(r.reason==='coins'?'Не хватает монет':'Пока закрыто',1500);render()}});
 document.querySelector('[data-action="invite"]')?.addEventListener('click',()=>{state.referral??={rewardClaimed:false,shown:0};const share='https://t.me/share/url?url='+encodeURIComponent('https://t.me/CozyKittenCornerBot?start=friend')+'&text='+encodeURIComponent('Поиграй со мной в Cozy Kitten Corner 🐾');try{window.Telegram?.WebApp?.openTelegramLink?window.Telegram.WebApp.openTelegramLink(share):window.open(share,'_blank')}catch{}if(!state.referral.rewardClaimed){state.referral.rewardClaimed=true;state.economy.coins+=100;persist();sfx('coin');applauseSound();showBubble('+100 🪙 за приглашение! 🎁',1800);render()}else showBubble('Ссылка для друга открыта ♥',1200)});
 document.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',()=>{
  if(actionLock)return;
@@ -331,6 +331,7 @@ document.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',(
  if(['playroom','lake','dance'].includes(state.room))state.activity={type:'emotion',stage:'curious',startedAt:Date.now()};
  ui.fridgeOpen=false;ui.panel=null;ui.previewItem=null;
  if(state.room==='store')ui.panel='shop';
+ if(state.room==='wardrobe')ui.panel='wardrobe';
  soundOn=state.settings?.musicEnabled!==false;
  preloadRoomBackgrounds(state.room);
  persist();render();if(soundOn)startRoomMusic(state.room);else stopMusic();
