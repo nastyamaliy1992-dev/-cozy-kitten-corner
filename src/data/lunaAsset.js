@@ -26,10 +26,10 @@ const actionFrame = path => asset(`actions/${path}`);
 const bathPeekNoFixture = actionFrame('bathroom/bath_peek_no_fixture.webp');
 const toiletSitNoFixture = actionFrame('bathroom/toilet_sit_no_fixture.webp');
 const bathroomFrames = {
-  toiletReady:toiletSitNoFixture,
-  toiletSitDown:toiletSitNoFixture,
-  toiletSitting:toiletSitNoFixture,
-  toiletFinished:actionFrame('bathroom/048_04_bathroom_bath_bath_finished.png'),
+  toiletReady:actionFrame('bathroom/037_04_bathroom_bath_toilet_ready.png'),
+  toiletSitDown:actionFrame('bathroom/038_04_bathroom_bath_toilet_sit_down.png'),
+  toiletSitting:actionFrame('bathroom/039_04_bathroom_bath_toilet_sitting.png'),
+  toiletFinished:actionFrame('bathroom/040_04_bathroom_bath_toilet_finished.png'),
   bathStepIn:bathPeekNoFixture,
   inTub:bathPeekNoFixture,
   bathSoap:bathPeekNoFixture,
@@ -71,12 +71,12 @@ const sleepFrames = Object.fromEntries(Array.from({length:10},(_,i)=>{
 export const LUNA_ASSETS = {
   idle, greetingWave, idleBlink, idleTail, ...emotionAssets, pet, happy, sad, sleepy, sleep, eat,
   hungry:idle,
-  play:actionYarn,
-  draw:actionDraw,
+  play:greetingWave,
+  draw:drawingFrames.drawSit,
   bath:actionBath,
   toilet:actionToilet,
   fish:idle,
-  jump:actionJump,
+  jump:greetingWave,
   proud:happy,
   laugh:happy,
   surprised:idle,
@@ -93,9 +93,12 @@ const stageMap = {
   ...fishingFrames,
   ...drawingFrames,
   danceLeft:greetingWave,
-  danceRight:actionYarn,
-  danceJump:actionJump,
-  danceSpin:happy,
+  danceRight:greetingWave,
+  danceJump:greetingWave,
+  danceSpin:greetingWave,
+  playReady:emotionAssets.curious,
+  playReach:greetingWave,
+  playCatch:emotionAssets.warmHappy,
   idle,
   idleBlink,
   idleTail,
@@ -106,8 +109,8 @@ const stageMap = {
   stroking:pet,
   happy:emotionAssets.warmHappy,
   satisfied:emotionAssets.warmHappy,
-  celebrate:actionJump,
-  newOutfit:actionJump,
+  celebrate:greetingWave,
+  newOutfit:greetingWave,
   mouthOpen:eat,
   bite:eat,
   chew1:eat,
@@ -139,8 +142,8 @@ const stageMap = {
   ...emotionAssets,
   preview:idle,
   equipped:actionJump,
-  jumping:actionJump,
-  chasing:actionYarn,
+  jumping:greetingWave,
+  chasing:greetingWave,
   drumming:happy
 };
 
@@ -155,8 +158,8 @@ export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle', 
   if (type === 'toilet') return actionToilet;
   if (['bath','bathReady','soap','shampoo','shower','bathBomb','towel'].includes(type)) return actionBath;
   if (type === 'draw') return actionDraw;
-  if (type === 'play') return actionYarn;
-  if (type === 'jump' || type === 'celebrate' || type === 'levelup') return actionJump;
+  if (type === 'play') return greetingWave;
+  if (type === 'jump' || type === 'celebrate' || type === 'levelup') return greetingWave;
   if (type === 'happy' || type === 'dress' || type === 'drum') return happy;
   if (type === 'sad') return sad;
   if (emotion === 'tired') return sleepy;
