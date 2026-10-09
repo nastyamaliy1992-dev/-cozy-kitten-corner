@@ -184,7 +184,7 @@ test('sequence assets can be collected before playback begins', () => {
 });
 
 test('generic hunger never shows the old bowl and purple-heart sprite', () => {
-  assert.match(lunaAssetFor({emotion:'hungry',activity:'idle',stage:'idle'}),/hall\/luna-main-clean\.png$/);
+  assert.match(lunaAssetFor({emotion:'hungry',activity:'idle',stage:'idle'}),/emotions\/pleading\.png$/);
   assert.match(lunaAssetFor({activity:'bathWant',stage:'asking'}),/emotions\/pleading\.png$/);
 });
 
