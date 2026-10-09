@@ -3,10 +3,10 @@ let musicBus=null,sfxBus=null,voiceBus=null;
 let settings={musicEnabled:true,sfxEnabled:true,voiceEnabled:true,musicVolume:.35,sfxVolume:.7,voiceVolume:.65};
 const roomNotes={dance:[523.25,659.25,783.99,880,783.99,659.25],living:[261.63,329.63,392],kitchen:[293.66,369.99,440],bathroom:[220,277.18,329.63],toilet:[246.94,311.13,369.99],bedroom:[196,246.94,293.66],wardrobe:[277.18,349.23,415.3],playroom:[329.63,415.3,493.88],school:[392,493.88,587.33,783.99],lake:[174.61,220,261.63],store:[349.23,440,523.25]};
 function ensure(){if(ctx)return;ctx=new (window.AudioContext||window.webkitAudioContext)();musicBus=ctx.createGain();sfxBus=ctx.createGain();voiceBus=ctx.createGain();musicBus.connect(ctx.destination);sfxBus.connect(ctx.destination);voiceBus.connect(ctx.destination);applyVolumes()}
-function applyVolumes(){if(!ctx)return;musicBus.gain.setTargetAtTime((settings.musicEnabled===false?0:settings.musicVolume*.62),ctx.currentTime,.08);sfxBus.gain.setTargetAtTime((settings.sfxEnabled===false?0:settings.sfxVolume*.56),ctx.currentTime,.05);voiceBus.gain.setTargetAtTime((settings.voiceEnabled===false?0:settings.voiceVolume*.56),ctx.currentTime,.05)}
+function applyVolumes(){if(!ctx)return;musicBus.gain.setTargetAtTime((settings.musicEnabled===false?0:Math.min(1,settings.musicVolume*(currentRoom==='dance'?.96:.62))),ctx.currentTime,.08);sfxBus.gain.setTargetAtTime((settings.sfxEnabled===false?0:settings.sfxVolume*.56),ctx.currentTime,.05);voiceBus.gain.setTargetAtTime((settings.voiceEnabled===false?0:settings.voiceVolume*.56),ctx.currentTime,.05)}
 export function configureAudio(next={}){settings={...settings,...next};if(ctx)applyVolumes()}
 function tone(freq,dur=.9,vol=.15,type='sine',bus='sfx'){ensure();const o=ctx.createOscillator(),g=ctx.createGain(),out=bus==='music'?musicBus:bus==='voice'?voiceBus:sfxBus;o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.001,ctx.currentTime);g.gain.linearRampToValueAtTime(vol,ctx.currentTime+.06);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(out);o.start();o.stop(ctx.currentTime+dur)}
-export function startRoomMusic(room){ensure();if(ctx.state==='suspended')ctx.resume();if(currentRoom===room&&timer)return;currentRoom=room;clearInterval(timer);let i=0;const play=()=>{
+export function startRoomMusic(room){ensure();if(ctx.state==='suspended')ctx.resume();if(currentRoom===room&&timer)return;currentRoom=room;applyVolumes();clearInterval(timer);let i=0;const play=()=>{
  const notes=roomNotes[currentRoom]||roomNotes.living;
  const a=notes[i%notes.length],b=notes[(i+1)%notes.length];
  if(currentRoom==='dance'){
@@ -16,8 +16,9 @@ export function startRoomMusic(room){ensure();if(ctx.state==='suspended')ctx.res
      tone(beat%2===0?110:175,.115,.12,'triangle','music');
      tone(beat%2===0?1960:1450,.055,.024,'sine','music');
    },ms));
-   tone(a,.34,.13,'triangle','music');
-   setTimeout(()=>tone(b,.36,.115,'triangle','music'),730);
+   tone(a,.34,.17,'triangle','music');
+   tone(a/2,.23,.10,'sine','music');
+   setTimeout(()=>{tone(b,.36,.16,'triangle','music');tone(b/2,.24,.09,'sine','music')},730);
  }else{
    tone(a,1.5,.16,'sine','music');
    setTimeout(()=>tone(b,1.05,.07,'triangle','music'),180);
@@ -25,7 +26,7 @@ export function startRoomMusic(room){ensure();if(ctx.state==='suspended')ctx.res
  i++;
 };play();timer=setInterval(play,1450)}
 export function stopMusic(){clearInterval(timer);timer=null;currentRoom=null}
-export function duckMusic(on=true){ensure();musicBus.gain.setTargetAtTime(on ? .10 : (settings.musicEnabled===false ? 0 : settings.musicVolume*.62),ctx.currentTime,.12)}
+export function duckMusic(on=true){ensure();musicBus.gain.setTargetAtTime(on ? .10 : (settings.musicEnabled===false ? 0 : settings.musicVolume*(currentRoom==='dance'?.96:.62)),ctx.currentTime,.12)}
 export function sfx(kind){const f={pet:520,feed:620,drink:720,bath:440,toilet:350,play:800,sleep:260,step:330,jump:690,draw:570,cast:460,catch:880,miss:260,coin:980,level:1040}[kind]||500;tone(f,.28,.24,kind==='play'?'triangle':'sine')}
 export function purr(duration=2.8){ensure();if(ctx.state==='suspended')ctx.resume();const now=ctx.currentTime,end=now+duration;const carrier=ctx.createOscillator(),harm=ctx.createOscillator(),mod=ctx.createOscillator(),modGain=ctx.createGain(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();carrier.type='sine';carrier.frequency.value=26;harm.type='sine';harm.frequency.value=52;mod.type='sine';mod.frequency.value=22;modGain.gain.value=.055;filter.type='lowpass';filter.frequency.value=135;gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(.34,now+.18);gain.gain.setValueAtTime(.30,end-.22);gain.gain.linearRampToValueAtTime(.001,end);mod.connect(modGain);modGain.connect(gain.gain);carrier.connect(filter);harm.connect(filter);filter.connect(gain);gain.connect(sfxBus);carrier.start(now);harm.start(now);mod.start(now);carrier.stop(end);harm.stop(end);mod.stop(end)}
 function noise(duration=.8,vol=.07,filterFreq=1800){ensure();const len=Math.floor(ctx.sampleRate*duration),buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*(1-i/len);const src=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),g=ctx.createGain();src.buffer=buf;filter.type='lowpass';filter.frequency.value=filterFreq;g.gain.value=vol;src.connect(filter);filter.connect(g);g.connect(sfxBus);src.start()}
