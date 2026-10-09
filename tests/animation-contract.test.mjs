@@ -134,7 +134,7 @@ test('welcome sequence waves and speaks the requested greeting with soft voice s
   assert.match(main, /stage:'greetingWave'/);
   assert.match(main, /Привет, я Луна\. Я тебя ждала!/);
   assert.match(audio, /u\.rate=\.94/);
-  assert.match(audio, /u\.pitch=1\.18/);
+  assert.match(audio, /u\.pitch=1\.03/);
 });
 
 test('kitchen action frames stay above the food panel', async () => {
@@ -241,4 +241,17 @@ test('sequence sound cues are tied to exact animation frames', () => {
   assert.deepEqual(sequenceSoundCue('draw','drawFirstLine'),['draw']);
   assert.deepEqual(sequenceSoundCue('fishGame','cast'),['cast','water']);
   assert.deepEqual(sequenceSoundCue('fishCatch','fishOnHook'),['catch']);
+});
+
+
+test('play interactions count both toys, while toilet sprites never overlay a second toilet', async () => {
+ const [main, view, luna] = await Promise.all([
+  readFile(new URL('../src/main.js', import.meta.url), 'utf8'),
+  readFile(new URL('../src/ui/appView.js', import.meta.url), 'utf8'),
+  readFile(new URL('../src/data/lunaAsset.js', import.meta.url), 'utf8')
+ ]);
+ assert.match(main, /state\.playStats\[kind\]/);
+ assert.match(view, /play-score/);
+ assert.match(luna, /toiletSitting:toiletSitNoFixture/);
+ assert.match(luna, /toiletSitDown:toiletSitNoFixture/);
 });
