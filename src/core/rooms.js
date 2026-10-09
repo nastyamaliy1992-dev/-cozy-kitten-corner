@@ -7,5 +7,6 @@ export const rooms = {
  wardrobe:{id:'wardrobe',labelKey:'wardrobe',className:'room-wardrobe'},
  playroom:{id:'playroom',labelKey:'playroom',className:'room-playroom'},
  store:{id:'store',labelKey:'store',className:'room-store'},
+ dance:{id:'dance',labelKey:'dance',className:'room-dance'},
  lake:{id:'lake',labelKey:'lake',className:'room-lake'}
 };
