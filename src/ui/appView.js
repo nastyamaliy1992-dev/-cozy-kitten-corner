@@ -1,10 +1,10 @@
-import { t } from '../data/localization.js?v=20261009-repair2';
-import { rooms } from '../core/rooms.js?v=20261009-repair2';
-import { renderRoomDecor } from './scenes.js?v=20261009-repair2';
-import { getEmotion } from '../core/state.js?v=20261009-repair2';
-import { renderPet } from './pet.js?v=20261009-repair2';
-import { catalog,categories,itemIcon } from '../core/shop.js?v=20261009-repair2';
-import { quests,achievements,levelData,rewardText } from '../core/progression.js?v=20261009-repair2';
+import { t } from '../data/localization.js?v=20261009-photo3';
+import { rooms } from '../core/rooms.js?v=20261009-photo3';
+import { renderRoomDecor } from './scenes.js?v=20261009-photo3';
+import { getEmotion } from '../core/state.js?v=20261009-photo3';
+import { renderPet } from './pet.js?v=20261009-photo3';
+import { catalog,categories,itemIcon } from '../core/shop.js?v=20261009-photo3';
+import { quests,achievements,levelData,rewardText } from '../core/progression.js?v=20261009-photo3';
 const labels={hunger:'Сытость',thirst:'Жажда',cleanliness:'Чистота',mood:'Настрой',energy:'Энергия',toilet:'Лоток',health:'Здоровье'};
 const categoryNames={food:'Продукты',drinks:'Напитки',treats:'Сладости',toys:'Игрушки',art:'Творчество',pajamas:'Пижамы',outfits:'Одежда',costumes:'Костюмы',hats:'Головные уборы',glasses:'Очки',collars:'Ошейники',shoes:'Обувь',accessories:'Аксессуары',bath:'Уход',furniture:'Мебель',beds:'Лежанки',kitchen:'Кухня',decor:'Декор',rods:'Удочки',fishing:'Для рыбалки',seasonal:'Сезонное',rare:'Редкое',gifts:'Подарки',premium:'Премиум'};
 const meter=(k,v)=>`<div class="need-line"><div class="need-label"><span class="need-mark ${k}"></span><span>${labels[k]}</span><strong>${Math.round(v)}</strong></div><div class="meter"><i style="width:${v}%"></i></div></div>`;
