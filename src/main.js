@@ -206,7 +206,7 @@ function runPlayAction(kind='ball'){
 }
 function runDanceMove(kind='left'){
  if(actionLock||state.room!=='dance')return;
- if(state.needs.energy<8){showBubble('Луне нужно немного отдохнуть 🌙',1400);return}
+ // Low energy never disables user-triggered dance animation; only energy loss bottoms out at zero.
  state.dance??={moves:0,completed:0};
  state.dance.moves++;
  state.needs.mood=Math.min(100,state.needs.mood+2);
