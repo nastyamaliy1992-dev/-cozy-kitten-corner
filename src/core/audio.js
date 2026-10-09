@@ -38,7 +38,7 @@ const sequenceCueMap={
  'draw:drawStart':['draw'],'draw:drawFirstLine':['draw'],'draw:drawHeart':['draw'],
  'draw:drawOutline':['draw'],'draw:drawColor':['draw'],'draw:drawStars':['draw'],
  'jump:jumping':['jump'],'play:chasing':['play'],'bath:bathStepIn':['splash'],
- 'toilet:toiletSitting':['fart'],'toilet:toiletFinished':['flush'],
+ 'toilet:toiletSitting':['fart'],'toilet:toiletFlush':['flush'],
  'towel:bathStepOut':['splash'],'towel:bathShake':['water'],
  'fishGame:cast':['cast','water'],'fishCatch:biteFish':['splash'],'fishCatch:fishOnHook':['catch']
 };
@@ -58,4 +58,4 @@ export function playSequenceFrameSound(type,stage){
 }
 
 export function unlockAudio(){ensure();if(ctx?.state==='suspended')return ctx.resume();return Promise.resolve()}
-export function speakLuna(text,lang='ru-RU'){if(settings.voiceEnabled===false||!text||!('speechSynthesis' in window))return;try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.94;u.pitch=1.18;u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));const voices=window.speechSynthesis.getVoices?.()||[],prefix=lang.slice(0,2).toLowerCase(),russian=voices.filter(v=>v.lang?.toLowerCase().startsWith(prefix));const preferred=russian.find(v=>/milena|alena|alyona|svetlana|irina|katya|female|google.*рус|siri/i.test(v.name))||russian.find(v=>!/male|yuri|pavel|alexander/i.test(v.name))||russian[0];if(preferred)u.voice=preferred;window.speechSynthesis.speak(u)}catch{}}
+export function speakLuna(text,lang='ru-RU'){if(settings.voiceEnabled===false||!text||!('speechSynthesis' in window))return;try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=1.04;u.pitch=1.06;u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));const voices=window.speechSynthesis.getVoices?.()||[],prefix=lang.slice(0,2).toLowerCase(),russian=voices.filter(v=>v.lang?.toLowerCase().startsWith(prefix));const preferred=russian.find(v=>/milena|alena|alyona|svetlana|irina|katya|female|google.*рус|siri/i.test(v.name))||russian.find(v=>!/male|yuri|pavel|alexander/i.test(v.name))||russian[0];if(preferred)u.voice=preferred;window.speechSynthesis.speak(u)}catch{}}
