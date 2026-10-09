@@ -1,4 +1,4 @@
-import { loadSave, saveGame } from './persistence.js?v=20261009-repair2';
+import { loadSave, saveGame } from './persistence.js?v=20261009-photo3';
 const clamp=v=>Math.max(0,Math.min(100,v));
 const recalc=n=>{n.needs.happiness=Math.round((n.needs.hunger+n.needs.thirst+n.needs.cleanliness+n.needs.mood+n.needs.energy+n.needs.toilet+n.needs.health)/7);return n};
 export function createInitialState(name,lang='ru'){return {schemaVersion:2,createdAt:Date.now(),updatedAt:Date.now(),name,room:'living',sleeping:false,sleepStartedAt:null,lastSeenAt:Date.now(),needs:{hunger:78,thirst:82,cleanliness:88,mood:86,energy:80,toilet:84,health:100,happiness:88},economy:{coins:250,xp:0,level:1},inventory:{food:{dryFood:4,wetFood:2,fishTreat:1},clothes:[],furniture:[],owned:[],equipped:{}},bedroom:{lampOn:true},petting:{lastXpAt:0},settings:{language:lang,reduceMotion:false,musicVolume:.35,sfxVolume:.7,voiceVolume:.65,voiceStyle:'soft',haptics:true,subtitles:true,graphics:'high',batterySaver:false,notifications:false,purchaseConfirm:true},movement:{x:50,y:78,target:null,facing:1},dance:{moves:0,completed:0},onboarding:{introSeen:false,starterClaimed:false}}}
