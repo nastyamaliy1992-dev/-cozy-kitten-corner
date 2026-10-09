@@ -166,7 +166,9 @@ export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle', 
   return idle;
 }
 
-export const LUNA_PRELOAD = [...new Set([...Object.values(LUNA_ASSETS),...Object.values(stageMap)])];
+// iOS Telegram WebView cannot reliably decode 100+ large transparent PNGs at once.
+// Keep only the essential idle frames warm. Actions load their own frames on demand.
+export const LUNA_PRELOAD = [idle, idleBlink, idleTail, greetingWave];
 
 export function sequenceFrameSources(type,frames=[]){
   return [...new Set(frames.map(frame=>lunaAssetFor({activity:type,stage:frame.stage})))];
