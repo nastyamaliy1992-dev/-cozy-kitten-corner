@@ -34,7 +34,7 @@ test('all new dance, jump, toy and toilet sprites actually exist',async()=>{
 
 test('approved dance room contains a valid embedded WEBP photograph',async()=>{
  const svg=await readFile(new URL('../assets/rooms/dance.svg',import.meta.url),'utf8');
- const found=svg.match(/data:image\\/webp;base64,([A-Za-z0-9+/=]+)/);
+ const found=svg.match(new RegExp('data:image/webp;base64,([A-Za-z0-9+/=]+)'));
  assert.ok(found,'approved studio photograph must be embedded');
  const data=Buffer.from(found[1],'base64');
  assert.equal(data.toString('ascii',0,4),'RIFF');
