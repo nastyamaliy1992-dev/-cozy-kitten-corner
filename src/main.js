@@ -8,7 +8,7 @@ import { castLine,catchFish } from './core/fishing.js';
 import { ensureSchool, startLesson, answerLesson, unlockLesson } from './core/school.js?v=20261010-school-play2';
 import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js';
 import { preloadRoomBackgrounds } from './data/roomAssets.js?v=20261010-dance-photo1';
-import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261010-school-play2';
+import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261010-poses-hotfix3';
 const telegram=initTelegram();
 preloadLunaFrames();
 let launchIntroPending=false;
@@ -289,7 +289,7 @@ document.querySelector('[data-play-catch]')?.addEventListener('click',()=>{
  if(!state.playChallenge||state.room!=='playroom'||actionLock)return;
  const challenge=state.playChallenge;challenge.hits++;challenge.target=(challenge.target+1)%5;
  state.activity={type:'playGame',stage:challenge.hits%2?'chasing':'toySurprise',playKind:challenge.kind,startedAt:Date.now()};
- sfx('play');if(state.settings?.haptics!==false)haptic('light');persist();render();
+ sfx('play');if(challenge.hits%2)meow('happy');if(state.settings?.haptics!==false)haptic('light');persist();render();
  if(challenge.hits<3){showBubble('Поймала! '+challenge.hits+'/3 🐾',900);return}
  const kind=challenge.kind;state.playChallenge=null;
  state=play(state);state=track(state,'play');state=unlockAchievement(state,'firstToy').state;
@@ -361,9 +361,9 @@ document.querySelectorAll('[data-school-buy]').forEach(b=>b.addEventListener('cl
 document.querySelector('[data-school-cancel]')?.addEventListener('click',()=>{ensureSchool(state).active=null;state.activity={type:'idle',stage:'idle',startedAt:Date.now()};persist();render()});
 document.querySelectorAll('[data-school-answer]').forEach(b=>b.addEventListener('click',()=>{if(state.room!=='school'||actionLock)return;
  const r=answerLesson(state,Number(b.dataset.schoolAnswer));if(!r.ok)return;state=r.state;
- state.activity={type:'school',stage:r.correct?(r.finished?'schoolCorrect':'schoolWrite'):'schoolWrong',startedAt:Date.now()};
+ state.activity={type:'school',stage:r.correct?(r.finished?'schoolCorrect':'schoolWrite'):(state.school?.active?.mistakes||1)%2===0?'schoolSad':'schoolAngry',startedAt:Date.now()};
  persist();render();
- if(r.correct){sfx('coin');if(r.finished){glamourJingle();applauseSound();giggleSound();showBubble('Урок пройден! +'+r.coins+' 🪙 и +'+r.xp+' XP 🌟',2500)}else{meow('happy');showBubble('Верно! '+r.explain,1600)}}else{meow('sad');showBubble('Попробуй ещё! Ты справишься 💛',1700)}
+ if(r.correct){sfx('coin');if(r.finished){glamourJingle();applauseSound();giggleSound();showBubble('Урок пройден! +'+r.coins+' 🪙 и +'+r.xp+' XP 🌟',2500)}else{meow('happy');showBubble('Верно! '+r.explain,1600)}}else{sadWhimper();meow('sad');showBubble('Попробуй ещё! Ты справишься 💛',1700)}
  setTimeout(()=>{if(state?.room==='school'&&state.activity?.type==='school'){state.activity={type:'school',stage:state.school?.active?'schoolThink':'schoolCorrect',startedAt:Date.now()};persist();render()}},1100);
 }));
 
