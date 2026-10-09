@@ -1183,3 +1183,62 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .wardrobe-panel .catalog-grid button small{font-size:10px}
 @media(max-width:430px){.room-school .pet-button{bottom:44%!important;width:min(53vw,260px)!important}.school-interface{left:78px;right:7px;max-height:46dvh;padding:9px}.room-wardrobe .pet-button{bottom:45%!important}.animated-toilet-lid{bottom:32%;width:40%}.play-catch-target{width:80px;height:80px}}
 @media(prefers-reduced-motion:reduce){.play-catch-target{animation:none}.room-wardrobe.activity-dress .pet-stage .luna-photo,.room-school.activity-school .pet-stage .luna-photo{animation:none!important}}
+
+
+/* 2026-10-10 regression fix: clothing must never cover Luna's head, and
+   gameplay styles must match the actual 'playGame' activity name. */
+.luna-wearables .wear-body{
+  clip-path:none!important;
+  left:38%!important;
+  right:38%!important;
+  top:63%!important;
+  height:14%!important;
+  min-height:0!important;
+  border-radius:36% 36% 34% 34%!important;
+  border:1px solid #f2ebff99!important;
+  box-shadow:inset 0 3px 8px #ffffff55,0 3px 6px #16102633!important;
+}
+.luna-wearables .wear-body::after{display:none!important}
+/* Do not draw generic clothing on action poses: they never line up with
+   the changing pose artwork. Keep equipped ids, purchases and saves intact. */
+.activity-dance .luna-wearables .wear-body,
+.activity-playGame .luna-wearables .wear-body,
+.activity-school .luna-wearables .wear-body,
+.activity-toilet .luna-wearables .wear-body,
+.activity-fishGame .luna-wearables .wear-body,
+.activity-fishCatch .luna-wearables .wear-body,
+.activity-jump .luna-wearables .wear-body{display:none!important}
+.room-playroom.activity-playGame .pet-stage[data-luna-stage="chasing"] .luna-photo{
+  animation:ckPlayChase .55s cubic-bezier(.15,.6,.3,1) 2 alternate!important;
+}
+.room-playroom.activity-playGame .pet-stage[data-luna-stage="toySurprise"] .luna-photo{
+  animation:ckPlayCatch .55s ease-out 1!important;
+}
+.room-playroom.activity-playGame .play-catch-target{
+  animation:ckTargetMove .42s ease-in-out infinite alternate,ckToyPulse 1s ease-in-out infinite!important;
+}
+@keyframes ckToyPulse{50%{filter:brightness(1.17) drop-shadow(0 6px 12px #ffce7880)}}
+.room-dance.activity-dance .pet-stage[data-luna-stage="danceLeft"] .luna-photo{
+  animation:ckDanceLeft .68s cubic-bezier(.3,.3,.5,1) 1 both!important;
+}
+.room-dance.activity-dance .pet-stage[data-luna-stage="danceRight"] .luna-photo{
+  animation:ckDanceRight .68s cubic-bezier(.3,.3,.5,1) 1 both!important;
+}
+.room-toilet .animated-toilet-lid{
+  opacity:0;
+  transition:opacity .22s ease;
+}
+.room-toilet.activity-toilet .animated-toilet-lid{opacity:1}
+.room-toilet.activity-toilet .animated-toilet-lid::before{
+  content:"";
+  position:absolute;
+  inset:18% 9% 10%;
+  border-radius:50%;
+  background:radial-gradient(ellipse at 50% 40%,#465256,#1a2327 75%);
+  border:6px solid #f4f3f1;
+  box-shadow:0 3px 8px #0005;
+}
+.room-toilet.activity-toilet .animated-toilet-lid span{
+  position:relative;
+}
+.room-toilet.activity-toilet .pet-button{z-index:42!important}
