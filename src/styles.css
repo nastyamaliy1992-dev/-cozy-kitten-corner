@@ -1039,3 +1039,12 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .room-dance .dance-actions small{font-size:10px;line-height:1.1}
 @media(max-width:430px){.room-dance .pet-button{width:min(68vw,305px)!important;bottom:146px!important}.room-dance .dance-status{bottom:92px;left:77px;right:7px}.room-dance .dance-actions button{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.dance-glow-orbs i{animation:none!important}}
+
+/* 2026-10-09: avoid heavy GPU layers in Telegram's iOS WebView.
+   Transparent Luna sprites and large room art should not reserve compositor textures. */
+.pet-button,.pet-stage,.pet-stage .luna-photo,.room-background{
+  will-change:auto!important;
+  -webkit-backface-visibility:visible;
+  backface-visibility:visible;
+}
+.pet-stage .luna-photo{filter:none!important}
