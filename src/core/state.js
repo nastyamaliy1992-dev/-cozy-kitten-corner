@@ -40,6 +40,8 @@ export function getEmotion(s){
  if(n.mood>88&&n.happiness>82)return 'joyful';
  if(n.mood<18)return 'angry';
  if(n.mood<32)return 'annoyed';
+ if(n.mood<15)return 'angry';
+ if(n.mood<30)return 'annoyed';
  if(n.mood<45)return 'sad';
  return 'calm';
 }
