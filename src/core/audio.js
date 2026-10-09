@@ -1,7 +1,7 @@
 let ctx=null,timer=null,currentRoom=null;
 let musicBus=null,sfxBus=null,voiceBus=null;
 let settings={musicEnabled:true,sfxEnabled:true,voiceEnabled:true,musicVolume:.35,sfxVolume:.7,voiceVolume:.65};
-const roomNotes={living:[261.63,329.63,392],kitchen:[293.66,369.99,440],bathroom:[220,277.18,329.63],toilet:[246.94,311.13,369.99],bedroom:[196,246.94,293.66],wardrobe:[277.18,349.23,415.3],playroom:[329.63,415.3,493.88],lake:[174.61,220,261.63],store:[349.23,440,523.25]};
+const roomNotes={dance:[523.25,659.25,783.99,880,783.99,659.25],living:[261.63,329.63,392],kitchen:[293.66,369.99,440],bathroom:[220,277.18,329.63],toilet:[246.94,311.13,369.99],bedroom:[196,246.94,293.66],wardrobe:[277.18,349.23,415.3],playroom:[329.63,415.3,493.88],lake:[174.61,220,261.63],store:[349.23,440,523.25]};
 function ensure(){if(ctx)return;ctx=new (window.AudioContext||window.webkitAudioContext)();musicBus=ctx.createGain();sfxBus=ctx.createGain();voiceBus=ctx.createGain();musicBus.connect(ctx.destination);sfxBus.connect(ctx.destination);voiceBus.connect(ctx.destination);applyVolumes()}
 function applyVolumes(){if(!ctx)return;musicBus.gain.setTargetAtTime((settings.musicEnabled===false?0:settings.musicVolume*.62),ctx.currentTime,.08);sfxBus.gain.setTargetAtTime((settings.sfxEnabled===false?0:settings.sfxVolume*.56),ctx.currentTime,.05);voiceBus.gain.setTargetAtTime((settings.voiceEnabled===false?0:settings.voiceVolume*.56),ctx.currentTime,.05)}
 export function configureAudio(next={}){settings={...settings,...next};if(ctx)applyVolumes()}
