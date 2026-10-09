@@ -161,7 +161,7 @@ const stageMap = {
 export function lunaAssetFor({ sleeping=false, emotion='calm', activity='idle', stage='idle' }={}){
   const type = typeof activity === 'object' ? (activity.type || 'idle') : activity;
   const phase = typeof activity === 'object' ? (activity.stage || stage || 'idle') : stage;
-  if (stageMap[phase]) return stageMap[phase];
+  if (stageMap[phase] && (phase !== 'idle' || emotion === 'calm')) return stageMap[phase];
   if (sleeping || type === 'sleep' || phase === 'sleeping') return sleep;
   if (type === 'petting' || type === 'petted') return pet;
   if (type === 'eating' || type === 'drink') return eat;
