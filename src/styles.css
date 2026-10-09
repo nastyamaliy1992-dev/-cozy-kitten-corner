@@ -1242,3 +1242,127 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
   position:relative;
 }
 .room-toilet.activity-toilet .pet-button{z-index:42!important}
+
+
+/* October 10 2026: floor-anchored full-body character + usable playroom.
+   Until bespoke fitted PNG outfits exist, NEVER paint block/oval clothes on top
+   of character art (the purple object that hid her face on small screens). */
+.luna-wearables .wear-body{display:none!important}
+.activity-idle .pet-stage{
+  animation:ckIdleBreath 3.4s ease-in-out infinite!important;
+}
+.activity-idle .pet-stage .luna-photo{
+  animation:ckIdleAlive 5.3s ease-in-out infinite!important;
+  transform-origin:50% 85%;
+}
+.activity-idle .pet-stage[data-luna-stage="idleBlink"] .luna-photo,
+.activity-idle .pet-stage[data-luna-stage="idleTail"] .luna-photo{
+  animation:ckIdleAlive 4.1s ease-in-out infinite!important;
+}
+@keyframes ckIdleBreath{
+  0%,100%{transform:scaleX(var(--luna-facing,1)) scale(1)}
+  50%{transform:scaleX(var(--luna-facing,1)) scale(1.012,.99)}
+}
+@keyframes ckIdleAlive{
+  0%,38%,100%{transform:translateY(0) rotate(0)}
+  48%{transform:translateY(-4px) rotate(-1deg)}
+  59%{transform:translateY(0) rotate(1deg)}
+}
+.room-playroom .pet-button{
+  bottom:12%!important;
+  width:min(67vw,330px)!important;
+  height:min(76vw,380px)!important;
+}
+.room-playroom.activity-draw .pet-button{
+  left:48%!important;
+  bottom:11%!important;
+  width:min(76vw,360px)!important;
+  height:min(72vw,350px)!important;
+}
+.room-playroom.activity-playGame .pet-button{
+  bottom:12%!important;
+  max-width:330px!important;
+  z-index:38!important;
+}
+.room-playroom.activity-playGame .pet-stage[data-luna-stage="chasing"] .luna-photo{
+  animation:ckPlayChase .52s ease-in-out 2 alternate!important;
+}
+.room-playroom.activity-playGame .pet-stage[data-luna-stage="toySurprise"] .luna-photo{
+  animation:ckPlayCatch .48s ease-out 1!important;
+}
+.room-playroom.activity-playGame .pet-stage[data-luna-stage="toyAnnoyed"] .luna-photo{
+  animation:ckKittenDisappointed .4s ease-in-out 3 alternate!important;
+}
+@keyframes ckKittenDisappointed{
+  from{transform:translateX(-7px) rotate(-4deg)}
+  to{transform:translateX(7px) rotate(3deg)}
+}
+/* During a catch the moving ball is the ONE actual toy: no extra floor balls,
+   unreadable duplicate score and overlapping translucent captions. */
+.room-playroom:has(.play-challenge-status) .play-toy-prop,
+.room-playroom:has(.play-challenge-status) .play-score{display:none!important}
+.room-playroom .play-challenge-status{
+  bottom:100px!important;
+  left:85px!important;
+  right:10px!important;
+  z-index:63!important;
+  background:#211c34f5!important;
+  border:1px solid #f9e0ab90!important;
+  text-shadow:none!important;
+}
+.room-playroom .play-catch-target{
+  z-index:60!important;
+  width:82px!important;
+  height:82px!important;
+  background:transparent!important;
+}
+.room-playroom.activity-playGame .play-catch-target img{
+  filter:drop-shadow(0 7px 8px #0007);
+}
+.room-toilet:not(.activity-toilet) .pet-button{
+  left:56%!important;
+  bottom:11%!important;
+  width:min(60vw,300px)!important;
+  height:min(72vw,365px)!important;
+}
+.room-toilet.activity-toilet .pet-button{
+  left:52%!important;
+  bottom:30%!important;
+  width:min(58vw,290px)!important;
+  height:min(56vw,290px)!important;
+}
+/* Draw the upright lid BEHIND Luna, above the existing porcelain rim. */
+.room-toilet .animated-toilet-lid{
+  left:51%!important;
+  bottom:33%!important;
+  width:31%!important;
+  height:11%!important;
+  z-index:27!important;
+  opacity:1!important;
+  perspective:none!important;
+}
+.room-toilet .animated-toilet-lid::before{display:none!important}
+.room-toilet .animated-toilet-lid span,
+.room-toilet[data-luna-stage="toiletSitDown"] .animated-toilet-lid span,
+.room-toilet[data-luna-stage="toiletSitting"] .animated-toilet-lid span,
+.room-toilet[data-luna-stage="toiletFinished"] .animated-toilet-lid span{
+  position:absolute!important;
+  left:12%!important;
+  bottom:92%!important;
+  width:78%!important;
+  height:125%!important;
+  box-sizing:border-box!important;
+  border:7px solid #f5f1eb!important;
+  border-radius:47% 47% 43% 43%!important;
+  background:linear-gradient(145deg,#fffefb,#dededb)!important;
+  transform:none!important;
+  box-shadow:0 4px 14px #0004,inset 0 3px 6px #ffffffdd!important;
+}
+@media(max-width:430px){
+ .room-playroom .pet-button{width:min(68vw,290px)!important;height:min(76vw,335px)!important}
+ .room-playroom.activity-draw .pet-button{width:min(72vw,320px)!important}
+ .room-toilet.activity-toilet .pet-button{width:min(59vw,265px)!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .activity-idle .pet-stage,.activity-idle .pet-stage .luna-photo{animation:none!important}
+}
