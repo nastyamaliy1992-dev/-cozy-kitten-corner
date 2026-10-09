@@ -1,7 +1,7 @@
 let ctx=null,timer=null,currentRoom=null;
 let musicBus=null,sfxBus=null,voiceBus=null;
 let settings={musicEnabled:true,sfxEnabled:true,voiceEnabled:true,musicVolume:.35,sfxVolume:.7,voiceVolume:.65};
-const roomNotes={dance:[523.25,659.25,783.99,880,783.99,659.25],living:[261.63,329.63,392],kitchen:[293.66,369.99,440],bathroom:[220,277.18,329.63],toilet:[246.94,311.13,369.99],bedroom:[196,246.94,293.66],wardrobe:[277.18,349.23,415.3],playroom:[329.63,415.3,493.88],lake:[174.61,220,261.63],store:[349.23,440,523.25]};
+const roomNotes={dance:[523.25,659.25,783.99,880,783.99,659.25],living:[261.63,329.63,392],kitchen:[293.66,369.99,440],bathroom:[220,277.18,329.63],toilet:[246.94,311.13,369.99],bedroom:[196,246.94,293.66],wardrobe:[277.18,349.23,415.3],playroom:[329.63,415.3,493.88],school:[392,493.88,587.33,783.99],lake:[174.61,220,261.63],store:[349.23,440,523.25]};
 function ensure(){if(ctx)return;ctx=new (window.AudioContext||window.webkitAudioContext)();musicBus=ctx.createGain();sfxBus=ctx.createGain();voiceBus=ctx.createGain();musicBus.connect(ctx.destination);sfxBus.connect(ctx.destination);voiceBus.connect(ctx.destination);applyVolumes()}
 function applyVolumes(){if(!ctx)return;musicBus.gain.setTargetAtTime((settings.musicEnabled===false?0:settings.musicVolume*.62),ctx.currentTime,.08);sfxBus.gain.setTargetAtTime((settings.sfxEnabled===false?0:settings.sfxVolume*.56),ctx.currentTime,.05);voiceBus.gain.setTargetAtTime((settings.voiceEnabled===false?0:settings.voiceVolume*.56),ctx.currentTime,.05)}
 export function configureAudio(next={}){settings={...settings,...next};if(ctx)applyVolumes()}
@@ -46,6 +46,10 @@ export function giggleSound(){[720,850,760,930].forEach((f,i)=>setTimeout(()=>to
 export function sadWhimper(){[430,365,310].forEach((f,i)=>setTimeout(()=>tone(f,.26,.11,'triangle','voice'),i*180))}
 export function drumSound(){[150,205,150,205,150,260].forEach((f,i)=>setTimeout(()=>{tone(f,.13,.22,'triangle');noise(.07,.05,1000)},i*145))}
 export function introTheme(){[392,523,659,784,659,523].forEach((f,i)=>setTimeout(()=>tone(f,.34,.12,'sine','music'),i*260))}
+export function glamourJingle(){ // Runway sparkle: a short original fanfare, distinct from other rooms.
+ const melody=[523.25,659.25,783.99,1046.5,880,1046.5,1318.51];
+ melody.forEach((pitch,i)=>setTimeout(()=>{tone(pitch,.24,.16,i%2?'triangle':'sine','music');if(i===3||i===6)tone(pitch/2,.34,.11,'triangle','sfx')},i*95));
+}
 export function sleepyChime(){[392,330,262].forEach((f,i)=>setTimeout(()=>tone(f,.5,.08),i*260))}
 
 const sequenceCueMap={
