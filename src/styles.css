@@ -646,7 +646,8 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 
 
 /* Remove every fake block-shaped overlay from Luna until fitted transparent art is used */
-.luna-wearables .wear-body{display:none!important;background:none!important;border:0!important;box-shadow:none!important}
+/* Show fitted garment overlays again: the previous emergency rule hid every purchased outfit. */
+.luna-wearables .wear-body{display:block!important;box-shadow:0 4px 10px rgba(39,30,58,.22)!important}
 .room-toilet.activity-toilet::after{display:none!important;content:none!important}
 .bed-blanket-fg{display:none!important}
 .pet-stage::after{background:transparent!important;border:0!important;box-shadow:none!important}
