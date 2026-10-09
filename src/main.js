@@ -1,4 +1,4 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-school-play2';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-dance-photo1';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261010-school-play2';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-school-play2';
@@ -7,7 +7,7 @@ import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels
 import { castLine,catchFish } from './core/fishing.js';
 import { ensureSchool, startLesson, answerLesson, unlockLesson } from './core/school.js?v=20261010-school-play2';
 import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js';
-import { preloadRoomBackgrounds } from './data/roomAssets.js?v=20261010-school-play2';
+import { preloadRoomBackgrounds } from './data/roomAssets.js?v=20261010-dance-photo1';
 import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261010-school-play2';
 const telegram=initTelegram();
 preloadLunaFrames();

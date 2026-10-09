@@ -11,7 +11,7 @@ export const ROOM_BACKGROUNDS = {
   playroom: new URL('../../assets/rooms/playroom.webp', import.meta.url).href,
   lake: new URL('../../assets/rooms/lake.webp', import.meta.url).href,
   school: new URL('../../assets/rooms/school.svg', import.meta.url).href,
-  dance: new URL('../../assets/rooms/dance.svg?v=20261009-actions3', import.meta.url).href,
+  dance: new URL('../../assets/rooms/dance-final-20261010.webp?v=20261010-dance-photo1', import.meta.url).href,
   store: new URL('../../assets/rooms/wardrobe.webp', import.meta.url).href, // safe fallback until dedicated store art is bundled
 };
 

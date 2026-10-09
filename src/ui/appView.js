@@ -1,7 +1,7 @@
 import { t } from '../data/localization.js';
 import { rooms } from '../core/rooms.js';
 import { LESSONS, getLesson, lessonUnlocked } from '../core/school.js?v=20261010-school-play2';
-import { renderRoomDecor } from './scenes.js?v=20261010-school-play2';
+import { renderRoomDecor } from './scenes.js?v=20261010-dance-photo1';
 import { getEmotion } from '../core/state.js?v=20261010-school-play2';
 import { renderPet } from './pet.js?v=20261010-school-play2';
 import { catalog,categories,itemIcon } from '../core/shop.js?v=20261010-school-play2';
