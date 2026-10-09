@@ -1019,3 +1019,23 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
   0%,100%{transform:rotate(0) scale(1)}
   50%{transform:rotate(-2deg) scale(1.025)}
 }
+
+/* Oct 09: Luna dance studio, bright neutral lighting and a large playable kitten */
+.room-dance .scene{background:#d6e0db!important}
+.room-dance .room-background{object-position:center center}
+.room-dance .pet-button{width:min(70vw,350px)!important;bottom:118px!important;z-index:35!important;filter:drop-shadow(0 12px 17px #493f3555)}
+.room-dance .pet-stage{width:100%!important}
+.room-dance .dance-decor{position:absolute;inset:0;overflow:hidden}
+.dance-glow-orbs{position:absolute;inset:0;pointer-events:none;z-index:3}
+.dance-glow-orbs i{position:absolute;top:11%;width:16vw;height:16vw;max-width:92px;max-height:92px;border-radius:50%;background:radial-gradient(circle,#fffef8 0 12%,#fbe9be99 30%,transparent 72%);filter:blur(5px);animation:dance-orb-glow 3.5s ease-in-out infinite alternate}
+.dance-glow-orbs i:nth-child(1){left:10%}
+.dance-glow-orbs i:nth-child(2){left:43%;top:13%;animation-delay:.8s}
+.dance-glow-orbs i:nth-child(3){right:8%;top:12%;background:radial-gradient(circle,#faffff 0 12%,#bfeae8aa 32%,transparent 72%);animation-delay:1.5s}
+@keyframes dance-orb-glow{from{opacity:.48;transform:scale(.88)}to{opacity:.96;transform:scale(1.18)}}
+.room-dance.activity-dance .pet-stage .luna-photo{animation:luna-play .58s ease-in-out infinite alternate!important}
+.room-dance .dance-status{position:absolute;bottom:96px;left:84px;right:10px;z-index:56;padding:10px 9px;background:#172b2bdb;color:#fff9e7;text-align:center;border:1px solid #f1e2b765;border-radius:14px;font-size:12px;font-weight:800;box-shadow:0 8px 22px #26312d55}
+.room-dance .room-action-bar{bottom:8px}
+.room-dance .dance-actions button{min-width:70px;min-height:63px}
+.room-dance .dance-actions small{font-size:10px;line-height:1.1}
+@media(max-width:430px){.room-dance .pet-button{width:min(68vw,305px)!important;bottom:146px!important}.room-dance .dance-status{bottom:92px;left:77px;right:7px}.room-dance .dance-actions button{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.dance-glow-orbs i{animation:none!important}}
