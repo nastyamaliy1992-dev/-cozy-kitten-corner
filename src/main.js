@@ -198,11 +198,11 @@ function runPlayAction(kind='ball'){
     ],{onFrame:f=>{if(f.stage==='celebrate'){giggleSound();happyJingle();showBubble('Ура-а-а! ✨',650)}}});
     return;
   }
-  state=play(state);state=track(state,'play');state=unlockAchievement(state,'firstToy').state;
-  state.playStats??={ball:0,yarn:0};state.playStats[kind]=(state.playStats[kind]||0)+1;persist();
-  runLunaSequence('play',[
-    {stage:'playReady',ms:220},{stage:'toySurprise',ms:250},{stage:'playReach',ms:460},{stage:'chasing',ms:540},{stage:'playCatch',ms:460}
-  ],{extra:{playKind:kind},onFrame:f=>{if(f.stage==='playCatch'){giggleSound();showBubble(kind==='yarn'?'Поймала клубок! 🧶':'Поймала мяч! ⚽',700)}}});
+  // Real touch game: the player must catch the moving ball/yarn three times.
+  state.playChallenge={kind,hits:0,target:0,startedAt:Date.now()};
+  state.activity={type:'playGame',stage:'toySurprise',playKind:kind,startedAt:Date.now()};
+  persist();render();showBubble('Поймай '+(kind==='ball'?'мячик':'клубок')+' три раза! 🐾',1900);
+
 }
 function runDanceMove(kind='left'){
  if(actionLock||state.room!=='dance')return;
@@ -285,6 +285,22 @@ document.querySelector('[data-action="bath-finish"]')?.addEventListener('click',
  }});
 });
 document.querySelectorAll('[data-play-action]').forEach(b=>b.addEventListener('click',()=>runPlayAction(b.dataset.playAction)));
+document.querySelector('[data-play-catch]')?.addEventListener('click',()=>{
+ if(!state.playChallenge||state.room!=='playroom'||actionLock)return;
+ const challenge=state.playChallenge;challenge.hits++;challenge.target=(challenge.target+1)%5;
+ state.activity={type:'playGame',stage:challenge.hits%2?'chasing':'toySurprise',playKind:challenge.kind,startedAt:Date.now()};
+ sfx('play');if(state.settings?.haptics!==false)haptic('light');persist();render();
+ if(challenge.hits<3){showBubble('Поймала! '+challenge.hits+'/3 🐾',900);return}
+ const kind=challenge.kind;state.playChallenge=null;
+ state=play(state);state=track(state,'play');state=unlockAchievement(state,'firstToy').state;
+ state.playStats??={ball:0,yarn:0};state.playStats[kind]=(state.playStats[kind]||0)+1;
+ state.economy.coins+=8;
+ persist();happyJingle();giggleSound();
+ runLunaSequence('play',[
+  {stage:'playReady',ms:210},{stage:'playReach',ms:350},{stage:'chasing',ms:450},{stage:'playCatch',ms:550}
+ ],{onFrame:f=>{if(f.stage==='playCatch')showBubble('Победа! +8 🪙 · +5 XP',1450)}});
+});
+
 document.querySelectorAll('[data-dance-move]').forEach(b=>b.addEventListener('click',()=>runDanceMove(b.dataset.danceMove)));
 document.querySelector('[data-action="fish-hook"]')?.addEventListener('click',()=>{
  if(actionLock||state.activity?.type!=='fishGame')return;
@@ -309,6 +325,7 @@ document.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',(
  if(actionLock)return;
  cancelLunaSequence();
  state.room=b.dataset.room;
+ state.playChallenge=null;
  state=moveLuna(state,'idle');
  state.activity=roomEntryActivity(state.room,Date.now());
  if(['playroom','lake','dance'].includes(state.room))state.activity={type:'emotion',stage:'curious',startedAt:Date.now()};
