@@ -6,25 +6,7 @@ function ensure(){if(ctx)return;ctx=new (window.AudioContext||window.webkitAudio
 function applyVolumes(){if(!ctx)return;musicBus.gain.setTargetAtTime((settings.musicEnabled===false?0:settings.musicVolume*.62),ctx.currentTime,.08);sfxBus.gain.setTargetAtTime((settings.sfxEnabled===false?0:settings.sfxVolume*.56),ctx.currentTime,.05);voiceBus.gain.setTargetAtTime((settings.voiceEnabled===false?0:settings.voiceVolume*.56),ctx.currentTime,.05)}
 export function configureAudio(next={}){settings={...settings,...next};if(ctx)applyVolumes()}
 function tone(freq,dur=.9,vol=.15,type='sine',bus='sfx'){ensure();const o=ctx.createOscillator(),g=ctx.createGain(),out=bus==='music'?musicBus:bus==='voice'?voiceBus:sfxBus;o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.001,ctx.currentTime);g.gain.linearRampToValueAtTime(vol,ctx.currentTime+.06);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(out);o.start();o.stop(ctx.currentTime+dur)}
-export function startRoomMusic(room){
- ensure();if(ctx.state==='suspended')void ctx.resume();
- if(currentRoom===room&&timer)return;
- currentRoom=room;clearInterval(timer);
- if(settings.musicEnabled===false)return;
- let i=0;
- const beat=room==='dance'?350:room==='playroom'?510:room==='bedroom'?900:room==='lake'?820:690;
- const play=()=>{
-  if(settings.musicEnabled===false)return;
-  const notes=roomNotes[currentRoom]||roomNotes.living;
-  const note=notes[i%notes.length],accent=notes[(i+2)%notes.length];
-  const dancing=currentRoom==='dance';
-  tone(note,dancing?.33:.62,dancing?.27:.23,dancing?'triangle':'sine','music');
-  if(i%2===0)tone(accent/2,dancing?.28:.50,dancing?.10:.08,'sine','music');
-  if(dancing&&i%4===0)sfx('step');
-  i++;
- };
- play();timer=setInterval(play,beat);
-}
+export function startRoomMusic(room){ensure();if(ctx.state==='suspended')ctx.resume();if(currentRoom===room&&timer)return;currentRoom=room;clearInterval(timer);let i=0;const play=()=>{const notes=roomNotes[currentRoom]||roomNotes.living;const a=notes[i%notes.length],b=notes[(i+1)%notes.length];tone(a,1.5,.16,'sine','music');setTimeout(()=>tone(b,1.05,.07,'triangle','music'),180);i++};play();timer=setInterval(play,1450)}
 export function stopMusic(){clearInterval(timer);timer=null;currentRoom=null}
 export function duckMusic(on=true){ensure();musicBus.gain.setTargetAtTime(on ? .10 : (settings.musicEnabled===false ? 0 : settings.musicVolume*.62),ctx.currentTime,.12)}
 export function sfx(kind){const f={pet:520,feed:620,drink:720,bath:440,toilet:350,play:800,sleep:260,step:330,jump:690,draw:570,cast:460,catch:880,miss:260,coin:980,level:1040}[kind]||500;tone(f,.28,.24,kind==='play'?'triangle':'sine')}
@@ -56,7 +38,7 @@ const sequenceCueMap={
  'draw:drawStart':['draw'],'draw:drawFirstLine':['draw'],'draw:drawHeart':['draw'],
  'draw:drawOutline':['draw'],'draw:drawColor':['draw'],'draw:drawStars':['draw'],
  'jump:jumping':['jump'],'play:chasing':['play'],'bath:bathStepIn':['splash'],
- 'toilet:toiletSitting':['fart'],'toilet:toiletFlush':['flush'],
+ 'toilet:toiletSitting':['fart'],'toilet:toiletFinished':['flush'],
  'towel:bathStepOut':['splash'],'towel:bathShake':['water'],
  'fishGame:cast':['cast','water'],'fishCatch:biteFish':['splash'],'fishCatch:fishOnHook':['catch']
 };
@@ -76,27 +58,4 @@ export function playSequenceFrameSound(type,stage){
 }
 
 export function unlockAudio(){ensure();if(ctx?.state==='suspended')return ctx.resume();return Promise.resolve()}
-export function speakLuna(text,lang='ru-RU'){
- if(settings.voiceEnabled===false||!text||typeof window==='undefined'||!('speechSynthesis' in window))return false;
- try{
-  const synth=window.speechSynthesis;
-  synth.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang=lang;
-  const bright=settings.voiceStyle==='bright';
-  u.rate=bright?1.08:.97;
-  u.pitch=bright?1.15:1.03;
-  u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));
-  const all=synth.getVoices?.()||[],prefix=lang.slice(0,2).toLowerCase();
-  const localized=all.filter(v=>String(v.lang||'').toLowerCase().startsWith(prefix));
-  const selected=localized.find(v=>v.name===settings.voiceName);
-  const preferred=selected||localized.find(v=>/premium|enhanced|siri|milena|alena|alyona|svetlana|irina|katya|female/i.test(v.name))
-   ||localized.find(v=>!/male|yuri|pavel|alexander/i.test(v.name))||localized[0];
-  if(preferred)u.voice=preferred;
-  u.onstart=()=>duckMusic(true);
-  u.onend=()=>duckMusic(false);
-  u.onerror=()=>duckMusic(false);
-  synth.speak(u);
-  return true;
- }catch{return false}
-}
+export function speakLuna(text,lang='ru-RU'){if(settings.voiceEnabled===false||!text||!('speechSynthesis' in window))return;try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.94;u.pitch=1.18;u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));const voices=window.speechSynthesis.getVoices?.()||[],prefix=lang.slice(0,2).toLowerCase(),russian=voices.filter(v=>v.lang?.toLowerCase().startsWith(prefix));const preferred=russian.find(v=>/milena|alena|alyona|svetlana|irina|katya|female|google.*рус|siri/i.test(v.name))||russian.find(v=>!/male|yuri|pavel|alexander/i.test(v.name))||russian[0];if(preferred)u.voice=preferred;window.speechSynthesis.speak(u)}catch{}}

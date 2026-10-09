@@ -1,35 +1,24 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261009-photo3';
-import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261009-photo3';
-import { saveGame } from './core/persistence.js?v=20261009-photo3';import { t } from './data/localization.js?v=20261009-photo3';
-import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261009-photo3';
-import { buyItem,equipItem,applyFurniture,catalog,grantPremiumItem } from './core/shop.js?v=20261009-photo3';
-import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels } from './core/progression.js?v=20261009-photo3';
-import { castLine,catchFish } from './core/fishing.js?v=20261009-photo3';
-import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js?v=20261009-photo3';
-import { preloadRoomBackgrounds } from './data/roomAssets.js?v=20261009-photo3';
-import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261009-photo3';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261007-life1';
+import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261007-life1';
+import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
+import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,introTheme,playSequenceFrameSound } from './core/audio.js';
+import { buyItem,equipItem,applyFurniture,catalog,grantPremiumItem } from './core/shop.js?v=20261007-life1';
+import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels } from './core/progression.js';
+import { castLine,catchFish } from './core/fishing.js';
+import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js';
+import { preloadRoomBackgrounds } from './data/roomAssets.js';
+import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261007-life1';
 const telegram=initTelegram();
 preloadLunaFrames();
-let launchIntroPending=false;
+let launchIntroPending=true;
 const app=document.querySelector('#app');let state=restoreState(),bubble='',bubbleTimer=null,actionLock=false,soundOn=false,lastWant=null,lastWantAt=0,petReactionTimer=null,ui={fridgeOpen:false,settingsOpen:false,panel:null,shopCategory:'all',selectedFood:null};
 if(state){state.room='living';state.sleeping=false;state.sleepStartedAt=null;state.movement={...(state.movement||{}),x:50,y:78,facing:1,target:'idle'};state.activity={type:'idle',stage:'idle',startedAt:Date.now()}}
 if(state&&telegram.available){const grant=readTelegramPurchaseGrant();if(grant){const g=grantPremiumItem(state,grant.item,grant.receipt);state=g.state;saveGame(state);clearTelegramPurchaseGrant();if(g.ok)setTimeout(()=>showBubble('Оплата Stars подтверждена ⭐ Предмет уже в гардеробе!',2600),500)}}
 const lang=()=>state?.settings?.language||'ru';
 let audioUnlocked=false;async function unlockGameAudio(){if(audioUnlocked||!state)return;audioUnlocked=true;try{await unlockAudio();soundOn=true;startRoomMusic(state.room)}catch{audioUnlocked=false}}
-document.addEventListener('pointerdown',()=>{void unlockGameAudio()},{passive:true});
+document.addEventListener('pointerdown',async()=>{await unlockGameAudio();if(launchIntroPending&&state){launchIntroPending=false;startGreeting()}},{once:false,passive:true});
 bindTelegramBack(()=>{if(ui.panel||ui.settingsOpen){ui.panel=null;ui.settingsOpen=false;render()}else if(state?.room&&state.room!=='living'){state.room='living';persist();render()}});
-function showBubble(text,ms=1500){
- bubble=text;clearTimeout(bubbleTimer);
- const scene=document.querySelector('.scene');
- if(scene){
-  let el=scene.querySelector('.speech-bubble');
-  if(!el){el=document.createElement('div');el.className='speech-bubble';scene.appendChild(el)}
-  el.textContent=text;
- }
- bubbleTimer=setTimeout(()=>{
-  if(bubble===text){bubble='';document.querySelector('.scene .speech-bubble')?.remove()}
- },ms)
-}
+function showBubble(text,ms=1500){bubble=text;clearTimeout(bubbleTimer);render();bubbleTimer=setTimeout(()=>{bubble='';render()},ms)}
 let lunaSequenceToken=0;
 function syncLunaFrame(type,stage){
   if(!state)return;
@@ -40,15 +29,17 @@ function syncLunaFrame(type,stage){
     const next=lunaAssetFor({sleeping:state.sleeping,activity:type,stage});
     if(img.src!==next){
       document.querySelector('.luna-previous-frame')?.remove();
-      const previous=img.complete&&img.naturalWidth?img.cloneNode(false):null;
-      if(previous){previous.classList.add('luna-previous-frame');previous.removeAttribute('fetchpriority');img.before(previous);}
+      const previous=img.cloneNode(false);
+      previous.classList.add('luna-previous-frame');
+      previous.removeAttribute('fetchpriority');
+      img.before(previous);
       img.src=next;
       if(typeof img.animate==='function'){
-        const outgoing=previous?.animate([{opacity:1},{opacity:0}],{duration:140,easing:'ease-out'});
+        const outgoing=previous.animate([{opacity:1},{opacity:0}],{duration:140,easing:'ease-out'});
         img.animate([{opacity:0},{opacity:1}],{duration:140,easing:'ease-out'});
-        if(outgoing)outgoing.onfinish=()=>previous?.remove();
-        setTimeout(()=>previous?.remove(),220);
-      }else previous?.remove();
+        outgoing.onfinish=()=>previous.remove();
+        setTimeout(()=>previous.remove(),220);
+      }else previous.remove();
     }
   }
   if(petStage){petStage.dataset.lunaState=type;petStage.dataset.lunaStage=stage}
@@ -136,18 +127,7 @@ function startGreeting(){
   ],{onFrame:(frame,index)=>{if(frame.stage==='greetingWave'&&index===1){meow('happy');speakLuna('Привет, я Луна. Я тебя ждала!')}}});
 }
 function persist(){if(!state)return;const lv=processLevels(state);state=lv.state;if(lv.leveled.length){state.activity={type:'levelup',stage:'celebrate',startedAt:Date.now()};happyJingle();sfx('level');const last=lv.leveled.at(-1);bubble=`Уровень ${last.level}! +${last.coins} 🪙`}state.lastSeenAt=Date.now();saveGame(state)}
-function render(){
- if(state)configureAudio(state.settings);
- if(!state){app.innerHTML=renderWelcome('ru');bindWelcome();return}
- app.innerHTML=renderGame(state,bubble,ui);
- document.querySelectorAll('.luna-photo').forEach(img=>{
-  img.addEventListener('error',()=>{
-   const safe=new URL('./assets/luna/hall/luna-main-clean.png',document.baseURI).href;
-   if(img.src!==safe){img.src=safe;img.dataset.fallback='true'}
-  },{once:true});
- });
- bindGame();
-}
+function render(){if(state)configureAudio(state.settings);if(!state){app.innerHTML=renderWelcome('ru');bindWelcome();return}app.innerHTML=renderGame(state,bubble,ui);bindGame()}
 function bindWelcome(){const input=document.querySelector('#pet-name'),start=document.querySelector('#start-game');input.addEventListener('input',()=>start.disabled=!input.value.trim());start.addEventListener('click',()=>{const name=input.value.trim();if(!name)return;state=createInitialState(name,'ru');const starter=grantStarterPack(state);state=starter.state;persist();startRoomMusic('living');render();setTimeout(()=>{sfx('coin');meow('happy');speakLuna('Привет! Я Луна. Давай играть!');showBubble('Привет! Я Luna ♥ Стартовый подарок уже у тебя!',2600)},350)})}
 function moveTo(target,after,ms=320){if(actionLock)return;actionLock=true;state=moveLuna(state,target);state.activity={type:'walk',stage:'moving',startedAt:Date.now()};persist();render();setTimeout(()=>{state.activity={type:'idle',stage:'arrived',startedAt:Date.now()};persist();render();actionLock=false;after?.()},ms)}
 function doAction(fn,msg,kind='pet'){if(actionLock)return;actionLock=true;state=fn(state);state.activity={type:kind==='play'?'play':kind,stage:'active',startedAt:Date.now()};persist();sfx(kind);showBubble(msg);setTimeout(()=>{state.activity={type:'idle',stage:'idle',startedAt:Date.now()};persist();render();actionLock=false},1300)}
@@ -158,63 +138,61 @@ function petDirect(){if(actionLock)return;
  if(state.sleeping){purr(1.8);showBubble('Мр-р-р… Луна сладко спит',1500);return}
  if(state.settings?.haptics!==false)haptic('light');soundOn=true;purr(3.2);const r=rewardPetting(state);state=r.state;state.activity={type:'petting',stage:'laugh',startedAt:Date.now()};persist();showBubble(r.rewarded?'Мр-р-р… ещё погладь! +2 XP':'Мр-р-р… ещё погладь!',1900);clearTimeout(petReactionTimer);petReactionTimer=setTimeout(()=>{if(!state||state.sleeping)return;state.activity={type:'idle',stage:'idle',startedAt:Date.now()};persist();render()},2000)}
 function runPlayAction(kind='ball'){
- if(actionLock||state.room!=='playroom')return;
- state=moveLuna(state,kind==='draw'?'art':'toy');
- if(kind==='draw'){
-  sfx('step');
-  runLunaSequence('draw',[
-   {stage:'drawSit',ms:260},{stage:'drawPickPencil',ms:220},{stage:'drawStart',ms:220},
-   {stage:'drawFirstLine',ms:170},{stage:'drawHeart',ms:170},{stage:'drawOutline',ms:170},
-   {stage:'drawColor',ms:180},{stage:'drawStars',ms:190},{stage:'drawInspect',ms:220},
-   {stage:'drawLift',ms:230},{stage:'showDrawing',ms:420},{stage:'drawProud',ms:480}
-  ],{onFrame:f=>{if(f.stage==='showDrawing'){state=addDrawing(state).state;happyJingle();showBubble('Я нарисовала! 🎨',950)}},
-     onDone:()=>speakLuna('Я нарисовала!')});
-  return;
- }
- state=play(state);state=track(state,'play');
- if(kind==='jump'){
-  runLunaSequence('jump',[
-    {stage:'playReady',ms:170},{stage:'playJumpRise',ms:300},
-    {stage:'playJumpPeak',ms:290},{stage:'playJumpLand',ms:270},
-    {stage:'playCelebrate',ms:400}
-  ],{onFrame:f=>{
-    if(f.stage==='playJumpRise')sfx('jump');
-    if(f.stage==='playCelebrate'){giggleSound();happyJingle();showBubble('Я прыгнула! ✨',900)}
-  }});
-  return;
- }
- state=unlockAchievement(state,'firstToy').state;
- runLunaSequence('play',[
-   {stage:'playReady',ms:210},{stage:'playChaseLeft',ms:450},
-   {stage:'playChaseRight',ms:450},{stage:'playPounce',ms:420},
-   {stage:'playCelebrate',ms:490}
- ],{extra:{playKind:kind},onFrame:f=>{
-   if(f.stage==='playPounce')sfx('play');
-   if(f.stage==='playCelebrate'){giggleSound();showBubble(kind==='yarn'?'Поймала клубок! 🧶':'Поймала мяч! ⚽',1100)}
- }});
+  if(actionLock)return;
+  const target=kind==='draw'?'art':'toy';
+  state=moveLuna(state,target);
+  if(kind==='draw'){
+    sfx('step');
+    runLunaSequence('draw',[
+      {stage:'drawSit',ms:260},
+      {stage:'drawPickPencil',ms:220},
+      {stage:'drawStart',ms:220},
+      {stage:'drawFirstLine',ms:170},
+      {stage:'drawHeart',ms:170},
+      {stage:'drawOutline',ms:170},
+      {stage:'drawColor',ms:180},
+      {stage:'drawStars',ms:190},
+      {stage:'drawInspect',ms:220},
+      {stage:'drawLift',ms:230},
+      {stage:'showDrawing',ms:420},
+      {stage:'drawProud',ms:480}
+    ],{
+      onFrame:(f,i)=>{
+        if(f.stage==='showDrawing'){state=addDrawing(state).state;happyJingle();giggleSound();showBubble('Смотри, что я нарисовала! 🎨',900)}
+        if(f.stage==='drawProud')speakLuna('Я нарисовала!');
+      }
+    });
+    return;
+  }
+  if(kind==='jump'){
+    state=play(state);state=track(state,'play');
+    runLunaSequence('jump',[
+      {stage:'arrived',ms:180},{stage:'jumping',ms:420},{stage:'celebrate',ms:460},{stage:'happy',ms:320}
+    ],{onFrame:f=>{if(f.stage==='celebrate'){giggleSound();happyJingle();showBubble('Ура-а-а! ✨',650)}}});
+    return;
+  }
+  state=play(state);state=track(state,'play');state=unlockAchievement(state,'firstToy').state;
+  runLunaSequence('play',[
+    {stage:'arrived',ms:220},{stage:'chasing',ms:360},{stage:'chasing',ms:360},{stage:'happy',ms:420}
+  ],{extra:{playKind:kind},onFrame:f=>{if(f.stage==='happy'){giggleSound();showBubble(kind==='yarn'?'Поймала клубок! 🧶':'Поймала мяч! ⚽',700)}}});
 }
 function runDanceMove(kind='left'){
  if(actionLock||state.room!=='dance')return;
+ if(state.needs.energy<8){showBubble('Луне нужно немного отдохнуть 🌙',1400);return}
  state.dance??={moves:0,completed:0};
- const pose={left:'danceLeft',right:'danceRight',jump:'danceJump',spin:'danceSpin'}[kind]||'danceLeft';
  state.dance.moves++;
- state.needs.mood=Math.min(100,state.needs.mood+3);
+ state.needs.mood=Math.min(100,state.needs.mood+2);
  state.needs.energy=Math.max(0,state.needs.energy-1);
  state.economy.xp+=2;
  const finished=state.dance.moves%4===0;
- if(finished){state.dance.completed++;state.economy.xp+=18;state.economy.coins+=15}
+ if(finished){state.dance.completed++;state.economy.xp+=18;state.economy.coins+=15;}
  persist();
+ const stage={left:'danceLeft',right:'danceRight',jump:'danceJump',spin:'danceSpin'}[kind]||'danceLeft';
+ if(finished){happyJingle();showBubble('Танец завершён! +15 🪙 · +18 XP ✨',1800)}
+ else {sfx('play');showBubble('Танцуем! 🎵',650)}
  runLunaSequence('dance',[
-  {stage:'danceReady',ms:160},{stage:pose+'1',ms:370},
-  {stage:pose+'2',ms:380},{stage:pose+'3',ms:390},
-  {stage:'danceFinished',ms:330}
- ],{onFrame:f=>{
-  if(f.stage===pose+'1')sfx('play');
-  if(f.stage==='danceFinished'){
-   if(finished){happyJingle();showBubble('Связка завершена! +15 монет · +18 XP',1200)}
-   else showBubble('Отличное движение! 🎶',950)
-  }
- }});
+  {stage:'arrived',ms:140},{stage,ms:360},{stage,ms:320},{stage:'happy',ms:390}
+ ],{onFrame:f=>{if(f.stage==='happy'&&finished)giggleSound()}});
 }
 function bindGame(){document.querySelector('[data-action="pet-now"]')?.addEventListener('click',()=>petDirect());const pet=document.querySelector('.pet-button');let petStart=null,petMoved=false,strokeTotal=0,lastStrokeSound=0;pet?.addEventListener('pointerdown',e=>{if(actionLock)return;e.preventDefault();petStart={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY};petMoved=false;strokeTotal=0;pet.classList.add('is-stroking');pet.setPointerCapture?.(e.pointerId);if(['soap','shampoo'].includes(state.activity?.type)){bubbleSound();giggleSound()}else{purr(2.2);state.activity={type:'petting',stage:'stroking',startedAt:Date.now()};document.querySelector('.game-shell')?.classList.add('activity-petting')}});pet?.addEventListener('pointermove',e=>{if(!petStart)return;e.preventDefault();const step=Math.hypot(e.clientX-petStart.lastX,e.clientY-petStart.lastY);const d=Math.hypot(e.clientX-petStart.x,e.clientY-petStart.y);petStart.lastX=e.clientX;petStart.lastY=e.clientY;strokeTotal+=step;if(d>8||strokeTotal>12){petMoved=true;pet.style.setProperty('--stroke-x',Math.max(-12,Math.min(12,(e.clientX-petStart.x)/5))+'px');const now=Date.now();if(['soap','shampoo'].includes(state.activity?.type)){state.activity.scrub=Math.min(100,(state.activity.scrub||0)+Math.max(1,Math.round(step/2.3)));const pct=document.querySelector('.foam-fx i');if(pct)pct.textContent=state.activity.scrub+'%';const foam=document.querySelector('.foam-fx');if(foam){foam.style.setProperty('--foam-progress',state.activity.scrub);foam.style.setProperty('--foam-scale',(.58+state.activity.scrub/180).toFixed(2));foam.style.setProperty('--foam-opacity',(.22+state.activity.scrub/140).toFixed(2))}if(now-lastStrokeSound>430){lastStrokeSound=now;bubbleSound();giggleSound()}if(state.activity.scrub>=100&&!state.activity.completed){state.activity.completed=true;state.needs.cleanliness=Math.min(100,state.needs.cleanliness+32);state.needs.mood=Math.min(100,state.needs.mood+10);applauseSound();giggleSound();speakLuna('Хи-хи! Какая пена!');persist();showBubble('Вот теперь много пены! 🫧😸',1700);petStart=null;setTimeout(()=>{if(state?.room==='bathroom'&&['soap','shampoo'].includes(state.activity?.type)&&state.activity?.completed){state.activity={type:'bathReady',stage:'inTub',startedAt:Date.now()};persist();render()}},1400)}}else if(now-lastStrokeSound>780){lastStrokeSound=now;purr(1.25)}}});pet?.addEventListener('pointerup',()=>{if(!petStart)return;const wasBath=['soap','shampoo'].includes(state.activity?.type);petStart=null;pet.classList.remove('is-stroking');pet.style.removeProperty('--stroke-x');if(wasBath){persist();render();return}const rr=rewardPetting(state);state=rr.state;state.activity={type:'petted',stage:'laugh',startedAt:Date.now()};persist();purr(2.6);showBubble(rr.rewarded?'Мр-р-р… как приятно! +2 XP':'Мр-р-р… как приятно!',1900);render();setTimeout(()=>{if(state&&!state.sleeping&&['petted','petting'].includes(state.activity?.type)){state.activity={type:'idle',stage:'idle',startedAt:Date.now()};persist();render()}},2000)});const clearPetGesture=()=>{petStart=null;petMoved=false;pet?.classList.remove('is-stroking');pet?.style.removeProperty('--stroke-x')};pet?.addEventListener('pointercancel',clearPetGesture);pet?.addEventListener('lostpointercapture',clearPetGesture);const toggleFridge=()=>{ui.fridgeOpen=!ui.fridgeOpen;if(ui.fridgeOpen)state=moveLuna(state,'fridge');persist();render();if(ui.fridgeOpen)showBubble('Выбирай еду',900)};document.querySelector('[data-object="fridge"]')?.addEventListener('click',toggleFridge);document.querySelector('[data-action="open-fridge"]')?.addEventListener('click',()=>{if(state.room!=='kitchen'){state.room='kitchen';ui.fridgeOpen=true;persist();render();startRoomMusic('kitchen')}else toggleFridge()});document.querySelector('[data-object="lamp"]')?.addEventListener('click',()=>moveTo('lamp',()=>{state=toggleLamp(state);persist();render()}));document.querySelector('[data-object="bed"]')?.addEventListener('click',()=>moveTo('bed',()=>{
   stopMusic();
@@ -247,20 +225,10 @@ document.querySelector('[data-object="tub"]')?.addEventListener('click',()=>move
   });
 }));
 document.querySelector('[data-object="litter"]')?.addEventListener('click',()=>moveTo('litter',()=>{
-  runLunaSequence('toilet',[
-   {stage:'toiletReady',ms:500},
-   {stage:'toiletSitDown',ms:580},
-   {stage:'toiletSitting',ms:1350},
-   {stage:'toiletFlush',ms:950},
-   {stage:'toiletFinished',ms:450}
-  ],{
-   onFrame:f=>{
-    if(f.stage==='toiletReady'){sfx('step');showBubble('Поднимаю крышку 🚽',700)}
-    if(f.stage==='toiletSitting')showBubble('Всё получается! 🐾',1000);
-    if(f.stage==='toiletFlush')showBubble('Смываю воду!',750);
-   },
-   onDone:()=>{state=useToilet(state);applauseSound();happyJingle();showBubble('Молодец, Луна! 👏',1600)}
-  })
+  runLunaSequence('toilet',[{stage:'toiletSitDown',ms:430},{stage:'toiletSitting',ms:850},{stage:'toiletFinished',ms:520}],{
+    onFrame:f=>{if(f.stage==='toiletSitting')showBubble('Мр-р… почти готово!',800)},
+    onDone:()=>{state=useToilet(state);applauseSound();showBubble('Ура! Готово! ♥',1300)}
+  });
 }));
 document.querySelector('[data-object="toy"]')?.addEventListener('click',()=>runPlayAction('yarn'));
 document.querySelector('[data-object="water"]')?.addEventListener('click',()=>moveTo('water',()=>{
@@ -314,7 +282,7 @@ document.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',(
  state.room=b.dataset.room;
  state=moveLuna(state,'idle');
  state.activity=roomEntryActivity(state.room,Date.now());
- if(['playroom','lake','dance'].includes(state.room))state.activity={type:'idle',stage:'idle',startedAt:Date.now()};
+ if(['playroom','lake','dance'].includes(state.room))state.activity={type:'emotion',stage:'curious',startedAt:Date.now()};
  ui.fridgeOpen=false;
  if(state.room==='store')ui.panel='shop';
  soundOn=true;
@@ -416,38 +384,8 @@ const drinkNow=()=>{if(actionLock)return;actionLock=true;state=moveLuna(state,'w
 document.querySelector('[data-action="bathe"]')?.addEventListener('click',()=>{waterSound();doAction(bathe,'Чисто и пушисто!','bath')});
 document.querySelector('[data-action="toilet"]')?.addEventListener('click',()=>{flushSound();doAction(useToilet,'Готово!','toilet')});
 document.querySelector('[data-action="play"]')?.addEventListener('click',()=>doAction(play,'Ещё!','play'));document.querySelector('[data-action="draw"]')?.addEventListener('click',()=>{state=addDrawing(state).state;state.activity={type:'draw',stage:'drawing',startedAt:Date.now()};persist();sfx('play');showBubble('Рисую!')});document.querySelector('[data-action="fish"]')?.addEventListener('click',()=>{state.activity={type:'fish',stage:'casting',startedAt:Date.now()};persist();sfx('play');showBubble('Забрасываю удочку…')});
-document.querySelectorAll('[data-action="shop"]').forEach(b=>b.addEventListener('click',()=>{ui.panel='shop';render()}));document.querySelectorAll('[data-shop-category]').forEach(b=>b.addEventListener('click',()=>{ui.shopCategory=b.dataset.shopCategory;render()}));document.querySelector('[data-action="room-items"]')?.addEventListener('click',()=>{ui.panel='roomItems';render()});document.querySelectorAll('[data-use-item]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.useItem,it=catalog.find(x=>x.id===id);if(!it)return;if(it.category==='pajamas'){state=equipItem(state,id);persist();showBubble('Пижама надета. Спокойной ночи ♥',1800);sleepyChime();speakLuna('Спокойной ночи');ui.panel=null;render();return}if(['soap','shampoo'].includes(it.interaction)){if(state.room!=='bathroom'||!['bathReady','soap','shampoo','bathBomb','shower'].includes(state.activity?.type)){showBubble('Сначала посади Луну в ванну 🛁',1700);ui.panel=null;render();return}state.activity={type:it.interaction,stage:'readyToScrub',itemId:id,foamColor:it.foamColor||'#f5f1ff',scrub:0,startedAt:Date.now()};bubbleSound();giggleSound();speakLuna('Намыливай меня пальцем!');showBubble('Теперь води пальцем по Луне 🫧',2200)}else if(it.interaction==='bathBomb'){if(state.room!=='bathroom'||!['bathReady','soap','shampoo','bathBomb','shower'].includes(state.activity?.type)){showBubble('Сначала посади Луну в ванну 🛁',1700);ui.panel=null;render();return}state.activity={type:'bathBomb',stage:'fizzing',itemId:id,bathColor:it.bathColor,startedAt:Date.now()};state.needs.mood=Math.min(100,state.needs.mood+12);bubbleSound();splashSound();giggleSound();speakLuna('Ух ты! Вода цветная!');showBubble('Ух ты! Цветная вода! 🫧',1800)}else if(it.category==='art'){state=addDrawing(state).state;state.activity={type:'draw',stage:'drawing',itemId:id,startedAt:Date.now()};sfx('draw');showBubble('Смотри, что я нарисовала! 🎨',1700)}else{state=play(state);state=track(state,'play');state.activity={type:it.interaction==='drum'?'drum':'play',stage:it.interaction==='drum'?'drumming':'chasing',itemId:id,startedAt:Date.now()};if(it.interaction==='drum'){drumSound();giggleSound();speakLuna('Слушай, как я умею!');showBubble('Бум-бум-бум! 🥁😸',1900)}else{sfx('play');giggleSound();speakLuna(it.interaction==='chase'?'Лови меня!':'Ещё! Ещё!');showBubble(it.interaction==='chase'?'Ловлю! 🐾':'Ещё! 🧶',1600)}}persist();ui.panel=null;render();if(!['soap','shampoo'].includes(state.activity?.type))setTimeout(()=>{if(state.activity?.itemId===id){state.activity=['bathBomb','shower'].includes(state.activity?.type)?{type:'bathReady',stage:'inTub',startedAt:Date.now()}:{type:'idle',stage:'idle',startedAt:Date.now()};persist();render()}},2100)}));document.querySelector('[data-action="decorate"]')?.addEventListener('click',()=>{ui.panel='furniture';render()});document.querySelector('[data-object="closet"]')?.addEventListener('click',()=>moveTo('closet',()=>{ui.panel='wardrobe';render()}));document.querySelector('[data-action="progress"]')?.addEventListener('click',()=>{ui.panel='progress';render()});document.querySelectorAll('[data-close-panel]').forEach(b=>b.addEventListener('click',()=>{ui.panel=null;render()}));document.querySelectorAll('[data-buy]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.buy;const r=buyItem(state,id);state=r.state;if(r.ok){sfx('coin');showBubble('Куплено! ♥')}else if(r.reason==='premium'){const opened=openBotPurchase(id);showBubble(opened?'Открываю оплату через Telegram Stars ⭐':'Не удалось открыть оплату',2200)}else showBubble(r.reason==='coins'?'Не хватает монет':r.reason==='owned'?'Уже куплено':'Пока закрыто');persist();render()}));document.querySelectorAll('[data-place]').forEach(b=>b.addEventListener('click',()=>{state=applyFurniture(state,b.dataset.place,state.room);persist();showBubble('Готово! Декор установлен ♥');ui.panel=null;render()}));document.querySelectorAll('[data-equip]').forEach(b=>b.addEventListener('click',()=>{state=equipItem(state,b.dataset.equip);state=unlockAchievement(state,'firstOutfit').state;state.activity={type:'dress',stage:'preview',itemId:b.dataset.equip,startedAt:Date.now()};persist();giggleSound();happyJingle();applauseSound();showBubble('Смотри! Я уже в этом наряде ♥',1500);render()}));document.querySelector('[data-daily]')?.addEventListener('click',()=>{const r=dailyReward(state);state=r.state;persist();showBubble(r.ok?`Подарок получен! ♥`:'Сегодня уже получено');render()});document.querySelectorAll('[data-quest]').forEach(b=>b.addEventListener('click',()=>{const r=claimQuest(state,b.dataset.quest);state=r.state;persist();showBubble(r.ok?'Награда получена! ♥':'Задание ещё не готово');render()}));document.querySelector('[data-action="help"]')?.addEventListener('click',()=>{ui.settingsOpen=false;render();setTimeout(()=>showBubble('Проведи пальцем по Luna или нажми «Гладить». Комнаты слева, магазин — 🛍️.',3600),30)});document.querySelector('[data-action="support"]')?.addEventListener('click',()=>{ui.settingsOpen=false;render();setTimeout(()=>showBubble('Поддержка Cozy Kitten Corner ♥ Если что-то не работает — пришли скрин.',3600),30)});document.querySelectorAll('[data-action="settings"]').forEach(el=>el.addEventListener('click',()=>{ui.settingsOpen=!ui.settingsOpen;render()}));document.querySelectorAll('[data-setting]').forEach(el=>el.addEventListener('change',e=>{const k=e.currentTarget.dataset.setting;state.settings[k]=e.currentTarget.type==='checkbox'?e.currentTarget.checked:e.currentTarget.type==='range'?Number(e.currentTarget.value):e.currentTarget.value;configureAudio(state.settings);if(k==='musicEnabled'){if(state.settings.musicEnabled){void unlockGameAudio();startRoomMusic(state.room)}else stopMusic()}persist();render()}));
-document.querySelector('[data-action="test-music"]')?.addEventListener('click',()=>{
- state.settings.musicEnabled=true;configureAudio(state.settings);
- void unlockGameAudio();stopMusic();startRoomMusic(state.room);
- persist();showBubble('Музыка играет в этой комнате ♫',1400);
-});
-document.querySelector('[data-action="test-voice"]')?.addEventListener('click',()=>{
- state.settings.voiceEnabled=true;configureAudio(state.settings);persist();
- speakLuna('Привет! Я Луна. Давай играть вместе!',state.settings.language==='uk'?'uk-UA':state.settings.language==='en'?'en-US':'ru-RU');
- showBubble('Проверка голоса — настройки сохранены',1500);
-});
-document.querySelector('[data-action="test-sounds"]')?.addEventListener('click',()=>{
- state.settings.sfxEnabled=true;configureAudio(state.settings);persist();
- sfx('play');setTimeout(()=>meow('happy'),280);
- showBubble('Звуки включены 🔊',1200);
-});
-document.querySelector('[data-action="sound"]')?.addEventListener('click',()=>{
- state.settings.musicEnabled=state.settings.musicEnabled===false;
- configureAudio(state.settings);persist();
- if(state.settings.musicEnabled){void unlockGameAudio();startRoomMusic(state.room);showBubble('Музыка включена ♫',1000)}
- else{stopMusic();showBubble('Музыка выключена',1000)}
- render()
-});
+document.querySelectorAll('[data-action="shop"]').forEach(b=>b.addEventListener('click',()=>{ui.panel='shop';render()}));document.querySelectorAll('[data-shop-category]').forEach(b=>b.addEventListener('click',()=>{ui.shopCategory=b.dataset.shopCategory;render()}));document.querySelector('[data-action="room-items"]')?.addEventListener('click',()=>{ui.panel='roomItems';render()});document.querySelectorAll('[data-use-item]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.useItem,it=catalog.find(x=>x.id===id);if(!it)return;if(it.category==='pajamas'){state=equipItem(state,id);persist();showBubble('Пижама надета. Спокойной ночи ♥',1800);sleepyChime();speakLuna('Спокойной ночи');ui.panel=null;render();return}if(['soap','shampoo'].includes(it.interaction)){if(state.room!=='bathroom'||!['bathReady','soap','shampoo','bathBomb','shower'].includes(state.activity?.type)){showBubble('Сначала посади Луну в ванну 🛁',1700);ui.panel=null;render();return}state.activity={type:it.interaction,stage:'readyToScrub',itemId:id,foamColor:it.foamColor||'#f5f1ff',scrub:0,startedAt:Date.now()};bubbleSound();giggleSound();speakLuna('Намыливай меня пальцем!');showBubble('Теперь води пальцем по Луне 🫧',2200)}else if(it.interaction==='bathBomb'){if(state.room!=='bathroom'||!['bathReady','soap','shampoo','bathBomb','shower'].includes(state.activity?.type)){showBubble('Сначала посади Луну в ванну 🛁',1700);ui.panel=null;render();return}state.activity={type:'bathBomb',stage:'fizzing',itemId:id,bathColor:it.bathColor,startedAt:Date.now()};state.needs.mood=Math.min(100,state.needs.mood+12);bubbleSound();splashSound();giggleSound();speakLuna('Ух ты! Вода цветная!');showBubble('Ух ты! Цветная вода! 🫧',1800)}else if(it.category==='art'){state=addDrawing(state).state;state.activity={type:'draw',stage:'drawing',itemId:id,startedAt:Date.now()};sfx('draw');showBubble('Смотри, что я нарисовала! 🎨',1700)}else{state=play(state);state=track(state,'play');state.activity={type:it.interaction==='drum'?'drum':'play',stage:it.interaction==='drum'?'drumming':'chasing',itemId:id,startedAt:Date.now()};if(it.interaction==='drum'){drumSound();giggleSound();speakLuna('Слушай, как я умею!');showBubble('Бум-бум-бум! 🥁😸',1900)}else{sfx('play');giggleSound();speakLuna(it.interaction==='chase'?'Лови меня!':'Ещё! Ещё!');showBubble(it.interaction==='chase'?'Ловлю! 🐾':'Ещё! 🧶',1600)}}persist();ui.panel=null;render();if(!['soap','shampoo'].includes(state.activity?.type))setTimeout(()=>{if(state.activity?.itemId===id){state.activity=['bathBomb','shower'].includes(state.activity?.type)?{type:'bathReady',stage:'inTub',startedAt:Date.now()}:{type:'idle',stage:'idle',startedAt:Date.now()};persist();render()}},2100)}));document.querySelector('[data-action="decorate"]')?.addEventListener('click',()=>{ui.panel='furniture';render()});document.querySelector('[data-object="closet"]')?.addEventListener('click',()=>moveTo('closet',()=>{ui.panel='wardrobe';render()}));document.querySelector('[data-action="progress"]')?.addEventListener('click',()=>{ui.panel='progress';render()});document.querySelectorAll('[data-close-panel]').forEach(b=>b.addEventListener('click',()=>{ui.panel=null;render()}));document.querySelectorAll('[data-buy]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.buy;const r=buyItem(state,id);state=r.state;if(r.ok){sfx('coin');showBubble('Куплено! ♥')}else if(r.reason==='premium'){const opened=openBotPurchase(id);showBubble(opened?'Открываю оплату через Telegram Stars ⭐':'Не удалось открыть оплату',2200)}else showBubble(r.reason==='coins'?'Не хватает монет':r.reason==='owned'?'Уже куплено':'Пока закрыто');persist();render()}));document.querySelectorAll('[data-place]').forEach(b=>b.addEventListener('click',()=>{state=applyFurniture(state,b.dataset.place,state.room);persist();showBubble('Готово! Декор установлен ♥');ui.panel=null;render()}));document.querySelectorAll('[data-equip]').forEach(b=>b.addEventListener('click',()=>{state=equipItem(state,b.dataset.equip);state=unlockAchievement(state,'firstOutfit').state;state.activity={type:'dress',stage:'preview',itemId:b.dataset.equip,startedAt:Date.now()};persist();giggleSound();happyJingle();applauseSound();showBubble('Смотри! Я уже в этом наряде ♥',1500);render()}));document.querySelector('[data-daily]')?.addEventListener('click',()=>{const r=dailyReward(state);state=r.state;persist();showBubble(r.ok?`Подарок получен! ♥`:'Сегодня уже получено');render()});document.querySelectorAll('[data-quest]').forEach(b=>b.addEventListener('click',()=>{const r=claimQuest(state,b.dataset.quest);state=r.state;persist();showBubble(r.ok?'Награда получена! ♥':'Задание ещё не готово');render()}));document.querySelector('[data-action="help"]')?.addEventListener('click',()=>{ui.settingsOpen=false;render();setTimeout(()=>showBubble('Проведи пальцем по Luna или нажми «Гладить». Комнаты слева, магазин — 🛍️.',3600),30)});document.querySelector('[data-action="support"]')?.addEventListener('click',()=>{ui.settingsOpen=false;render();setTimeout(()=>showBubble('Поддержка Cozy Kitten Corner ♥ Если что-то не работает — пришли скрин.',3600),30)});document.querySelectorAll('[data-action="settings"]').forEach(el=>el.addEventListener('click',()=>{ui.settingsOpen=!ui.settingsOpen;render()}));document.querySelectorAll('[data-setting]').forEach(el=>el.addEventListener('change',e=>{const k=e.currentTarget.dataset.setting;state.settings[k]=e.currentTarget.type==='checkbox'?e.currentTarget.checked:e.currentTarget.type==='range'?Number(e.currentTarget.value):e.currentTarget.value;configureAudio(state.settings);persist();render()}));
+document.querySelector('[data-action="sound"]')?.addEventListener('click',()=>{soundOn=!soundOn;if(soundOn){startRoomMusic(state.room);showBubble('Музыка включена')}else{stopMusic();showBubble('Музыка выключена')}});
 document.querySelector('[data-action="sleep"]')?.addEventListener('click',()=>{if(actionLock)return;state=setSleeping(state,!state.sleeping);persist();showBubble(state.sleeping?t('goodNight',lang()):'Доброе утро!')})}
-setInterval(()=>{
- if(!state)return;
- state=tickState(state,10);
- const want=getWant(state),now=Date.now();
- if(want&&(want!==lastWant||now-lastWantAt>90000)&&!actionLock){
-  lastWant=want;lastWantAt=now;meow(want);speakLuna(wantSpeech[want]);showBubble(wantSpeech[want],2400);
- }
- persist();
- if(!actionLock)render();
-},10000);if(state){preloadRoomBackgrounds(state.room);setTimeout(()=>{if(state){showBubble('Добро пожаловать! Нажми на экран — Luna тебя поприветствует ♥',2600)}},500)}else preloadRoomBackgrounds('living');
+setInterval(()=>{if(state){state=tickState(state,10);const want=getWant(state),now=Date.now();if(want&&(want!==lastWant||now-lastWantAt>90000)){lastWant=want;lastWantAt=now;meow(want);speakLuna(wantSpeech[want]);showBubble(wantSpeech[want],2400)}persist();render()}},10000);if(state){preloadRoomBackgrounds(state.room);setTimeout(()=>{if(state){showBubble('Добро пожаловать! Нажми на экран — Luna тебя поприветствует ♥',2600)}},500)}else preloadRoomBackgrounds('living');
 document.addEventListener('visibilitychange',()=>{if(document.hidden)persist();else scheduleIdleLife(900)});window.addEventListener('pagehide',persist);render();scheduleIdleLife();

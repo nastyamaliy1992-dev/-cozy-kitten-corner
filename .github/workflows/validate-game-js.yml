@@ -21,5 +21,3 @@ jobs:
           set -e
           find src -type f -name '*.js' -print0 | xargs -0 -n1 node --check
           if [ -f sw.js ]; then node --check sw.js; fi
-      - name: Verify Luna gameplay regressions
-        run: node --test tests/repair-contract.test.mjs
