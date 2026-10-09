@@ -60,7 +60,7 @@ export function renderGame(state,bubble='',ui={}){
    bedroom:'<div class="room-action-bar"><button data-action="bed-sleep">🌙<small>Лечь в кровать</small></button></div>',
    bathroom:bathControls,
    toilet:'<div class="room-action-bar"><button data-action="toilet-seat">🚽<small>Сесть на унитаз</small></button></div>',
-   playroom:'<div class="room-action-bar play-actions"><button data-play-action="ball">⚽<small>Играть в мяч</small></button><button data-play-action="yarn">🧶<small>Клубок</small></button><button data-play-action="draw">🎨<small>Рисовать</small></button><button data-play-action="jump">✨<small>Прыгать</small></button></div>',
+   playroom:`<div class="play-score" aria-live="polite">⚽ Мяч: ${state.playStats?.ball||0} · 🧶 Клубок: ${state.playStats?.yarn||0}</div><div class="room-action-bar play-actions"><button data-play-action="ball">⚽<small>Играть в мяч</small></button><button data-play-action="yarn">🧶<small>Клубок</small></button><button data-play-action="draw">🎨<small>Рисовать</small></button><button data-play-action="jump">✨<small>Прыгать</small></button></div>`,
    dance:`<div class="dance-status">🎵 Танцевальная связка: ${(state.dance?.moves||0)%4}/4 · Завершено: ${state.dance?.completed||0}</div><div class="room-action-bar dance-actions"><button data-dance-move="left">👈<small>Шаг влево</small></button><button data-dance-move="right">👉<small>Шаг вправо</small></button><button data-dance-move="jump">✨<small>Прыжок</small></button><button data-dance-move="spin">🔄<small>Поворот</small></button></div>`,
    lake:'<div class="room-action-bar"><button data-action="lake-fish">🎣<small>Ловить рыбу</small></button><button data-action="fish-shop">🎒<small>Снаряжение</small></button></div>'
  };
