@@ -1,10 +1,10 @@
 import { t } from '../data/localization.js';
 import { rooms } from '../core/rooms.js';
-import { LESSONS, getLesson, lessonUnlocked } from '../core/school.js?v=20261010-school-play1';
-import { renderRoomDecor } from './scenes.js?v=20261010-school-play1';
-import { getEmotion } from '../core/state.js?v=20261010-school-play1';
-import { renderPet } from './pet.js?v=20261010-school-play1';
-import { catalog,categories,itemIcon } from '../core/shop.js?v=20261010-school-play1';
+import { LESSONS, getLesson, lessonUnlocked } from '../core/school.js?v=20261010-school-play2';
+import { renderRoomDecor } from './scenes.js?v=20261010-school-play2';
+import { getEmotion } from '../core/state.js?v=20261010-school-play2';
+import { renderPet } from './pet.js?v=20261010-school-play2';
+import { catalog,categories,itemIcon } from '../core/shop.js?v=20261010-school-play2';
 import { quests,achievements,levelData,rewardText } from '../core/progression.js';
 const labels={hunger:'Сытость',thirst:'Жажда',cleanliness:'Чистота',mood:'Настрой',energy:'Энергия',toilet:'Лоток',health:'Здоровье'};
 const categoryNames={food:'Продукты',drinks:'Напитки',treats:'Сладости',toys:'Игрушки',art:'Творчество',pajamas:'Пижамы',outfits:'Одежда',costumes:'Костюмы',hats:'Головные уборы',glasses:'Очки',collars:'Ошейники',shoes:'Обувь',accessories:'Аксессуары',bath:'Уход',furniture:'Мебель',beds:'Лежанки',kitchen:'Кухня',decor:'Декор',rods:'Удочки',fishing:'Для рыбалки',seasonal:'Сезонное',rare:'Редкое',gifts:'Подарки',premium:'Премиум'};
