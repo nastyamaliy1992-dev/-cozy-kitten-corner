@@ -176,6 +176,24 @@ function runPlayAction(kind='ball'){
     {stage:'arrived',ms:220},{stage:'chasing',ms:360},{stage:'chasing',ms:360},{stage:'happy',ms:420}
   ],{extra:{playKind:kind},onFrame:f=>{if(f.stage==='happy'){giggleSound();showBubble(kind==='yarn'?'Поймала клубок! 🧶':'Поймала мяч! ⚽',700)}}});
 }
+function runDanceMove(kind='left'){
+ if(actionLock||state.room!=='dance')return;
+ if(state.needs.energy<8){showBubble('Луне нужно немного отдохнуть 🌙',1400);return}
+ state.dance??={moves:0,completed:0};
+ state.dance.moves++;
+ state.needs.mood=Math.min(100,state.needs.mood+2);
+ state.needs.energy=Math.max(0,state.needs.energy-1);
+ state.economy.xp+=2;
+ const finished=state.dance.moves%4===0;
+ if(finished){state.dance.completed++;state.economy.xp+=18;state.economy.coins+=15;}
+ persist();
+ const stage={left:'danceLeft',right:'danceRight',jump:'danceJump',spin:'danceSpin'}[kind]||'danceLeft';
+ if(finished){happyJingle();showBubble('Танец завершён! +15 🪙 · +18 XP ✨',1800)}
+ else {sfx('play');showBubble('Танцуем! 🎵',650)}
+ runLunaSequence('dance',[
+  {stage:'arrived',ms:140},{stage,ms:360},{stage,ms:320},{stage:'happy',ms:390}
+ ],{onFrame:f=>{if(f.stage==='happy'&&finished)giggleSound()}});
+}
 function bindGame(){document.querySelector('[data-action="pet-now"]')?.addEventListener('click',()=>petDirect());const pet=document.querySelector('.pet-button');let petStart=null,petMoved=false,strokeTotal=0,lastStrokeSound=0;pet?.addEventListener('pointerdown',e=>{if(actionLock)return;e.preventDefault();petStart={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY};petMoved=false;strokeTotal=0;pet.classList.add('is-stroking');pet.setPointerCapture?.(e.pointerId);if(['soap','shampoo'].includes(state.activity?.type)){bubbleSound();giggleSound()}else{purr(2.2);state.activity={type:'petting',stage:'stroking',startedAt:Date.now()};document.querySelector('.game-shell')?.classList.add('activity-petting')}});pet?.addEventListener('pointermove',e=>{if(!petStart)return;e.preventDefault();const step=Math.hypot(e.clientX-petStart.lastX,e.clientY-petStart.lastY);const d=Math.hypot(e.clientX-petStart.x,e.clientY-petStart.y);petStart.lastX=e.clientX;petStart.lastY=e.clientY;strokeTotal+=step;if(d>8||strokeTotal>12){petMoved=true;pet.style.setProperty('--stroke-x',Math.max(-12,Math.min(12,(e.clientX-petStart.x)/5))+'px');const now=Date.now();if(['soap','shampoo'].includes(state.activity?.type)){state.activity.scrub=Math.min(100,(state.activity.scrub||0)+Math.max(1,Math.round(step/2.3)));const pct=document.querySelector('.foam-fx i');if(pct)pct.textContent=state.activity.scrub+'%';const foam=document.querySelector('.foam-fx');if(foam){foam.style.setProperty('--foam-progress',state.activity.scrub);foam.style.setProperty('--foam-scale',(.58+state.activity.scrub/180).toFixed(2));foam.style.setProperty('--foam-opacity',(.22+state.activity.scrub/140).toFixed(2))}if(now-lastStrokeSound>430){lastStrokeSound=now;bubbleSound();giggleSound()}if(state.activity.scrub>=100&&!state.activity.completed){state.activity.completed=true;state.needs.cleanliness=Math.min(100,state.needs.cleanliness+32);state.needs.mood=Math.min(100,state.needs.mood+10);applauseSound();giggleSound();speakLuna('Хи-хи! Какая пена!');persist();showBubble('Вот теперь много пены! 🫧😸',1700);petStart=null;setTimeout(()=>{if(state?.room==='bathroom'&&['soap','shampoo'].includes(state.activity?.type)&&state.activity?.completed){state.activity={type:'bathReady',stage:'inTub',startedAt:Date.now()};persist();render()}},1400)}}else if(now-lastStrokeSound>780){lastStrokeSound=now;purr(1.25)}}});pet?.addEventListener('pointerup',()=>{if(!petStart)return;const wasBath=['soap','shampoo'].includes(state.activity?.type);petStart=null;pet.classList.remove('is-stroking');pet.style.removeProperty('--stroke-x');if(wasBath){persist();render();return}const rr=rewardPetting(state);state=rr.state;state.activity={type:'petted',stage:'laugh',startedAt:Date.now()};persist();purr(2.6);showBubble(rr.rewarded?'Мр-р-р… как приятно! +2 XP':'Мр-р-р… как приятно!',1900);render();setTimeout(()=>{if(state&&!state.sleeping&&['petted','petting'].includes(state.activity?.type)){state.activity={type:'idle',stage:'idle',startedAt:Date.now()};persist();render()}},2000)});const clearPetGesture=()=>{petStart=null;petMoved=false;pet?.classList.remove('is-stroking');pet?.style.removeProperty('--stroke-x')};pet?.addEventListener('pointercancel',clearPetGesture);pet?.addEventListener('lostpointercapture',clearPetGesture);const toggleFridge=()=>{ui.fridgeOpen=!ui.fridgeOpen;if(ui.fridgeOpen)state=moveLuna(state,'fridge');persist();render();if(ui.fridgeOpen)showBubble('Выбирай еду',900)};document.querySelector('[data-object="fridge"]')?.addEventListener('click',toggleFridge);document.querySelector('[data-action="open-fridge"]')?.addEventListener('click',()=>{if(state.room!=='kitchen'){state.room='kitchen';ui.fridgeOpen=true;persist();render();startRoomMusic('kitchen')}else toggleFridge()});document.querySelector('[data-object="lamp"]')?.addEventListener('click',()=>moveTo('lamp',()=>{state=toggleLamp(state);persist();render()}));document.querySelector('[data-object="bed"]')?.addEventListener('click',()=>moveTo('bed',()=>{
   stopMusic();
   sleepyChime();
@@ -239,6 +257,7 @@ document.querySelector('[data-action="bath-finish"]')?.addEventListener('click',
  }});
 });
 document.querySelectorAll('[data-play-action]').forEach(b=>b.addEventListener('click',()=>runPlayAction(b.dataset.playAction)));
+document.querySelectorAll('[data-dance-move]').forEach(b=>b.addEventListener('click',()=>runDanceMove(b.dataset.danceMove)));
 document.querySelector('[data-action="fish-hook"]')?.addEventListener('click',()=>{
  if(actionLock||state.activity?.type!=='fishGame')return;
  const phase=((Date.now()-(state.activity.startedAt||Date.now()))%2200)/2200,hit=phase>=.28&&phase<=.72;
@@ -263,7 +282,7 @@ document.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',(
  state.room=b.dataset.room;
  state=moveLuna(state,'idle');
  state.activity=roomEntryActivity(state.room,Date.now());
- if(['playroom','lake'].includes(state.room))state.activity={type:'emotion',stage:'curious',startedAt:Date.now()};
+ if(['playroom','lake','dance'].includes(state.room))state.activity={type:'emotion',stage:'curious',startedAt:Date.now()};
  ui.fridgeOpen=false;
  if(state.room==='store')ui.panel='shop';
  soundOn=true;
@@ -282,6 +301,8 @@ document.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',(
   meow('play');showBubble('Хочу играть!',1500);
  }else if(state.room==='lake'){
   meow('fish');showBubble('Хочу ловить рыбку!',1500);
+ }else if(state.room==='dance'){
+  meow('happy');showBubble('Потанцуем? Выбирай движения! 🎶',1900);
  }
 }));
 // Petting is gesture-only. Do not bind click: a completed pointer stroke may synthesize a click and double-reward Luna.
