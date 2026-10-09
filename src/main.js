@@ -7,7 +7,7 @@ import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels
 import { castLine,catchFish } from './core/fishing.js';
 import { ensureSchool, startLesson, answerLesson, unlockLesson } from './core/school.js?v=20261010-school-play2';
 import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js';
-import { preloadRoomBackgrounds } from './data/roomAssets.js?v=20261010-dance-photo1';
+import { preloadRoomBackgrounds } from './data/roomAssets.js?v=20261010-toilet-photo2';
 import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261010-fullbody5';
 const telegram=initTelegram();
 preloadLunaFrames();
