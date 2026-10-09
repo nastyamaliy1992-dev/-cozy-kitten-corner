@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createInitialState,rewardPetting} from '../src/core/state.js';
+import {createInitialState,rewardPetting,getEmotion} from '../src/core/state.js';
 import {LESSONS, startLesson, answerLesson, unlockLesson, lessonUnlocked} from '../src/core/school.js';
 import {buyItem,equipItem,catalog} from '../src/core/shop.js';
 import {renderGame} from '../src/ui/appView.js';
@@ -60,4 +60,12 @@ test('playroom shows three-catch touch target for active challenge',()=>{
  const h=renderGame(s);
  assert.match(h,/data-play-catch/);assert.match(h,/Поймай игрушку: 1\/3/);
  assert.match(h,/assets\/toys\/yarn.svg/);
+});
+
+
+test('low-mood anger and annoyance use their distinct uploaded emotion assets',()=>{
+  const s=createInitialState('Луна');
+  s.needs.mood=12;assert.equal(getEmotion(s),'angry');
+  s.needs.mood=24;assert.equal(getEmotion(s),'annoyed');
+  s.needs.mood=38;assert.equal(getEmotion(s),'sad');
 });
