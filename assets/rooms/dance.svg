@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1600" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f4f1e8"/><stop offset=".62" stop-color="#d9e2dd"/><stop offset="1" stop-color="#b1bcb7"/></linearGradient>
+<linearGradient id="floor" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#d6bda0"/><stop offset=".57" stop-color="#e5d4bf"/><stop offset="1" stop-color="#e9dbc8"/></linearGradient>
+<linearGradient id="mirror" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dcece7"/><stop offset=".55" stop-color="#f7faf7"/><stop offset="1" stop-color="#bbd1d2"/></linearGradient>
+<radialGradient id="warm"><stop stop-color="#fffbea"/><stop offset=".22" stop-color="#ffeabb"/><stop offset=".48" stop-color="#ffd89a" stop-opacity=".68"/><stop offset="1" stop-color="#ffd89a" stop-opacity="0"/></radialGradient>
+<radialGradient id="cool"><stop stop-color="#f7ffff"/><stop offset=".2" stop-color="#cce9e6"/><stop offset=".46" stop-color="#9ac9cd" stop-opacity=".52"/><stop offset="1" stop-color="#9ac9cd" stop-opacity="0"/></radialGradient>
+<filter id="soft"><feGaussianBlur stdDeviation="18"/></filter>
+<filter id="shadow"><feGaussianBlur stdDeviation="8"/></filter>
+<pattern id="wood" width="160" height="160" patternUnits="userSpaceOnUse"><path d="M0 0v160M54 0v160M110 0v160" stroke="#b99d7b" stroke-width="2" opacity=".26"/></pattern>
+</defs>
+<rect width="900" height="1600" fill="url(#wall)"/>
+<path d="M0 0H900V300L0 330Z" fill="#f3f4f0"/>
+<path d="M0 910L900 910V1600H0Z" fill="url(#floor)"/>
+<path d="M0 910H900V1600H0Z" fill="url(#wood)" opacity=".9"/>
+<path d="M0 910H900" stroke="#b9a78f" stroke-width="18"/>
+<path d="M450 917L-110 1599M450 917L1060 1599" stroke="#bea587" stroke-width="4" opacity=".38"/>
+<path d="M0 1150H900M0 1390H900" stroke="#b79f87" stroke-width="3" opacity=".26"/>
+<!-- large illuminated wall mirrors -->
+<rect x="98" y="330" width="705" height="540" rx="32" fill="#a69a85" opacity=".4" filter="url(#shadow)"/>
+<rect x="112" y="316" width="675" height="536" rx="26" fill="#c5b59a" stroke="#efe4d0" stroke-width="14"/>
+<rect x="132" y="336" width="635" height="496" rx="15" fill="url(#mirror)"/>
+<path d="M150 350L425 350L173 808L145 808Z" fill="#fff" opacity=".35"/>
+<path d="M545 342L650 342L400 831L335 831Z" fill="#fff" opacity=".24"/>
+<path d="M444 336V832" stroke="#cabca7" stroke-width="7"/>
+<!-- ballet rail -->
+<path d="M135 730H766" stroke="#a58b71" stroke-width="16" stroke-linecap="round"/>
+<path d="M178 731V828M722 731V828" stroke="#9b8673" stroke-width="14"/>
+<path d="M135 744H767" stroke="#faf3e7" stroke-width="3" opacity=".7"/>
+<!-- top ceiling and modern light rails -->
+<path d="M0 70H900" stroke="#ddd6c8" stroke-width="15"/>
+<path d="M60 122H840" stroke="#a6a8a0" stroke-width="12" stroke-linecap="round"/>
+<path d="M118 120V230M275 120V300M465 120V265M662 120V302M805 120V208" stroke="#a19d91" stroke-width="7"/>
+<!-- canopy diffuse illumination -->
+<ellipse cx="450" cy="360" rx="440" ry="160" fill="#fff5d8" opacity=".22" filter="url(#soft)"/>
+<!-- lots of decorative glowing floating orbs -->
+<g>
+<circle cx="120" cy="230" r="110" fill="url(#warm)"/><circle cx="120" cy="230" r="34" fill="#fff8e6"/><circle cx="120" cy="230" r="20" fill="#fffef7"/>
+<circle cx="275" cy="300" r="95" fill="url(#cool)"/><circle cx="275" cy="300" r="27" fill="#f0ffff"/><circle cx="275" cy="300" r="16" fill="#fff"/>
+<circle cx="465" cy="265" r="112" fill="url(#warm)"/><circle cx="465" cy="265" r="36" fill="#fff5d8"/><circle cx="465" cy="265" r="20" fill="#fff"/>
+<circle cx="662" cy="303" r="120" fill="url(#cool)"/><circle cx="662" cy="303" r="33" fill="#ecfffa"/><circle cx="662" cy="303" r="20" fill="#fff"/>
+<circle cx="805" cy="208" r="88" fill="url(#warm)"/><circle cx="805" cy="208" r="24" fill="#fff8e7"/><circle cx="805" cy="208" r="14" fill="#fff"/>
+</g>
+<!-- stage lighting -->
+<path d="M95 144L198 800L320 800L140 145Z" fill="#fff4ce" opacity=".11"/>
+<path d="M790 144L570 830L705 830L835 145Z" fill="#c4eae9" opacity=".15"/>
+<!-- wall strip lights -->
+<rect x="34" y="368" width="17" height="525" rx="9" fill="#fff0ce"/><rect x="25" y="355" width="35" height="545" rx="16" fill="#fff3d6" opacity=".4" filter="url(#soft)"/>
+<rect x="846" y="368" width="17" height="525" rx="9" fill="#e0fdf9"/><rect x="836" y="355" width="35" height="545" rx="16" fill="#e0fdf9" opacity=".5" filter="url(#soft)"/>
+<!-- musical area -->
+<rect x="63" y="810" width="103" height="179" rx="15" fill="#6b7475"/><rect x="78" y="825" width="74" height="148" rx="12" fill="#4b5558"/>
+<circle cx="116" cy="875" r="26" stroke="#a7cecd" stroke-width="8" fill="#384548"/>
+<circle cx="116" cy="938" r="15" fill="#819b9d"/>
+<rect x="746" y="811" width="98" height="178" rx="15" fill="#6b7475"/><rect x="757" y="825" width="75" height="148" rx="12" fill="#4b5558"/>
+<circle cx="794" cy="875" r="26" stroke="#a7cecd" stroke-width="8" fill="#384548"/><circle cx="794" cy="938" r="15" fill="#819b9d"/>
+<!-- soft glowing round floor lights -->
+<ellipse cx="220" cy="1200" rx="130" ry="38" fill="#fff0cf" opacity=".5" filter="url(#soft)"/>
+<ellipse cx="685" cy="1220" rx="145" ry="42" fill="#d4faf9" opacity=".5" filter="url(#soft)"/>
+<!-- paw details -->
+<g opacity=".22" fill="#7a908e"><ellipse cx="480" cy="1450" rx="49" ry="30"/><circle cx="425" cy="1395" r="18"/><circle cx="461" cy="1377" r="18"/><circle cx="504" cy="1377" r="18"/><circle cx="536" cy="1402" r="17"/></g>
+</svg>
