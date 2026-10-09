@@ -1,4 +1,4 @@
-import { HALL_BG, ROOM_BACKGROUNDS } from '../data/roomAssets.js?v=20261010-school-play1';
+import { HALL_BG, ROOM_BACKGROUNDS } from '../data/roomAssets.js?v=20261010-school-play2';
 
 export function renderRoomDecor(room,ui={}){
  const bg=ROOM_BACKGROUNDS[room] || HALL_BG;
