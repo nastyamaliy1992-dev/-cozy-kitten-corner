@@ -1039,3 +1039,47 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .room-dance .dance-actions small{font-size:10px;line-height:1.1}
 @media(max-width:430px){.room-dance .pet-button{width:min(68vw,305px)!important;bottom:146px!important}.room-dance .dance-status{bottom:92px;left:77px;right:7px}.room-dance .dance-actions button{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.dance-glow-orbs i{animation:none!important}}
+
+/* Luna interaction repair: show kitten, unmistakable movement, toilet lid and moving toys */
+.room-playroom .pet-button{display:block!important;visibility:visible!important;opacity:1!important;width:min(68vw,340px)!important;bottom:142px!important;z-index:39!important}
+.room-playroom .pet-stage,.room-dance .pet-stage{width:100%!important;overflow:visible!important;transform-origin:50% 95%!important}
+.room-playroom .luna-photo,.room-dance .luna-photo{width:100%!important;height:auto!important;max-height:none!important;display:block!important;opacity:1!important;object-fit:contain!important}
+.room-playroom .pet-button .pet-stage[data-luna-stage="playReady"]{animation:none!important}
+.room-playroom .pet-button .pet-stage[data-luna-stage="playChaseLeft"]{animation:toyLunaChaseLeft .46s ease-in-out both!important}
+.room-playroom .pet-button .pet-stage[data-luna-stage="playChaseRight"]{animation:toyLunaChaseRight .46s ease-in-out both!important}
+.room-playroom .pet-button .pet-stage[data-luna-stage="playPounce"]{animation:toyLunaPounce .42s cubic-bezier(.3,.1,.2,1) both!important}
+.room-playroom .pet-button .pet-stage[data-luna-stage="playJumpRise"]{animation:toyLunaRise .3s ease-out both!important}
+.room-playroom .pet-button .pet-stage[data-luna-stage="playJumpPeak"]{animation:toyLunaPeak .29s ease-in-out both!important}
+.room-playroom .pet-button .pet-stage[data-luna-stage="playJumpLand"]{animation:toyLunaLand .29s ease-in both!important}
+.room-playroom .pet-button .pet-stage[data-luna-stage="playCelebrate"]{animation:toyLunaPounce .5s ease-in-out both!important}
+@keyframes toyLunaChaseLeft{0%{transform:translateX(32px) rotate(4deg)}100%{transform:translateX(-54px) rotate(-8deg)}}
+@keyframes toyLunaChaseRight{0%{transform:translateX(-54px) rotate(-8deg)}100%{transform:translateX(40px) rotate(8deg)}}
+@keyframes toyLunaPounce{0%{transform:translateY(0) scale(.94)}45%{transform:translateY(-55px) rotate(-7deg) scale(1.07)}100%{transform:translateY(0) rotate(0) scale(1)}}
+@keyframes toyLunaRise{0%{transform:translateY(0) scaleY(.9)}100%{transform:translateY(-65px) scaleY(1.05)}}
+@keyframes toyLunaPeak{0%,100%{transform:translateY(-65px)}50%{transform:translateY(-102px) rotate(-5deg)}}
+@keyframes toyLunaLand{0%{transform:translateY(-65px)}65%{transform:translateY(9px) scaleY(.88)}100%{transform:translateY(0) scaleY(1)}}
+.room-dance.activity-dance .pet-stage .luna-photo{animation:none!important}
+.room-dance .pet-stage[data-luna-stage^="danceLeft"]{animation:danceSidestepLeft .36s ease-in-out both!important}
+.room-dance .pet-stage[data-luna-stage^="danceRight"]{animation:danceSidestepRight .36s ease-in-out both!important}
+.room-dance .pet-stage[data-luna-stage^="danceJump"]{animation:danceJumpMove .38s cubic-bezier(.2,.2,.1,1) both!important}
+.room-dance .pet-stage[data-luna-stage^="danceSpin"]{animation:danceSpinMove .38s ease-in-out both!important}
+.room-dance .pet-stage[data-luna-stage="danceReady"],.room-dance .pet-stage[data-luna-stage="danceFinished"]{animation:pet-breathe-premium 2.5s ease-in-out infinite!important}
+@keyframes danceSidestepLeft{0%{transform:translateX(24px) rotate(5deg)}60%{transform:translateX(-70px) rotate(-9deg)}100%{transform:translateX(-45px) rotate(-4deg)}}
+@keyframes danceSidestepRight{0%{transform:translateX(-24px) rotate(-5deg)}60%{transform:translateX(70px) rotate(9deg)}100%{transform:translateX(45px) rotate(4deg)}}
+@keyframes danceJumpMove{0%{transform:translateY(0) scale(.96)}55%{transform:translateY(-96px) scale(1.06)}100%{transform:translateY(0) scale(1)}}
+@keyframes danceSpinMove{0%{transform:rotateY(0deg)}50%{transform:rotateY(165deg) scale(.96)}100%{transform:rotateY(360deg)}}
+.toy-animation{position:absolute;z-index:42;left:42%;bottom:167px;width:65px;height:65px;pointer-events:none}
+.toy-animation .toy-object{position:absolute;inset:0;display:grid;place-items:center;font-size:59px;filter:drop-shadow(0 12px 7px #33251e66);animation:rollingToy 1s linear infinite alternate}
+.toy-animation.toy-ball .toy-object{font-size:54px}
+.toy-animation.toy-yarn .toy-object{filter:drop-shadow(0 9px 6px #33251e77) hue-rotate(165deg)}
+@keyframes rollingToy{0%{transform:translateX(-110px) translateY(3px) rotate(-45deg)}40%{transform:translateX(0) translateY(-12px) rotate(30deg)}100%{transform:translateX(110px) translateY(3px) rotate(130deg)}}
+.room-toilet .toilet-lid-visual{position:absolute;left:43%;top:53%;width:29%;height:14%;z-index:7;pointer-events:none;opacity:0;border-radius:48% 48% 26% 26%;background:linear-gradient(145deg,#fff 0%,#d6dad8 62%,#a4aeb1 100%);border:7px solid #d2d4d6;box-shadow:0 9px 22px #30363b75;transform-origin:50% 100%;transform:perspective(240px) rotateX(0);transition:transform .45s ease,opacity .25s ease}
+.room-toilet.activity-toilet .toilet-lid-visual{opacity:1;transform:perspective(240px) rotateX(-72deg)}
+.room-toilet.activity-toilet .pet-button{z-index:38!important;bottom:214px!important;left:47%!important;width:min(39vw,208px)!important}
+.room-toilet.activity-toilet .pet-stage{animation:none!important}
+.room-toilet.activity-toilet .pet-stage[data-luna-stage="toiletSitting"]{animation:toiletPose .62s ease-in-out infinite alternate!important}
+@keyframes toiletPose{from{transform:translateY(0)}to{transform:translateY(7px)}}
+.room-toilet.activity-toilet .toilet-lid-visual:after{content:"";position:absolute;left:10%;right:10%;bottom:-4px;height:6px;background:#a9d2d9;border-radius:50%}
+.room-toilet.activity-toilet .pet-button .luna-photo{width:100%!important}
+@media(max-width:430px){.room-playroom .pet-button{width:min(67vw,290px)!important;bottom:164px!important}.toy-animation{bottom:179px}.room-toilet.activity-toilet .pet-button{bottom:215px!important}}
+@media(prefers-reduced-motion:reduce){.toy-animation .toy-object,.room-dance .pet-stage,.room-playroom .pet-stage{animation:none!important}}
