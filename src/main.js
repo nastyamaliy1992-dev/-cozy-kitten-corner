@@ -1,12 +1,12 @@
 import { renderWelcome,renderGame } from './ui/appView.js?v=20261009-actions2';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261007-life1';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
-import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,introTheme,playSequenceFrameSound } from './core/audio.js';
+import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261009-actions3';
 import { buyItem,equipItem,applyFurniture,catalog,grantPremiumItem } from './core/shop.js?v=20261007-life1';
 import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels,levelData } from './core/progression.js';
 import { castLine,catchFish } from './core/fishing.js';
 import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js';
-import { preloadRoomBackgrounds } from './data/roomAssets.js';
+import { preloadRoomBackgrounds } from './data/roomAssets.js?v=20261009-actions3';
 import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261009-actions2';
 const telegram=initTelegram();
 preloadLunaFrames();
@@ -311,9 +311,9 @@ document.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',(
  if(['playroom','lake','dance'].includes(state.room))state.activity={type:'emotion',stage:'curious',startedAt:Date.now()};
  ui.fridgeOpen=false;
  if(state.room==='store')ui.panel='shop';
- soundOn=true;
+ soundOn=state.settings?.musicEnabled!==false;
  preloadRoomBackgrounds(state.room);
- persist();render();startRoomMusic(state.room);
+ persist();render();if(soundOn)startRoomMusic(state.room);else stopMusic();
  if(state.room==='toilet'){
   meow('toilet');showBubble('Мяу… хочу в туалет! 🐾',2400);
   setTimeout(()=>{if(state?.room==='toilet'&&state.activity?.type==='toiletNeed'){state.activity={type:'idle',stage:'idle',startedAt:Date.now()};persist();render()}},2500);
