@@ -1,4 +1,4 @@
-import { lunaAssetFor } from '../data/lunaAsset.js?v=20261009-repair2';
+import { lunaAssetFor } from '../data/lunaAsset.js?v=20261009-photo3';
 
 export function renderPet({sleeping=false,emotion='calm',activity='idle',stage='idle',movement={x:50,y:78,facing:1}}={}){
   const type = typeof activity === 'object' ? (activity.type || 'idle') : activity;
