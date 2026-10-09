@@ -1111,3 +1111,21 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
  .room-playroom.activity-play .pet-stage .luna-photo,
  .room-dance.activity-dance .pet-stage .luna-photo{animation:none!important}
 }
+
+
+/* 2026-10-10: clear gameplay feedback and separate toilet fixture. */
+.room-playroom .play-score{position:absolute;z-index:57;left:clamp(85px,22vw,120px);right:12px;bottom:97px;background:#24243edb;border:1px solid #ffffff55;color:#fff;border-radius:14px;padding:9px;text-align:center;font-size:13px;font-weight:800}
+.room-playroom.activity-play .play-fx{z-index:45!important}
+.room-playroom.activity-play .play-moving-toy{animation:ckToyRoll .8s cubic-bezier(.2,.7,.25,1) infinite alternate!important}
+.room-dance.activity-dance .pet-stage[data-luna-stage="danceLeft"] .luna-photo{animation:ckDanceLeft .72s ease-in-out 1 both!important}
+.room-dance.activity-dance .pet-stage[data-luna-stage="danceRight"] .luna-photo{animation:ckDanceRight .72s ease-in-out 1 both!important}
+.room-dance.activity-dance .pet-stage[data-luna-stage="danceSpin"] .luna-photo{animation:ckDanceSpin .72s ease-in-out 1 both!important}
+.room-dance.activity-dance .pet-stage[data-luna-stage="danceJump"] .luna-photo{animation:ckRealJump .72s ease-in-out 1 both!important}
+.room-toilet.activity-toilet .pet-button{width:min(52vw,265px)!important;height:min(54vw,275px)!important;bottom:30%!important;left:52%!important;z-index:42!important}
+.room-toilet.activity-toilet .pet-stage[data-luna-stage="toiletSitDown"] .luna-photo{animation:ckToiletSit .74s ease-in 1 both!important}
+.room-toilet.activity-toilet .pet-stage[data-luna-stage="toiletSitting"] .luna-photo{animation:ckToiletSitBreathe 1.05s ease-in-out infinite alternate!important}
+.room-toilet.activity-toilet .pet-stage[data-luna-stage="toiletFinished"] .luna-photo{animation:ckToiletUp .72s ease-out 1 both!important}
+@keyframes ckToiletSit{from{transform:translateY(-22px) scale(1.08)}to{transform:translateY(8px) scale(.98)}}
+@keyframes ckToiletSitBreathe{from{transform:translateY(5px) scale(.98)}to{transform:translateY(11px) scale(1)}}
+@keyframes ckToiletUp{from{transform:translateY(10px) scale(.97)}to{transform:translateY(-12px) scale(1.03)}}
+@media(max-width:430px){.room-playroom .play-score{bottom:104px;font-size:12px}.room-toilet.activity-toilet .pet-button{width:min(58vw,265px)!important;height:min(62vw,280px)!important}}
