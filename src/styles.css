@@ -1048,3 +1048,66 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
   backface-visibility:visible;
 }
 .pet-stage .luna-photo{filter:none!important}
+
+
+/* 2026-10-09 gameplay pass: movement must be VISIBLY different from a sprite swap. */
+.room-playroom .play-toy-prop{position:absolute;z-index:2;bottom:16%;width:18%;max-width:112px;pointer-events:none;filter:drop-shadow(0 7px 8px #0005);object-fit:contain}
+.room-playroom .yarn-prop{left:25%;transform:rotate(-12deg)}
+.room-playroom .ball-prop{right:12%;transform:rotate(16deg)}
+.room-playroom .play-fx{z-index:36;left:42%;bottom:22%;width:85px;height:90px;font-size:initial;pointer-events:none;animation:none!important}
+.room-playroom .play-fx .play-moving-toy{display:block;width:100%;height:100%;filter:drop-shadow(0 8px 10px #0007);object-fit:contain;animation:ckToyRoll .68s cubic-bezier(.2,.7,.25,1) infinite alternate}
+@keyframes ckToyRoll{0%{transform:translate(-58px,12px) rotate(-52deg) scale(.85)}100%{transform:translate(105px,-13px) rotate(170deg) scale(1.06)}}
+.room-playroom.activity-play .pet-stage[data-luna-stage="playReach"] .luna-photo,
+.room-playroom.activity-play .pet-stage[data-luna-stage="chasing"] .luna-photo{
+  animation:ckPlayChase .5s cubic-bezier(.3,.1,.6,1) infinite alternate!important;
+}
+@keyframes ckPlayChase{0%{transform:translate(-18px,2px) rotate(-7deg) scale(.98)}100%{transform:translate(32px,-19px) rotate(5deg) scale(1.07)}}
+.room-playroom.activity-play .pet-stage[data-luna-stage="playCatch"] .luna-photo{
+  animation:ckPlayCatch .42s ease-out 1!important
+}
+@keyframes ckPlayCatch{0%{transform:translateY(-23px) scale(1.08)}75%{transform:translateY(4px) scale(.97)}100%{transform:none}}
+.room-playroom.activity-jump .pet-stage[data-luna-stage="jumping"] .luna-photo,
+.room-dance.activity-dance .pet-stage[data-luna-stage="danceJump"] .luna-photo{
+  animation:ckRealJump .55s cubic-bezier(.25,.1,.25,1) 1 both!important
+}
+@keyframes ckRealJump{0%{transform:translateY(0) scale(.96,1.02)}42%{transform:translateY(-72px) scale(1.05,.96)}70%{transform:translateY(-22px)}100%{transform:translateY(0) scale(1)}}
+.room-playroom.activity-jump .pet-stage[data-luna-stage="celebrate"] .luna-photo{animation:ckCelebrate .32s ease-in-out 2!important}
+@keyframes ckCelebrate{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-25px) rotate(4deg)}}
+.room-dance.activity-dance .pet-stage[data-luna-stage="danceLeft"] .luna-photo{
+  animation:ckDanceLeft .68s cubic-bezier(.25,.1,.25,1) 1 both!important
+}
+.room-dance.activity-dance .pet-stage[data-luna-stage="danceRight"] .luna-photo{
+  animation:ckDanceRight .68s cubic-bezier(.25,.1,.25,1) 1 both!important
+}
+.room-dance.activity-dance .pet-stage[data-luna-stage="danceSpin"] .luna-photo{
+  animation:ckDanceSpin .68s ease-in-out 1 both!important;
+  backface-visibility:visible!important
+}
+@keyframes ckDanceLeft{0%{transform:translateX(0) rotate(0)}43%{transform:translateX(-47px) rotate(-12deg)}100%{transform:translateX(-23px) rotate(-3deg)}}
+@keyframes ckDanceRight{0%{transform:translateX(0) rotate(0)}43%{transform:translateX(47px) rotate(12deg)}100%{transform:translateX(23px) rotate(3deg)}}
+@keyframes ckDanceSpin{0%{transform:rotateY(0deg) rotate(-3deg)}25%{transform:rotateY(90deg)}50%{transform:rotateY(180deg)}75%{transform:rotateY(270deg)}100%{transform:rotateY(360deg)}}
+.room-dance.activity-dance .pet-stage[data-luna-stage="happy"] .luna-photo{animation:ckDanceFinish .48s ease-out 1!important}
+@keyframes ckDanceFinish{0%{transform:scale(.93)}60%{transform:translateY(-13px) scale(1.04)}100%{transform:none}}
+/* The toilet frames already contain the actual open porcelain lid and seat, including Luna. */
+.room-toilet.activity-toilet .pet-button{
+  left:53%!important;
+  bottom:31%!important;
+  width:min(68vw,345px)!important;
+  height:min(68vw,345px)!important;
+  z-index:33!important;
+}
+.room-toilet.activity-toilet .pet-stage{width:100%!important;height:100%!important;animation:none!important}
+.room-toilet.activity-toilet .luna-photo{
+  width:100%!important;height:100%!important;object-fit:contain!important;
+  animation:none!important;filter:drop-shadow(0 12px 12px #0005)!important
+}
+@media(max-width:430px){
+ .room-playroom .play-toy-prop{width:16%;bottom:15%}
+ .room-dance .pet-button{width:min(72vw,335px)!important}
+ .room-toilet.activity-toilet .pet-button{width:min(70vw,320px)!important;height:min(70vw,320px)!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .room-playroom .play-fx .play-moving-toy,
+ .room-playroom.activity-play .pet-stage .luna-photo,
+ .room-dance.activity-dance .pet-stage .luna-photo{animation:none!important}
+}
