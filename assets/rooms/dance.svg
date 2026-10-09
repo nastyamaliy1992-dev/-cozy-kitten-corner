@@ -58,4 +58,27 @@
 <ellipse cx="685" cy="1220" rx="145" ry="42" fill="#d4faf9" opacity=".5" filter="url(#soft)"/>
 <!-- paw details -->
 <g opacity=".22" fill="#7a908e"><ellipse cx="480" cy="1450" rx="49" ry="30"/><circle cx="425" cy="1395" r="18"/><circle cx="461" cy="1377" r="18"/><circle cx="504" cy="1377" r="18"/><circle cx="536" cy="1402" r="17"/></g>
+
+<!-- Extra warm, gender-neutral festive light installation, on top of the studio mirror. -->
+<defs><radialGradient id="pendantGlow"><stop stop-color="#fffce9"/><stop offset=".27" stop-color="#fff2c6" stop-opacity=".65"/><stop offset="1" stop-color="#ffdfa0" stop-opacity="0"/></radialGradient><linearGradient id="lantern" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#fffdf2"/><stop offset=".6" stop-color="#ffe3a3"/><stop offset="1" stop-color="#b88a4a"/></linearGradient></defs>
+<path d="M-12 160Q223 318 450 191T915 205" fill="none" stroke="#6b574c" stroke-width="5" opacity=".8"/>
+<g fill="#fff7d8" stroke="#e4b876" stroke-width="2">
+<circle cx="36" cy="190" r="10"/><circle cx="95" cy="235" r="10"/><circle cx="156" cy="258" r="10"/><circle cx="216" cy="269" r="10"/><circle cx="276" cy="264" r="10"/><circle cx="336" cy="247" r="10"/><circle cx="397" cy="216" r="10"/><circle cx="459" cy="191" r="10"/><circle cx="521" cy="210" r="10"/><circle cx="583" cy="234" r="10"/><circle cx="645" cy="245" r="10"/><circle cx="706" cy="244" r="10"/><circle cx="769" cy="229" r="10"/><circle cx="831" cy="211" r="10"/><circle cx="890" cy="203" r="10"/>
+</g>
+<g opacity=".8"><circle cx="95" cy="235" r="37" fill="url(#pendantGlow)"/><circle cx="276" cy="264" r="37" fill="url(#pendantGlow)"/><circle cx="521" cy="210" r="44" fill="url(#pendantGlow)"/><circle cx="769" cy="229" r="39" fill="url(#pendantGlow)"/></g>
+<!-- Suspended paper moon lantern and two glowing stars -->
+<path d="M450 30V167M236 50V265M675 40V288" stroke="#958472" stroke-width="4"/>
+<circle cx="450" cy="255" r="110" fill="url(#pendantGlow)"/>
+<circle cx="450" cy="255" r="47" fill="url(#lantern)" stroke="#e7c78a" stroke-width="5"/>
+<path d="M403 255H497M415 224H485M415 286H485M450 208V302" stroke="#c89c5d" stroke-width="2" opacity=".5"/>
+<circle cx="235" cy="300" r="71" fill="url(#pendantGlow)"/>
+<path d="M235 273l11 19 23 4-16 16 4 22-22-11-21 11 4-22-17-16 23-4Z" fill="#fff6d6" stroke="#e4bc6f" stroke-width="6"/>
+<circle cx="677" cy="326" r="71" fill="url(#pendantGlow)"/>
+<path d="M677 296l10 19 23 4-16 16 4 22-21-11-21 11 4-22-16-16 23-4Z" fill="#fff6d6" stroke="#e4bc6f" stroke-width="6"/>
+<!-- Warm accent greenery on the outer columns -->
+<g fill="#668d71" opacity=".9">
+<ellipse cx="28" cy="570" rx="19" ry="42" transform="rotate(33 28 570)"/><ellipse cx="70" cy="633" rx="15" ry="34" transform="rotate(-24 70 633)"/><ellipse cx="20" cy="697" rx="22" ry="39" transform="rotate(24 20 697)"/><ellipse cx="62" cy="758" rx="18" ry="35" transform="rotate(-25 62 758)"/>
+<ellipse cx="859" cy="555" rx="19" ry="42" transform="rotate(-33 859 555)"/><ellipse cx="833" cy="627" rx="15" ry="34" transform="rotate(24 833 627)"/><ellipse cx="870" cy="694" rx="22" ry="39" transform="rotate(-24 870 694)"/><ellipse cx="835" cy="766" rx="18" ry="35" transform="rotate(25 835 766)"/>
+</g>
+<g stroke="#a9885e" stroke-width="6" opacity=".65"><path d="M10 450Q75 650 18 842M888 450Q813 650 871 842" fill="none"/></g>
 </svg>
