@@ -1129,3 +1129,56 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 @keyframes ckToiletSitBreathe{from{transform:translateY(5px) scale(.98)}to{transform:translateY(11px) scale(1)}}
 @keyframes ckToiletUp{from{transform:translateY(10px) scale(.97)}to{transform:translateY(-12px) scale(1.03)}}
 @media(max-width:430px){.room-playroom .play-score{bottom:104px;font-size:12px}.room-toilet.activity-toilet .pet-button{width:min(58vw,265px)!important;height:min(62vw,280px)!important}}
+
+
+/* 2026-10-10 Luna interactive school, wardrobe, physical-touch toys and toilet lid. */
+.room-school .scene{background:#e9ddc8!important}
+.room-school .room-background{object-position:center center}
+.room-school .pet-button{left:54%!important;bottom:43%!important;width:min(55vw,265px)!important;z-index:40!important}
+.room-school.activity-school .pet-stage[data-luna-stage="schoolWrite"] .luna-photo{animation:ckWriting .5s ease-in-out 2!important}
+.room-school.activity-school .pet-stage[data-luna-stage="schoolCorrect"] .luna-photo{animation:ckSchoolCelebrate .55s ease-in-out 2!important}
+@keyframes ckWriting{50%{transform:rotate(-4deg) translate(-4px,5px) scale(.99)}}
+@keyframes ckSchoolCelebrate{40%{transform:translateY(-22px) rotate(-4deg) scale(1.04)}70%{transform:translateY(-8px) rotate(4deg)}}
+.school-board-hotspot{left:24%;right:12%;top:19%;height:26%;z-index:4}
+.school-interface{position:absolute;bottom:12px;left:83px;right:8px;z-index:61;max-height:48dvh;overflow-y:auto;overscroll-behavior:contain;padding:12px;background:linear-gradient(170deg,#161b2aec,#242036f7);color:#fff;border:2px solid #ffe2ab77;border-radius:22px;box-shadow:0 15px 34px #302417aa;backdrop-filter:blur(12px)}
+.school-menu-head{display:grid;gap:3px;text-align:center;padding:4px 0 12px}
+.school-menu-head b{font-size:17px;color:#ffe8be}
+.school-menu-head span{font-size:11px;color:#e3dfed}
+.school-lesson-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.school-lesson{display:grid;grid-template-columns:32px 1fr auto;grid-template-rows:repeat(3,auto);gap:3px 7px;align-items:center;padding:9px;border:1px solid #ffffff37;border-radius:14px;background:#ffffff12}
+.school-lesson .lesson-icon{grid-row:span 3;font-size:25px}.school-lesson b{font-size:13px}.school-lesson small{grid-column:2/4;font-size:10px;color:#d9d3dc}
+.school-lesson>button{grid-column:3;grid-row:1;min-height:36px;padding:6px 10px;border:1px solid #ffd99c83;border-radius:10px;background:#95734f;color:white;font-weight:900;font-size:10px}
+.school-lesson.locked{background:#211d2c}.school-lesson.locked button{background:#785cb4}.school-lock{font-size:10px;color:#ffdfa3;grid-column:2}
+.school-quiz{display:grid;gap:10px;padding:2px 1px}
+.school-quiz-top{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:16px}
+.school-quiz-top button{border-radius:10px;background:#ffffff22;color:white;border:1px solid #fff5;font-size:20px;width:38px;height:38px}
+.school-progress{color:#f5dfb7;font-size:12px;text-align:center;font-weight:700}
+.school-question{background:#fff9e9;color:#27302a;border-radius:14px;padding:19px 8px;text-align:center;font-size:clamp(20px,6vw,30px);font-weight:1000;box-shadow:inset 0 4px 10px #6e543b22}
+.school-answers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.school-answers button{min-height:58px;border-radius:14px;background:linear-gradient(#beedcf,#86b9a7);color:#173d32;border:2px solid #fff8;font-size:clamp(15px,4vw,21px);font-weight:950}
+.school-answers button:active{transform:scale(.94)}
+.play-challenge-status{position:absolute;z-index:54;left:85px;right:12px;bottom:113px;background:#18152df2;color:#fff;border:1px solid #fee5b57d;border-radius:14px;text-align:center;padding:10px;font-weight:950;font-size:14px}
+.play-catch-target{position:absolute;z-index:55;width:88px;height:88px;border:0;background:transparent;padding:0;transform:translate(-50%,0);filter:drop-shadow(0 12px 9px #08071499);animation:ckTargetMove .72s ease-in-out infinite alternate;touch-action:manipulation}
+.play-catch-target img{width:100%;height:100%;object-fit:contain}
+.play-catch-target:focus-visible{outline:4px solid #ffd474;border-radius:50%}
+@keyframes ckTargetMove{from{translate:-14px 6px;rotate:-16deg}to{translate:22px -12px;rotate:20deg}}
+/* A visible closing/opening lid of the existing ceramic fixture. */
+.animated-toilet-lid{position:absolute;left:51%;bottom:33%;width:33%;height:11%;z-index:25;pointer-events:none;perspective:260px;transform:translateX(-50%)}
+.animated-toilet-lid span{display:block;width:100%;height:100%;border:8px solid #faf9f6;background:linear-gradient(#fafafa,#c9c8c4);box-shadow:0 6px 10px #0006,inset 0 4px 5px #fff;border-radius:50%;transform-origin:50% 8%;transition:transform .5s cubic-bezier(.2,.8,.25,1)}
+.room-toilet[data-luna-stage="toiletSitDown"] .animated-toilet-lid span,
+.room-toilet[data-luna-stage="toiletSitting"] .animated-toilet-lid span,
+.room-toilet[data-luna-stage="toiletFinished"] .animated-toilet-lid span{transform:rotateX(74deg) translateY(-14px);background:#f5f4f1b9}
+.room-toilet.activity-toilet .animated-toilet-lid{z-index:28}
+.room-wardrobe.activity-dress .pet-stage .luna-photo{animation:ckGlamourPose .9s ease-in-out 2!important}
+@keyframes ckGlamourPose{0%,100%{transform:translateY(0) rotate(-2deg)}45%{transform:translateY(-23px) rotate(5deg) scale(1.06)}70%{transform:rotate(-5deg) scale(1.03)}}
+.room-wardrobe.activity-dress .pet-stage::before{content:"✦ ✨ ✦";position:absolute;top:0;left:0;right:0;z-index:16;color:#ffe2a6;font-size:29px;text-align:center;animation:ckGlamourPose .9s ease-in-out 2}
+.luna-wearables .wear-body{clip-path:polygon(23% 0,77% 0,100% 31%,91% 98%,10% 98%,0 31%)!important;left:21%!important;right:21%!important;top:48%!important;height:35%!important;border-radius:21% 21% 25% 25%!important;border:3px solid #fff8!important}
+.luna-wearables .wear-body::after{content:"";position:absolute;left:45%;top:0;height:100%;width:9%;border-left:2px solid #fff9;border-right:2px solid #fff6;opacity:.65}
+.room-wardrobe .pet-button{bottom:39%!important;width:min(70vw,340px)!important}
+.room-wardrobe .wardrobe-panel{max-height:47dvh!important;bottom:9px!important}
+.wardrobe-panel .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.wardrobe-panel .catalog-grid button{min-height:78px;border:1px solid #dfbefe66;border-radius:14px;background:#42315ae8;color:#fff;padding:8px 4px}
+.wardrobe-panel .catalog-grid button b{font-size:12px}
+.wardrobe-panel .catalog-grid button small{font-size:10px}
+@media(max-width:430px){.room-school .pet-button{bottom:44%!important;width:min(53vw,260px)!important}.school-interface{left:78px;right:7px;max-height:46dvh;padding:9px}.room-wardrobe .pet-button{bottom:45%!important}.animated-toilet-lid{bottom:32%;width:40%}.play-catch-target{width:80px;height:80px}}
+@media(prefers-reduced-motion:reduce){.play-catch-target{animation:none}.room-wardrobe.activity-dress .pet-stage .luna-photo,.room-school.activity-school .pet-stage .luna-photo{animation:none!important}}
