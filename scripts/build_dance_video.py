@@ -8,6 +8,7 @@ the already-configurable room audio instead.
 from __future__ import annotations
 import math
 import subprocess
+import imageio_ffmpeg
 import wave
 from array import array
 from pathlib import Path
@@ -106,7 +107,7 @@ def main():
     music = OUT.parent / ".dance-audio.wav"
     make_original_music(music)
     command = [
-        "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+        imageio_ffmpeg.get_ffmpeg_exe(), "-hide_banner", "-loglevel", "error", "-y",
         "-f", "rawvideo", "-pix_fmt", "rgb24", "-s:v", f"{W}x{H}",
         "-r", str(FPS), "-i", "pipe:0", "-i", str(music),
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "24",
