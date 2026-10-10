@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 const previousVersion = '20261010-school-play2';
 const roomVersion = '20261010-toilet-photo2';
 const stateVersion = '20261010-floor-anchor4';
-const currentVersion = '20261010-single-dance1';
+const currentVersion = '20261010-dance-video2';
 const poseVersion = '20261010-choreo3';
 const petVersion = '20261010-fullbody5';
 
@@ -39,4 +39,17 @@ test('dance interface uses one accurate Luna dance label', async () => {
  assert.doesNotMatch(appView,/>\s*(Макарена|Арам-зам-зам|Хип-хоп)/);
  assert.match(main,/const LUNA_DANCE_STEPS=/);
  assert.doesNotMatch(main,/const DANCE_ROUTINES=/);
+});
+
+
+test('one real generated MP4 is used for the Luna dance', async () => {
+ const [view, workflow, builder] = await Promise.all([
+  'src/ui/appView.js',
+  '.github/workflows/pages.yml',
+  'scripts/build_dance_video.py',
+ ].map(p => readFile(new URL('../' + p, import.meta.url), 'utf8')));
+ assert.match(view, /src="\.\/assets\/videos\/luna-dance\.mp4/);
+ assert.doesNotMatch(view, /assets\/videos\/\$\{state\.activity\.videoStyle\}/);
+ assert.match(workflow, /python scripts\/build_dance_video\.py/);
+ assert.match(builder, /luna-dance\.mp4/);
 });
