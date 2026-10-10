@@ -1366,3 +1366,17 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 @media(prefers-reduced-motion:reduce){
  .activity-idle .pet-stage,.activity-idle .pet-stage .luna-photo{animation:none!important}
 }
+
+/* Toilet interaction: match the actual centered fixture in the supplied room photograph. */
+.room-toilet.activity-toilet .pet-button{z-index:42!important}
+.room-toilet[data-luna-stage="toiletSitDown"] .pet-button,
+.room-toilet[data-luna-stage="toiletSitting"] .pet-button,
+.room-toilet[data-luna-stage="toiletFinished"] .pet-button{
+ left:52%!important;bottom:37%!important;width:min(38vw,172px)!important;height:min(38vw,172px)!important;
+ transform:translateX(-50%)!important;
+}
+.room-toilet[data-luna-stage="toiletSitting"] .pet-stage,
+.room-toilet[data-luna-stage="toiletSitDown"] .pet-stage{
+ transform:scaleY(.72) translateY(17%)!important;transform-origin:bottom center!important;
+}
+.room-toilet[data-luna-stage="toiletSitting"] .pet-stage{animation:none!important}
