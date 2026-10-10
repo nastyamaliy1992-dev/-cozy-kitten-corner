@@ -6,7 +6,7 @@ import { readFile } from 'node:fs/promises';
 const previousVersion = '20261010-school-play2';
 const roomVersion = '20261010-toilet-photo2';
 const stateVersion = '20261010-floor-anchor4';
-const currentVersion = '20261011-telegram-video-fix1';
+const currentVersion = '20261011-dance-fullframe-controls2';
 const poseVersion = '20261010-choreo3';
 const petVersion = '20261010-fullbody5';
 
@@ -67,7 +67,7 @@ test('Telegram dance video is a visible, tappable player started by user action'
   .map(p=>readFile(new URL('../'+p,import.meta.url),'utf8')));
  assert.match(view,/const danceVideo=\(state\.room==='dance'&&!state\.settings\?\.reduceMotion\)/);
  assert.match(view,/<video class="dance-video" controls playsinline webkit-playsinline preload="auto"/);
- assert.match(view,/\$\{danceClip\}\?v=20261011-telegram-video-fix1/);
+ assert.match(view,/\$\{danceClip\}\?v=20261011-dance-fullframe-controls2/);
  assert.match(view,/data-stop-dance/);
  assert.match(main,/const started=video\.play\(\)/);
  assert.match(main,/shell\?\.classList\.add\('dance-video-ready'\)/);
@@ -123,4 +123,17 @@ test('Telegram media fallback uses iOS Baseline video and retains original expor
  assert.match(css,/display:block;visibility:hidden;opacity:0/);
  assert.match(workflow,/Verify iPhone-compatible Luna dance 1/);
  assert.match(workflow,/Verify iPhone-compatible Luna dance 2/);
+});
+
+
+test('full body Luna dance is uncropped and compact controls do not cover the kitten', async () => {
+ const [css, main] = await Promise.all(['src/styles.css','src/main.js']
+  .map(p => readFile(new URL('../'+p,import.meta.url),'utf8')));
+ assert.match(css,/object-fit:contain!important/);
+ assert.match(css,/\.room-dance\.activity-dance \.dance-routines\s*\{[^}]*top:10px!important/);
+ assert.match(css,/\.room-dance\.activity-dance \.dance-status\s*\{\s*display:none!important/);
+ assert.match(css,/\.room-dance\.activity-dance \.dance-routines \[data-stop-dance\]\s*\{[^}]*min-height:32px!important/);
+ assert.match(main,/video\.addEventListener\('playing'/);
+ assert.match(main,/video\.controls=false/);
+ assert.match(main,/dance-video-playing/);
 });

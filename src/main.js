@@ -1,4 +1,4 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261011-telegram-video-fix1';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261011-dance-fullframe-controls2';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261010-floor-anchor4';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-choreo3';
@@ -279,7 +279,7 @@ function runDanceRoutine(danceId=1){
   if(completed||!state||state.room!=='dance')return;
   completed=true;
   actionLock=false;
-  const link='./assets/videos/luna-dance-0'+danceId+'-mobile.mp4?v=20261011-telegram-video-fix1';
+  const link='./assets/videos/luna-dance-0'+danceId+'-mobile.mp4?v=20261011-dance-fullframe-controls2';
   state.activity={type:'idle',stage:'idle',startedAt:Date.now()};
   persist();render();
   if(state.settings?.musicEnabled!==false)startRoomMusic('dance');
@@ -303,13 +303,25 @@ function runDanceRoutine(danceId=1){
   if(triedOriginal){fallback();return;}
   triedOriginal=true;
   // If Telegram cannot decode the iPhone-safe Baseline MP4, retry the original export.
-  video.src='./assets/videos/luna-dance-0'+danceId+'.mp4?v=20261011-telegram-video-fix1-original-retry';
+  video.src='./assets/videos/luna-dance-0'+danceId+'.mp4?v=20261011-dance-fullframe-controls2-original-retry';
   video.load();
   showBubble('Пробую второй формат видео…',2200);
   try{const resumed=video.play();if(resumed?.catch)resumed.catch(()=>{
    if(!video.error)showBubble('Нажми ▶ на самом видео',2600);
   });}catch{showBubble('Нажми ▶ на самом видео',2600)}
  };
+ // Hide iOS's large native playback overlay once playback really starts.
+ // Keep native controls available if it pauses or autoplay is blocked.
+ video.addEventListener('playing',()=>{
+  if(completed||state?.room!=='dance')return;
+  video.controls=false;
+  shell?.classList.add('dance-video-playing');
+ });
+ video.addEventListener('pause',()=>{
+  if(completed||video.ended)return;
+  video.controls=true;
+  shell?.classList.remove('dance-video-playing');
+ });
  video.addEventListener('ended',award,{once:true});
  video.addEventListener('error',retryOriginal);
  // Show the player even when video.play() is rejected: the user can press

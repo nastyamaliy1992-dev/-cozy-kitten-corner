@@ -1653,3 +1653,71 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
  background:#50416f;color:white;font-size:12px;font-weight:800;
  text-decoration:none;grid-column:1 / -1;
 }
+
+/* Full-body Luna dance on iPhone: fit the WHOLE recorded frame instead of cropping.
+   Keep large playback overlays away from the cat's body and floor contact. */
+.room-dance .scene .dance-video {
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+.room-dance .dance-routines {
+  position:absolute!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  left:clamp(78px,12.5%,104px)!important;
+  right:10px!important;
+  top:auto!important;
+  bottom:12px!important;
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+  padding:4px!important;
+  gap:4px!important;
+  border-radius:12px!important;
+  background:rgba(29,23,43,.86)!important;
+}
+.room-dance .dance-routines button {
+  min-height:34px!important;
+  max-height:38px!important;
+  min-width:0!important;
+  width:auto!important;
+  padding:5px 3px!important;
+  font-size:clamp(10px,2.6vw,12px)!important;
+  line-height:1.12!important;
+  border-radius:8px!important;
+}
+.room-dance .dance-status {
+  left:clamp(78px,12.5%,104px)!important;
+  right:10px!important;
+  bottom:60px!important;
+  padding:4px 6px!important;
+  font-size:10px!important;
+  min-height:0!important;
+}
+.room-dance.activity-dance .dance-routines {
+  left:clamp(78px,12.5%,104px)!important;
+  right:auto!important;
+  top:10px!important;
+  bottom:auto!important;
+  width:max-content!important;
+  max-width:175px!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:0!important;
+  padding:3px!important;
+  background:rgba(30,24,45,.8)!important;
+}
+.room-dance.activity-dance .dance-routines [data-stop-dance] {
+  min-width:0!important;
+  min-height:32px!important;
+  max-height:36px!important;
+  width:auto!important;
+  padding:5px 10px!important;
+  font-size:11px!important;
+  white-space:nowrap!important;
+}
+.room-dance.activity-dance .dance-status {
+  display:none!important;
+}
+.room-dance.dance-video-playing .scene .dance-video {
+  pointer-events:none!important;
+}
