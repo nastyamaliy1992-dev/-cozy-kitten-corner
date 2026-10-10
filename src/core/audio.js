@@ -1,4 +1,6 @@
-let ctx=null,timer=null,currentRoom=null;
+let ctx=null,timer=null,currentRoom=null,danceStyle='macarena';
+const danceMelodies={macarena:[523.25,659.25,783.99,659.25,587.33,523.25],aram:[392,440,523.25,587.33,523.25,440],hiphop:[261.63,311.13,392,349.23,311.13,261.63]};
+export function setDanceStyle(style){if(danceMelodies[style])danceStyle=style;}
 let musicBus=null,sfxBus=null,voiceBus=null;
 let settings={musicEnabled:true,sfxEnabled:true,voiceEnabled:true,musicVolume:.35,sfxVolume:.7,voiceVolume:.65};
 const roomNotes={dance:[523.25,659.25,783.99,880,783.99,659.25],living:[261.63,329.63,392],kitchen:[293.66,369.99,440],bathroom:[220,277.18,329.63],toilet:[246.94,311.13,369.99],bedroom:[196,246.94,293.66],wardrobe:[277.18,349.23,415.3],playroom:[329.63,415.3,493.88],school:[392,493.88,587.33,783.99],lake:[174.61,220,261.63],store:[349.23,440,523.25]};
@@ -7,16 +9,16 @@ function applyVolumes(){if(!ctx)return;musicBus.gain.setTargetAtTime((settings.m
 export function configureAudio(next={}){settings={...settings,...next};if(ctx)applyVolumes()}
 function tone(freq,dur=.9,vol=.15,type='sine',bus='sfx'){ensure();const o=ctx.createOscillator(),g=ctx.createGain(),out=bus==='music'?musicBus:bus==='voice'?voiceBus:sfxBus;o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.001,ctx.currentTime);g.gain.linearRampToValueAtTime(vol,ctx.currentTime+.06);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(out);o.start();o.stop(ctx.currentTime+dur)}
 export function startRoomMusic(room){ensure();if(ctx.state==='suspended')ctx.resume();if(currentRoom===room&&timer)return;currentRoom=room;applyVolumes();clearInterval(timer);let i=0;const play=()=>{
- const notes=roomNotes[currentRoom]||roomNotes.living;
+ const notes=currentRoom==='dance'?danceMelodies[danceStyle]:(roomNotes[currentRoom]||roomNotes.living);
  const a=notes[i%notes.length],b=notes[(i+1)%notes.length];
  if(currentRoom==='dance'){
    // A steady four-beat dance groove, rendered via WebAudio; no external audio file.
    [0,365,730,1095].forEach((ms,beat)=>setTimeout(()=>{
      if(currentRoom!=='dance'||settings.musicEnabled===false)return;
-     tone(beat%2===0?110:175,.115,.12,'triangle','music');
+     tone(danceStyle==='hiphop'?(beat%2===0?82:146):(beat%2===0?110:175),.115,danceStyle==='hiphop'?.17:.12,'triangle','music');
      tone(beat%2===0?1960:1450,.055,.024,'sine','music');
    },ms));
-   tone(a,.34,.17,'triangle','music');
+   tone(a,.34,danceStyle==='hiphop'?.16:.19,'triangle','music');
    tone(a/2,.23,.10,'sine','music');
    setTimeout(()=>{tone(b,.36,.16,'triangle','music');tone(b/2,.24,.09,'sine','music')},730);
  }else{
