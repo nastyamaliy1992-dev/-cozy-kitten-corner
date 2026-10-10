@@ -35,6 +35,14 @@ jobs:
         run: |
           test -s assets/videos/luna-dance-02.mp4
           echo 'b5208334978e3c292c0c0aa16d097f95a1c6af1f0142c4cd3decfed96b714221  assets/videos/luna-dance-02.mp4' | sha256sum -c -
+      - name: Verify iPhone-compatible Luna dance 1
+        run: |
+          test -s assets/videos/luna-dance-01-mobile.mp4
+          echo '3fac868065f2767943218dc5d6e24c60581b6882ccbc9bd273470b70d2e9e56d  assets/videos/luna-dance-01-mobile.mp4' | sha256sum -c -
+      - name: Verify iPhone-compatible Luna dance 2
+        run: |
+          test -s assets/videos/luna-dance-02-mobile.mp4
+          echo '79e2881fbb88dbe7f0cdd872308de97115b075e98b16eaa5646a72c50a9816c0  assets/videos/luna-dance-02-mobile.mp4' | sha256sum -c -
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:

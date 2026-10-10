@@ -6,7 +6,7 @@ import { readFile } from 'node:fs/promises';
 const previousVersion = '20261010-school-play2';
 const roomVersion = '20261010-toilet-photo2';
 const stateVersion = '20261010-floor-anchor4';
-const currentVersion = '20261011-two-filmed-dances';
+const currentVersion = '20261011-telegram-video-fix1';
 const poseVersion = '20261010-choreo3';
 const petVersion = '20261010-fullbody5';
 
@@ -52,8 +52,8 @@ test('first MP4 is selected while previous approved video is preserved', async (
   '.github/workflows/pages.yml',
   'scripts/build_dance_video.py',
  ].map(p => readFile(new URL('../' + p, import.meta.url), 'utf8')));
- assert.match(view, /luna-dance-01\.mp4/);
- assert.match(view, /luna-dance-02\.mp4/);
+ assert.match(view, /luna-dance-01-mobile\.mp4/);
+ assert.match(view, /luna-dance-02-mobile\.mp4/);
  assert.match(view, /src="\.\/assets\/videos\/\$\{danceClip\}/);
  assert.doesNotMatch(view, /assets\/videos\/\$\{state\.activity\.videoStyle\}/);
  assert.match(workflow, /test -s assets\/videos\/luna-dance\.mp4/);
@@ -66,12 +66,12 @@ test('Telegram dance video is a visible, tappable player started by user action'
  const [view,main,css]=await Promise.all(['src/ui/appView.js','src/main.js','src/styles.css']
   .map(p=>readFile(new URL('../'+p,import.meta.url),'utf8')));
  assert.match(view,/const danceVideo=\(state\.room==='dance'&&!state\.settings\?\.reduceMotion\)/);
- assert.match(view,/<video class="dance-video" controls playsinline webkit-playsinline/);
- assert.match(view,/\$\{danceClip\}\?v=20261011-two-filmed-dances/);
+ assert.match(view,/<video class="dance-video" controls playsinline webkit-playsinline preload="auto"/);
+ assert.match(view,/\$\{danceClip\}\?v=20261011-telegram-video-fix1/);
  assert.match(view,/data-stop-dance/);
  assert.match(main,/const started=video\.play\(\)/);
  assert.match(main,/shell\?\.classList\.add\('dance-video-ready'\)/);
- assert.match(css,/\.room-dance\.dance-video-ready \.scene \.dance-video\{display:block\}/);
+ assert.match(css,/\.room-dance\.dance-video-ready \.scene \.dance-video\{visibility:visible;opacity:1\}/);
 });
 
 
@@ -100,4 +100,27 @@ test('user-supplied second filmed dance deploys byte-exactly and is independentl
  assert.match(view,/data-dance-routine="2"/);
  assert.match(view,/state\.dance\?\.selectedVideo===2/);
  assert.match(main,/!\[1,2\]\.includes\(danceId\)/);
+});
+
+
+test('Telegram media fallback uses iOS Baseline video and retains original exports',async()=>{
+ const [first,second,view,main,css,workflow]=await Promise.all([
+  readFile(new URL('../assets/videos/luna-dance-01-mobile.mp4',import.meta.url)),
+  readFile(new URL('../assets/videos/luna-dance-02-mobile.mp4',import.meta.url)),
+  readFile(new URL('../src/ui/appView.js',import.meta.url),'utf8'),
+  readFile(new URL('../src/main.js',import.meta.url),'utf8'),
+  readFile(new URL('../src/styles.css',import.meta.url),'utf8'),
+  readFile(new URL('../.github/workflows/pages.yml',import.meta.url),'utf8')
+ ]);
+ assert.equal(first.length,1540941);
+ assert.equal(second.length,1494320);
+ assert.equal(createHash('sha256').update(first).digest('hex'),'3fac868065f2767943218dc5d6e24c60581b6882ccbc9bd273470b70d2e9e56d');
+ assert.equal(createHash('sha256').update(second).digest('hex'),'79e2881fbb88dbe7f0cdd872308de97115b075e98b16eaa5646a72c50a9816c0');
+ assert.match(view,/luna-dance-01-mobile\.mp4/);
+ assert.match(view,/luna-dance-02-mobile\.mp4/);
+ assert.match(main,/const retryOriginal=/);
+ assert.match(main,/video\.load\(\)/);
+ assert.match(css,/display:block;visibility:hidden;opacity:0/);
+ assert.match(workflow,/Verify iPhone-compatible Luna dance 1/);
+ assert.match(workflow,/Verify iPhone-compatible Luna dance 2/);
 });

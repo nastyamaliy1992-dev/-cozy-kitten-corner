@@ -1526,11 +1526,11 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 /* Videos are only displayed after HTMLVideoElement canplay. UI stays clickable.
    If browser blocks video, the regular interactive Luna animation is retained. */
 .room-dance .scene .dance-video{
- display:none;position:absolute;inset:0;width:100%;height:100%;
+ display:block;visibility:hidden;opacity:0;position:absolute;inset:0;width:100%;height:100%;
  object-fit:cover;object-position:center;z-index:36;
  pointer-events:none;background:transparent;
 }
-.room-dance.dance-video-ready .scene .dance-video{display:block}
+.room-dance.dance-video-ready .scene .dance-video{visibility:visible;opacity:1}
 .room-dance.dance-video-ready .scene .pet-button{opacity:0;pointer-events:none}
 .room-dance .dance-routines,.room-dance .dance-status,.room-dance .dance-actions{
  z-index:58;position:absolute;
@@ -1631,7 +1631,8 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
  pointer-events:auto!important;
 }
 
-/* 2026-10-11: Luna dance selection, only clip 3 locked until provided. */
+/* 2026-10-11: Luna dance selection, only clip 3 locked until provided.
+   On iOS, keep the video element in layout while hidden, so metadata can preload. */
 .room-dance .dance-routines{
  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
  gap:5px!important;max-width:none!important;margin:0!important;
@@ -1644,3 +1645,11 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .room-dance .dance-routines button:disabled{opacity:.56;filter:saturate(.45);cursor:not-allowed}
 .room-dance.activity-dance .dance-routines{grid-template-columns:minmax(0,1fr)!important}
 .room-dance.dance-video-ready .scene .dance-video{pointer-events:auto}
+
+/* iPhone Telegram: direct-open fallback if both MP4 variants fail */
+.room-dance .dance-routines .dance-open-fallback{
+ display:flex;align-items:center;justify-content:center;
+ min-height:48px;padding:8px;border-radius:11px;
+ background:#50416f;color:white;font-size:12px;font-weight:800;
+ text-decoration:none;grid-column:1 / -1;
+}

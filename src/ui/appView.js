@@ -82,9 +82,9 @@ export function renderGame(state,bubble='',ui={}){
    lake:'<div class="room-action-bar"><button data-action="lake-fish">🎣<small>Ловить рыбу</small></button><button data-action="fish-shop">🎒<small>Снаряжение</small></button></div>'
  };
  const feedingItem=state.activity?.type==='eating'&&state.activity?.itemId?(catalog.find(i=>i.id===state.activity.itemId)||fridgeItems.find(i=>i.id===state.activity.itemId)):null;
- const danceClip=state.dance?.selectedVideo===2?'luna-dance-02.mp4':'luna-dance-01.mp4';
+ const danceClip=state.dance?.selectedVideo===2?'luna-dance-02-mobile.mp4':'luna-dance-01-mobile.mp4';
  const danceVideo=(state.room==='dance'&&!state.settings?.reduceMotion)
-   ?`<video class="dance-video" controls playsinline webkit-playsinline preload="metadata" poster="./assets/rooms/dance-final-20261010.webp" src="./assets/videos/${danceClip}?v=20261011-two-filmed-dances" aria-label="Видео танца Луны"></video>`:'';
+   ?`<video class="dance-video" controls playsinline webkit-playsinline preload="auto" poster="./assets/rooms/dance-final-20261010.webp" src="./assets/videos/${danceClip}?v=20261011-telegram-video-fix1" aria-label="Видео танца Луны"></video>`:'';
  const feedingLayers=feedingItem?`<div class="feeding-sequence-layer" data-stage="${state.activity?.stage||'feed01'}" aria-hidden="true"><div class="feeding-bowl-layer"></div><div class="feeding-food-layer"><span>${foodIcon(feedingItem)}</span></div><div class="feeding-hand-layer">🤲</div></div>`:'';
  const action=(actions[state.room]||'')+(ui.settingsOpen?settingsPanel(state):'')+(ui.panel==='shop'?shopPanel(state,ui):'')+(ui.panel==='wardrobe'?wardrobePanel(state,ui):'')+(ui.panel==='progress'?progressPanel(state):'')+(ui.panel==='furniture'?furniturePanel(state):'')+(ui.panel==='roomItems'?roomItemsPanel(state,state.room):'');
  const nav=[['living','🏠','Холл'],['kitchen','🍽️','Кухня'],['bedroom','🌙','Спальня'],['bathroom','🛁','Ванная'],['toilet','🚽','Туалет'],['wardrobe','👗','Гардероб'],['playroom','🧶','Игры'],['store','🛍️','Магазин'],['dance','🪩','Танцы'],['school','📚','Школа'],['lake','🎣','Озеро']];

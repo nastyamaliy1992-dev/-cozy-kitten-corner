@@ -1,4 +1,4 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261011-two-filmed-dances';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261011-telegram-video-fix1';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261010-floor-anchor4';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-choreo3';
@@ -247,7 +247,6 @@ const LUNA_DANCE_STEPS=[
 function runDanceRoutine(danceId=1){
  if(actionLock||state?.room!=='dance')return;
  if(![1,2].includes(danceId)){showBubble('Этот танец скоро появится 🎵',1500);return;}
- const frames=LUNA_DANCE_STEPS.map(([stage,ms])=>({stage,ms}));
  state.dance??={moves:0,completed:0};
  state.dance.style='luna';
  state.dance.selectedVideo=danceId;
@@ -275,22 +274,44 @@ function runDanceRoutine(danceId=1){
   happyJingle();applauseSound();
   showBubble('Браво, Луна! +15 🪙 · +20 XP',2200);
  };
+ let triedOriginal=false;
  const fallback=()=>{
   if(completed||!state||state.room!=='dance')return;
   completed=true;
   actionLock=false;
+  const link='./assets/videos/luna-dance-0'+danceId+'-mobile.mp4?v=20261011-telegram-video-fix1';
   state.activity={type:'idle',stage:'idle',startedAt:Date.now()};
   persist();render();
   if(state.settings?.musicEnabled!==false)startRoomMusic('dance');
-  showBubble('Видео танца не загрузилось. Попробуй снова',2600);
+  const toolbar=document.querySelector('.room-dance .dance-routines');
+  if(toolbar){
+   const open=document.createElement('a');
+   open.className='dance-open-fallback';
+   open.href=link;open.target='_blank';open.rel='noopener noreferrer';
+   open.textContent='↗ Открыть танец '+danceId;
+   toolbar.append(open);
+  }
+  showBubble('Плеер Telegram не открыл видео. Используй кнопку «Открыть танец»',6000);
  };
  if(!video){fallback();return}
  video.controls=true;
  video.playsInline=true;
  video.muted=state.settings?.musicEnabled===false||state.settings?.musicVolume===0;
- video.volume=Math.max(0,Math.min(1,state.settings?.musicVolume??0.85));
+ try{video.volume=Math.max(0,Math.min(1,state.settings?.musicVolume??0.85));}catch{}
+ const retryOriginal=()=>{
+  if(completed||state?.room!=='dance')return;
+  if(triedOriginal){fallback();return;}
+  triedOriginal=true;
+  // If Telegram cannot decode the iPhone-safe Baseline MP4, retry the original export.
+  video.src='./assets/videos/luna-dance-0'+danceId+'.mp4?v=20261011-telegram-video-fix1-original-retry';
+  video.load();
+  showBubble('Пробую второй формат видео…',2200);
+  try{const resumed=video.play();if(resumed?.catch)resumed.catch(()=>{
+   if(!video.error)showBubble('Нажми ▶ на самом видео',2600);
+  });}catch{showBubble('Нажми ▶ на самом видео',2600)}
+ };
  video.addEventListener('ended',award,{once:true});
- video.addEventListener('error',fallback,{once:true});
+ video.addEventListener('error',retryOriginal);
  // Show the player even when video.play() is rejected: the user can press
  // the native Play control on iOS, instead of seeing an invisible video.
  shell?.classList.add('dance-video-ready');
@@ -299,12 +320,10 @@ function runDanceRoutine(danceId=1){
  try{
   const started=video.play();
   if(started?.catch)started.catch(()=>{
-   if(video.error){fallback();return}
    showBubble('Нажми ▶ на самом видео',2600);
   });
  }catch{
-  if(video.error)fallback();
-  else showBubble('Нажми ▶ на самом видео',2600);
+  showBubble('Нажми ▶ на самом видео',2600);
  }
 }
 
