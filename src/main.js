@@ -1,4 +1,4 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-dance-video2';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-dance-video3';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261010-floor-anchor4';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-choreo3';
@@ -245,42 +245,80 @@ const LUNA_DANCE_STEPS=[
  ['danceLeft',470],['danceRight',470],['aramClap',560],['danceFinish',640]
 ];
 function runDanceRoutine(){
- if(actionLock||state.room!=='dance')return;
+ if(actionLock||state?.room!=='dance')return;
+ const frames=LUNA_DANCE_STEPS.map(([stage,ms])=>({stage,ms}));
  state.dance??={moves:0,completed:0};
  state.dance.style='luna';
- state.dance.moves=(state.dance.moves||0)+1;
- state.needs.mood=Math.min(100,state.needs.mood+7);
- state.needs.energy=Math.max(0,state.needs.energy-3);
- persist();startRoomMusic('dance');
- showBubble('Луна танцует! 🎵',1400);
- runLunaSequence('dance',LUNA_DANCE_STEPS.map(([stage,ms])=>({stage,ms})),{
-  onFrame:(f,i)=>{if(i%2===0)sfx('step');if(f.stage==='danceFinish'){giggleSound();happyJingle()}},
-  onDone:()=>{state.dance.completed=(state.dance.completed||0)+1;state.economy.xp+=20;state.economy.coins+=15;persist();showBubble('Браво, Луна! +15 🪙 · +20 XP',2200)}
- });
+ state.activity={type:'dance',stage:'danceLeft',startedAt:Date.now()};
+ actionLock=true;
+ persist();
+ // Render a video element before calling play() while still in the original
+ // user tap. iPhone Telegram WebView can block play() called from canplay.
+ render();
+ const video=document.querySelector('.room-dance .dance-video');
+ const shell=document.querySelector('.room-dance.game-shell');
+ let completed=false;
+ const award=()=>{
+  if(completed||!state||state.room!=='dance')return;
+  completed=true;
+  actionLock=false;
+  state.dance.moves=(state.dance.moves||0)+1;
+  state.dance.completed=(state.dance.completed||0)+1;
+  state.needs.mood=Math.min(100,state.needs.mood+7);
+  state.needs.energy=Math.max(0,state.needs.energy-3);
+  state.economy.xp+=20;state.economy.coins+=15;
+  state.activity={type:'idle',stage:'idle',startedAt:Date.now()};
+  persist();render();
+  if(state.settings?.musicEnabled!==false)startRoomMusic('dance');
+  happyJingle();applauseSound();
+  showBubble('Браво, Луна! +15 🪙 · +20 XP',2200);
+ };
+ const fallback=()=>{
+  if(completed||!state||state.room!=='dance')return;
+  // The complete playable sprite choreography stays available if the
+  // phone cannot decode the MP4 or has reduced-motion enabled.
+  completed=true;
+  shell?.classList.remove('dance-video-ready');
+  actionLock=false;
+  startRoomMusic('dance');
+  showBubble('Включаю движения Луны 🐾',1000);
+  runLunaSequence('dance',frames,{
+   onFrame:(f,i)=>{if(i%2===0)sfx('step');if(f.stage==='danceFinish'){giggleSound();happyJingle()}},
+   onDone:()=>{
+    state.dance.completed=(state.dance.completed||0)+1;
+    state.dance.moves=(state.dance.moves||0)+1;
+    state.needs.mood=Math.min(100,state.needs.mood+7);
+    state.needs.energy=Math.max(0,state.needs.energy-3);
+    state.economy.xp+=20;state.economy.coins+=15;
+    persist();showBubble('Браво, Луна! +15 🪙 · +20 XP',2200);
+   }
+  });
+ };
+ if(!video){fallback();return}
+ video.controls=true;
+ video.playsInline=true;
+ video.muted=state.settings?.musicEnabled===false||state.settings?.musicVolume===0;
+ video.volume=Math.max(0,Math.min(1,state.settings?.musicVolume??0.85));
+ video.addEventListener('ended',award,{once:true});
+ video.addEventListener('error',fallback,{once:true});
+ // Show the player even when video.play() is rejected: the user can press
+ // the native Play control on iOS, instead of seeing an invisible video.
+ shell?.classList.add('dance-video-ready');
+ stopMusic();
+ showBubble('Луна танцует! Нажми ▶ на видео, если нужно',2200);
+ try{
+  const started=video.play();
+  if(started?.catch)started.catch(()=>{
+   if(video.error){fallback();return}
+   showBubble('Нажми ▶ на самом видео',2600);
+  });
+ }catch{
+  if(video.error)fallback();
+  else showBubble('Нажми ▶ на самом видео',2600);
+ }
 }
 
 function bindGame(){
- const activeMovie=document.querySelector('.dance-video');
- if(activeMovie){
-   const shell=activeMovie.closest('.game-shell');
-   const reveal=async()=>{
-     if(!state||state.room!=='dance'||state.activity?.type!=='dance')return;
-     try{
-       activeMovie.muted=true;
-       // If download starts late, seek forward to stay aligned with the dance.
-       const elapsed=(Date.now()-(state.activity.startedAt||Date.now()))/1000;
-       if(Number.isFinite(activeMovie.duration)&&activeMovie.duration>elapsed+0.3){
-         activeMovie.currentTime=Math.max(0,elapsed);
-       }
-       await activeMovie.play();
-       shell?.classList.add('dance-video-ready');
-     }catch{shell?.classList.remove('dance-video-ready')}
-   };
-   activeMovie.addEventListener('canplay',reveal,{once:true});
-   activeMovie.addEventListener('error',()=>shell?.classList.remove('dance-video-ready'),{once:true});
-   activeMovie.addEventListener('ended',()=>shell?.classList.remove('dance-video-ready'),{once:true});
-   if(activeMovie.readyState>=3)reveal();
- }
  document.querySelector('[data-action="pet-now"]')?.addEventListener('click',()=>petDirect());const pet=document.querySelector('.pet-button');let petStart=null,petMoved=false,strokeTotal=0,lastStrokeSound=0;pet?.addEventListener('pointerdown',e=>{if(actionLock)return;e.preventDefault();petStart={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY};petMoved=false;strokeTotal=0;pet.classList.add('is-stroking');pet.setPointerCapture?.(e.pointerId);if(['soap','shampoo'].includes(state.activity?.type)){bubbleSound();giggleSound()}else{purr(2.2);state.activity={type:'petting',stage:'stroking',startedAt:Date.now()};document.querySelector('.game-shell')?.classList.add('activity-petting')}});pet?.addEventListener('pointermove',e=>{if(!petStart)return;e.preventDefault();const step=Math.hypot(e.clientX-petStart.lastX,e.clientY-petStart.lastY);const d=Math.hypot(e.clientX-petStart.x,e.clientY-petStart.y);petStart.lastX=e.clientX;petStart.lastY=e.clientY;strokeTotal+=step;if(d>8||strokeTotal>12){if(!petMoved&&!['soap','shampoo'].includes(state.activity?.type))syncLunaFrame('petting','petBliss');petMoved=true;pet.style.setProperty('--stroke-x',Math.max(-12,Math.min(12,(e.clientX-petStart.x)/5))+'px');const now=Date.now();if(['soap','shampoo'].includes(state.activity?.type)){state.activity.scrub=Math.min(100,(state.activity.scrub||0)+Math.max(1,Math.round(step/2.3)));const pct=document.querySelector('.foam-fx i');if(pct)pct.textContent=state.activity.scrub+'%';const foam=document.querySelector('.foam-fx');if(foam){foam.style.setProperty('--foam-progress',state.activity.scrub);foam.style.setProperty('--foam-scale',(.58+state.activity.scrub/180).toFixed(2));foam.style.setProperty('--foam-opacity',(.22+state.activity.scrub/140).toFixed(2))}if(now-lastStrokeSound>430){lastStrokeSound=now;bubbleSound();giggleSound()}if(state.activity.scrub>=100&&!state.activity.completed){state.activity.completed=true;state.needs.cleanliness=Math.min(100,state.needs.cleanliness+32);state.needs.mood=Math.min(100,state.needs.mood+10);applauseSound();giggleSound();speakLuna('Хи-хи! Какая пена!');persist();showBubble('Вот теперь много пены! 🫧😸',1700);petStart=null;setTimeout(()=>{if(state?.room==='bathroom'&&['soap','shampoo'].includes(state.activity?.type)&&state.activity?.completed){state.activity={type:'bathReady',stage:'inTub',startedAt:Date.now()};persist();render()}},1400)}}else if(now-lastStrokeSound>780){lastStrokeSound=now;purr(1.25)}}});pet?.addEventListener('pointerup',()=>{if(!petStart)return;const wasBath=['soap','shampoo'].includes(state.activity?.type);petStart=null;pet.classList.remove('is-stroking');pet.style.removeProperty('--stroke-x');if(wasBath){persist();render();return}const rr=rewardPetting(state);state=rr.state;state.activity={type:'petted',stage:'petBliss',startedAt:Date.now()};persist();purr(2.6);showBubble(rr.rewarded?'Мурр! +3 ⚡ +2 XP':'Мурр! +3 ⚡',1900);render();setTimeout(()=>{if(state&&!state.sleeping&&['petted','petting'].includes(state.activity?.type)){state.activity={type:'idle',stage:'idle',startedAt:Date.now()};persist();render()}},2000)});const clearPetGesture=()=>{petStart=null;petMoved=false;pet?.classList.remove('is-stroking');pet?.style.removeProperty('--stroke-x')};pet?.addEventListener('pointercancel',clearPetGesture);pet?.addEventListener('lostpointercapture',clearPetGesture);const toggleFridge=()=>{ui.fridgeOpen=!ui.fridgeOpen;if(ui.fridgeOpen)state=moveLuna(state,'fridge');persist();render();if(ui.fridgeOpen)showBubble('Выбирай еду',900)};document.querySelector('[data-object="fridge"]')?.addEventListener('click',toggleFridge);document.querySelector('[data-action="open-fridge"]')?.addEventListener('click',()=>{if(state.room!=='kitchen'){state.room='kitchen';ui.fridgeOpen=true;persist();render();startRoomMusic('kitchen')}else toggleFridge()});document.querySelector('[data-object="lamp"]')?.addEventListener('click',()=>moveTo('lamp',()=>{state=toggleLamp(state);persist();render()}));document.querySelector('[data-object="bed"]')?.addEventListener('click',()=>moveTo('bed',()=>{
   stopMusic();
   sleepyChime();
@@ -365,6 +403,15 @@ document.querySelector('[data-play-catch]')?.addEventListener('click',()=>{
 
 document.querySelectorAll('[data-dance-move]').forEach(b=>b.addEventListener('click',()=>runDanceMove(b.dataset.danceMove)));
 document.querySelectorAll('[data-dance-routine]').forEach(b=>b.addEventListener('click',()=>runDanceRoutine()));
+ document.querySelector('[data-stop-dance]')?.addEventListener('click',()=>{
+  document.querySelector('.dance-video')?.pause();
+  cancelLunaSequence();
+  if(state?.room==='dance'){
+   state.activity={type:'idle',stage:'idle',startedAt:Date.now()};
+   persist();render();
+   if(state.settings?.musicEnabled!==false)startRoomMusic('dance');
+  }
+ });
 document.querySelector('[data-action="fish-hook"]')?.addEventListener('click',()=>{
  if(actionLock||state.activity?.type!=='fishGame')return;
  const phase=((Date.now()-(state.activity.startedAt||Date.now()))%2200)/2200,hit=phase>=.28&&phase<=.72;
