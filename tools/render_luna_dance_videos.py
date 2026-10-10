@@ -13,7 +13,7 @@ SOURCE = ROOT / "assets" / "luna" / "hall"
 SCENE = ROOT / "assets" / "rooms" / "dance-final-20261010.webp"
 OUTPUT = ROOT / "assets" / "videos"
 OUTPUT.mkdir(parents=True, exist_ok=True)
-W, H, FPS = 400, 710, 18
+W, H, FPS = 540, 960, 24
 
 background = Image.open(SCENE).convert("RGB")
 factor = max(W / background.width, H / background.height)
@@ -35,7 +35,7 @@ for key, filename in {
     bounds = alpha.getbbox()
     if bounds:
         img = img.crop(bounds)
-    height = 315
+    height = 426
     img = img.resize((round(img.width*height/img.height),height),
                      Image.Resampling.LANCZOS)
     poses[key] = img
