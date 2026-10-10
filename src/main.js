@@ -255,8 +255,9 @@ const DANCE_ROUTINES={
  ['hiphopSlide',620],['hiphopPop',580],['hiphopJump',720],['danceFinish',610]
  ]}
 };
-function runDanceRoutine(style='macarena'){
+function runDanceRoutine(style='mix'){
  if(actionLock||state.room!=='dance')return;
+ if(style==='mix')style=['macarena','aram','hiphop'][(state.dance?.completed||0)%3];
  const routine=DANCE_ROUTINES[style]||DANCE_ROUTINES.macarena;
  state.dance??={moves:0,completed:0};
  state.dance.style=style;
@@ -266,11 +267,11 @@ function runDanceRoutine(style='macarena'){
  persist();
  setDanceStyle(style);
  startRoomMusic('dance');
- showBubble('Танец «'+routine.title+'»! 🎶',1800);
+ showBubble('Луна танцует! 🎶',1800);
  const frames=routine.steps.map(([stage,ms])=>({stage,ms}));
  runLunaSequence('dance',frames,{extra:{videoStyle:style},onFrame:(frame,index)=>{
    if(index%2===0)sfx('step');
-   if(frame.stage==='danceFinish'){happyJingle();giggleSound();showBubble('Браво! '+routine.title+' ✨',1400)}
+   if(frame.stage==='danceFinish'){happyJingle();giggleSound();showBubble('Браво, Луна! ✨',1400)}
  },onDone:()=>{
    state.dance.completed=(state.dance.completed||0)+1;
    state.economy.xp+=20;
