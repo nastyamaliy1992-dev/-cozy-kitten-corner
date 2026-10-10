@@ -1,4 +1,4 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-choreo3';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-single-dance1';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261010-floor-anchor4';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-choreo3';
@@ -238,46 +238,25 @@ function runDanceMove(kind='left'){
  ],{onFrame:f=>{if(f.stage==='happy'&&finished)giggleSound();else if(f.stage.startsWith('dance'))sfx('step')}});
 }
 
-const DANCE_ROUTINES={
- macarena:{title:'Макарена',steps:[
- ['macarenaArms',680],['macarenaArmsHigh',680],['macarenaHands',680],['macarenaHips',680],
- ['macarenaSide',690],['macarenaTurn',700],['macarenaArms',680],['macarenaHips',700],
- ['macarenaSide',660],['macarenaTurn',800],['danceJump',690],['danceFinish',520]
- ]},
- aram:{title:'Арам-зам-зам',steps:[
- ['aramClap',460],['aramClapAlt',460],['aramReach',570],['aramReachAlt',570],
- ['aramBounce',610],['aramClap',460],['aramClapAlt',460],['aramSpin',690],
- ['aramBounce',610],['aramReach',540],['aramSpin',720],['danceFinish',550]
- ]},
- hiphop:{title:'Хип-хоп',steps:[
- ['hiphopBounce',490],['hiphopSlide',670],['hiphopPop',610],['hiphopSlideBack',670],
- ['hiphopWave',660],['hiphopBounce',530],['hiphopSpin',790],['hiphopFreeze',590],
- ['hiphopSlide',620],['hiphopPop',580],['hiphopJump',720],['danceFinish',610]
- ]}
-};
-function runDanceRoutine(style='mix'){
+const LUNA_DANCE_STEPS=[
+ ['danceLeft',500],['danceJump',540],['danceRight',500],['danceSpin',660],
+ ['macarenaHips',600],['aramBounce',580],['danceLeft',470],['danceRight',510],
+ ['hiphopSlide',630],['hiphopBounce',530],['danceJump',670],['danceSpin',750],
+ ['danceLeft',470],['danceRight',470],['aramClap',560],['danceFinish',640]
+];
+function runDanceRoutine(){
  if(actionLock||state.room!=='dance')return;
- if(style==='mix')style=['macarena','aram','hiphop'][(state.dance?.completed||0)%3];
- const routine=DANCE_ROUTINES[style]||DANCE_ROUTINES.macarena;
  state.dance??={moves:0,completed:0};
- state.dance.style=style;
- state.dance.moves=(state.dance.moves||0)+routine.steps.length;
+ state.dance.style='luna';
+ state.dance.moves=(state.dance.moves||0)+1;
  state.needs.mood=Math.min(100,state.needs.mood+7);
  state.needs.energy=Math.max(0,state.needs.energy-3);
- persist();
- setDanceStyle(style);
- startRoomMusic('dance');
- showBubble('Луна танцует! 🎶',1800);
- const frames=routine.steps.map(([stage,ms])=>({stage,ms}));
- runLunaSequence('dance',frames,{extra:{videoStyle:style},onFrame:(frame,index)=>{
-   if(index%2===0)sfx('step');
-   if(frame.stage==='danceFinish'){happyJingle();giggleSound();showBubble('Браво, Луна! ✨',1400)}
- },onDone:()=>{
-   state.dance.completed=(state.dance.completed||0)+1;
-   state.economy.xp+=20;
-   state.economy.coins+=15;
-   persist();showBubble('Танец пройден! +15 🪙 · +20 XP',2200);
- }});
+ persist();startRoomMusic('dance');
+ showBubble('Луна танцует! 🎵',1400);
+ runLunaSequence('dance',LUNA_DANCE_STEPS.map(([stage,ms])=>({stage,ms})),{
+  onFrame:(f,i)=>{if(i%2===0)sfx('step');if(f.stage==='danceFinish'){giggleSound();happyJingle()}},
+  onDone:()=>{state.dance.completed=(state.dance.completed||0)+1;state.economy.xp+=20;state.economy.coins+=15;persist();showBubble('Браво, Луна! +15 🪙 · +20 XP',2200)}
+ });
 }
 
 function bindGame(){
@@ -372,7 +351,7 @@ document.querySelector('[data-play-catch]')?.addEventListener('click',()=>{
 });
 
 document.querySelectorAll('[data-dance-move]').forEach(b=>b.addEventListener('click',()=>runDanceMove(b.dataset.danceMove)));
-document.querySelectorAll('[data-dance-routine]').forEach(b=>b.addEventListener('click',()=>runDanceRoutine(b.dataset.danceRoutine)));
+document.querySelectorAll('[data-dance-routine]').forEach(b=>b.addEventListener('click',()=>runDanceRoutine()));
 document.querySelector('[data-action="fish-hook"]')?.addEventListener('click',()=>{
  if(actionLock||state.activity?.type!=='fishGame')return;
  const phase=((Date.now()-(state.activity.startedAt||Date.now()))%2200)/2200,hit=phase>=.28&&phase<=.72;
