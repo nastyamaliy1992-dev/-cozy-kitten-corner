@@ -1,11 +1,12 @@
 import test from 'node:test';
+import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const previousVersion = '20261010-school-play2';
 const roomVersion = '20261010-toilet-photo2';
 const stateVersion = '20261010-floor-anchor4';
-const currentVersion = '20261010-dance-video4';
+const currentVersion = '20261010-dance-video5';
 const poseVersion = '20261010-choreo3';
 const petVersion = '20261010-fullbody5';
 
@@ -50,7 +51,8 @@ test('one real generated MP4 is used for the Luna dance', async () => {
  ].map(p => readFile(new URL('../' + p, import.meta.url), 'utf8')));
  assert.match(view, /src="\.\/assets\/videos\/luna-dance\.mp4/);
  assert.doesNotMatch(view, /assets\/videos\/\$\{state\.activity\.videoStyle\}/);
- assert.match(workflow, /python scripts\/build_dance_video\.py/);
+ assert.match(workflow, /test -s assets\/videos\/luna-dance\.mp4/);
+ assert.doesNotMatch(workflow, /python scripts\/build_dance_video\.py/);
  assert.match(builder, /luna-dance\.mp4/);
 });
 
@@ -60,9 +62,16 @@ test('Telegram dance video is a visible, tappable player started by user action'
   .map(p=>readFile(new URL('../'+p,import.meta.url),'utf8')));
  assert.match(view,/const danceVideo=\(state\.room==='dance'&&!state\.settings\?\.reduceMotion\)/);
  assert.match(view,/<video class="dance-video" controls playsinline webkit-playsinline/);
- assert.match(view,/luna-dance\.mp4\?v=20261010-dance-video4/);
+ assert.match(view,/luna-dance\.mp4\?v=20261010-feet-locked-v4/);
  assert.match(view,/data-stop-dance/);
  assert.match(main,/const started=video\.play\(\)/);
  assert.match(main,/shell\?\.classList\.add\('dance-video-ready'\)/);
  assert.match(css,/\.room-dance\.dance-video-ready \.scene \.dance-video\{display:block\}/);
+});
+
+
+test('approved Luna dance V4 is embedded byte-exactly, without rebuilding a substitute', async () => {
+ const video=await readFile(new URL('../assets/videos/luna-dance.mp4',import.meta.url));
+ assert.equal(video.length,1548731);
+ assert.equal(createHash('sha256').update(video).digest('hex'),'1e7c8fa914af2a1502a71949dba583fcf749d61dc8ba75c9fa0dc004aa04935f');
 });

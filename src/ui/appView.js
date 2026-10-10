@@ -83,7 +83,7 @@ export function renderGame(state,bubble='',ui={}){
  };
  const feedingItem=state.activity?.type==='eating'&&state.activity?.itemId?(catalog.find(i=>i.id===state.activity.itemId)||fridgeItems.find(i=>i.id===state.activity.itemId)):null;
  const danceVideo=(state.room==='dance'&&!state.settings?.reduceMotion)
-   ?`<video class="dance-video" controls playsinline webkit-playsinline preload="metadata" poster="./assets/rooms/dance-final-20261010.webp" src="./assets/videos/luna-dance.mp4?v=20261010-dance-video4" aria-label="Видео танца Луны"></video>`:'';
+   ?`<video class="dance-video" controls playsinline webkit-playsinline preload="metadata" poster="./assets/rooms/dance-final-20261010.webp" src="./assets/videos/luna-dance.mp4?v=20261010-feet-locked-v4" aria-label="Видео танца Луны"></video>`:'';
  const feedingLayers=feedingItem?`<div class="feeding-sequence-layer" data-stage="${state.activity?.stage||'feed01'}" aria-hidden="true"><div class="feeding-bowl-layer"></div><div class="feeding-food-layer"><span>${foodIcon(feedingItem)}</span></div><div class="feeding-hand-layer">🤲</div></div>`:'';
  const action=(actions[state.room]||'')+(ui.settingsOpen?settingsPanel(state):'')+(ui.panel==='shop'?shopPanel(state,ui):'')+(ui.panel==='wardrobe'?wardrobePanel(state,ui):'')+(ui.panel==='progress'?progressPanel(state):'')+(ui.panel==='furniture'?furniturePanel(state):'')+(ui.panel==='roomItems'?roomItemsPanel(state,state.room):'');
  const nav=[['living','🏠','Холл'],['kitchen','🍽️','Кухня'],['bedroom','🌙','Спальня'],['bathroom','🛁','Ванная'],['toilet','🚽','Туалет'],['wardrobe','👗','Гардероб'],['playroom','🧶','Игры'],['store','🛍️','Магазин'],['dance','🪩','Танцы'],['school','📚','Школа'],['lake','🎣','Озеро']];
