@@ -1630,3 +1630,17 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .room-dance.dance-video-ready .dance-routines{
  pointer-events:auto!important;
 }
+
+/* 2026-10-11: Luna dance selection, clip 2 and 3 intentionally locked until provided. */
+.room-dance .dance-routines{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:5px!important;max-width:none!important;margin:0!important;
+ left:86px;right:8px;bottom:147px;
+}
+.room-dance .dance-routines button{
+ min-width:0!important;min-height:52px!important;
+ font-size:clamp(11px,2.5vw,13px)!important;padding:6px 2px!important;
+}
+.room-dance .dance-routines button:disabled{opacity:.56;filter:saturate(.45);cursor:not-allowed}
+.room-dance.activity-dance .dance-routines{grid-template-columns:minmax(0,1fr)!important}
+.room-dance.dance-video-ready .scene .dance-video{pointer-events:auto}

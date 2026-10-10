@@ -1,4 +1,4 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-dance-video5';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261011-three-dance-slots1';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261010-floor-anchor4';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-choreo3';
@@ -244,11 +244,13 @@ const LUNA_DANCE_STEPS=[
  ['hiphopSlide',630],['hiphopBounce',530],['danceJump',670],['danceSpin',750],
  ['danceLeft',470],['danceRight',470],['aramClap',560],['danceFinish',640]
 ];
-function runDanceRoutine(){
+function runDanceRoutine(danceId=1){
  if(actionLock||state?.room!=='dance')return;
+ if(danceId!==1){showBubble('Этот танец скоро появится 🎵',1500);return;}
  const frames=LUNA_DANCE_STEPS.map(([stage,ms])=>({stage,ms}));
  state.dance??={moves:0,completed:0};
  state.dance.style='luna';
+ state.dance.selectedVideo=danceId;
  state.activity={type:'dance',stage:'danceLeft',startedAt:Date.now()};
  actionLock=true;
  persist();
@@ -275,24 +277,12 @@ function runDanceRoutine(){
  };
  const fallback=()=>{
   if(completed||!state||state.room!=='dance')return;
-  // The complete playable sprite choreography stays available if the
-  // phone cannot decode the MP4 or has reduced-motion enabled.
   completed=true;
-  shell?.classList.remove('dance-video-ready');
   actionLock=false;
-  startRoomMusic('dance');
-  showBubble('Включаю движения Луны 🐾',1000);
-  runLunaSequence('dance',frames,{
-   onFrame:(f,i)=>{if(i%2===0)sfx('step');if(f.stage==='danceFinish'){giggleSound();happyJingle()}},
-   onDone:()=>{
-    state.dance.completed=(state.dance.completed||0)+1;
-    state.dance.moves=(state.dance.moves||0)+1;
-    state.needs.mood=Math.min(100,state.needs.mood+7);
-    state.needs.energy=Math.max(0,state.needs.energy-3);
-    state.economy.xp+=20;state.economy.coins+=15;
-    persist();showBubble('Браво, Луна! +15 🪙 · +20 XP',2200);
-   }
-  });
+  state.activity={type:'idle',stage:'idle',startedAt:Date.now()};
+  persist();render();
+  if(state.settings?.musicEnabled!==false)startRoomMusic('dance');
+  showBubble('Видео танца не загрузилось. Попробуй снова',2600);
  };
  if(!video){fallback();return}
  video.controls=true;
@@ -402,10 +392,11 @@ document.querySelector('[data-play-catch]')?.addEventListener('click',()=>{
 });
 
 document.querySelectorAll('[data-dance-move]').forEach(b=>b.addEventListener('click',()=>runDanceMove(b.dataset.danceMove)));
-document.querySelectorAll('[data-dance-routine]').forEach(b=>b.addEventListener('click',()=>runDanceRoutine()));
+document.querySelectorAll('[data-dance-routine]').forEach(b=>b.addEventListener('click',()=>runDanceRoutine(Number(b.dataset.danceRoutine))));
  document.querySelector('[data-stop-dance]')?.addEventListener('click',()=>{
   document.querySelector('.dance-video')?.pause();
   cancelLunaSequence();
+  actionLock=false;
   if(state?.room==='dance'){
    state.activity={type:'idle',stage:'idle',startedAt:Date.now()};
    persist();render();

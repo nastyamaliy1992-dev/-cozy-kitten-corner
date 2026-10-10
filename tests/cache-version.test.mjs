@@ -6,7 +6,7 @@ import { readFile } from 'node:fs/promises';
 const previousVersion = '20261010-school-play2';
 const roomVersion = '20261010-toilet-photo2';
 const stateVersion = '20261010-floor-anchor4';
-const currentVersion = '20261010-dance-video5';
+const currentVersion = '20261011-three-dance-slots1';
 const poseVersion = '20261010-choreo3';
 const petVersion = '20261010-fullbody5';
 
@@ -34,22 +34,25 @@ test('latest UI and pose assets refresh while dance photo stays correctly wired'
   assert.match(pet, new RegExp(`lunaAsset\\.js\\?v=${poseVersion}`));
 });
 
-test('dance interface uses one accurate Luna dance label', async () => {
+test('dance interface offers independently selectable clips', async () => {
  const [appView,main]=await Promise.all(['src/ui/appView.js','src/main.js'].map(p=>readFile(new URL(`../${p}`,import.meta.url),'utf8')));
- assert.match(appView,/data-dance-routine="luna"/);
+ assert.match(appView,/data-dance-routine="1"/);
+ assert.match(appView,/🔒 Танец 2/);
+ assert.match(appView,/🔒 Танец 3/);
+ assert.match(main,/runDanceRoutine\(Number\(b\.dataset\.danceRoutine\)\)/);
  assert.doesNotMatch(appView,/>\s*(Макарена|Арам-зам-зам|Хип-хоп)/);
  assert.match(main,/const LUNA_DANCE_STEPS=/);
  assert.doesNotMatch(main,/const DANCE_ROUTINES=/);
 });
 
 
-test('one real generated MP4 is used for the Luna dance', async () => {
+test('first MP4 is selected while previous approved video is preserved', async () => {
  const [view, workflow, builder] = await Promise.all([
   'src/ui/appView.js',
   '.github/workflows/pages.yml',
   'scripts/build_dance_video.py',
  ].map(p => readFile(new URL('../' + p, import.meta.url), 'utf8')));
- assert.match(view, /src="\.\/assets\/videos\/luna-dance\.mp4/);
+ assert.match(view, /src="\.\/assets\/videos\/luna-dance-01\.mp4/);
  assert.doesNotMatch(view, /assets\/videos\/\$\{state\.activity\.videoStyle\}/);
  assert.match(workflow, /test -s assets\/videos\/luna-dance\.mp4/);
  assert.doesNotMatch(workflow, /python scripts\/build_dance_video\.py/);
@@ -62,7 +65,7 @@ test('Telegram dance video is a visible, tappable player started by user action'
   .map(p=>readFile(new URL('../'+p,import.meta.url),'utf8')));
  assert.match(view,/const danceVideo=\(state\.room==='dance'&&!state\.settings\?\.reduceMotion\)/);
  assert.match(view,/<video class="dance-video" controls playsinline webkit-playsinline/);
- assert.match(view,/luna-dance\.mp4\?v=20261010-feet-locked-v4/);
+ assert.match(view,/luna-dance-01\.mp4\?v=20261011-three-dance-slots1/);
  assert.match(view,/data-stop-dance/);
  assert.match(main,/const started=video\.play\(\)/);
  assert.match(main,/shell\?\.classList\.add\('dance-video-ready'\)/);
@@ -74,4 +77,15 @@ test('approved Luna dance V4 is embedded byte-exactly, without rebuilding a subs
  const video=await readFile(new URL('../assets/videos/luna-dance.mp4',import.meta.url));
  assert.equal(video.length,1548731);
  assert.equal(createHash('sha256').update(video).digest('hex'),'1e7c8fa914af2a1502a71949dba583fcf749d61dc8ba75c9fa0dc004aa04935f');
+});
+
+
+test('user-supplied first filmed dance deploys byte-exactly and other choices remain locked', async () => {
+ const video=await readFile(new URL('../assets/videos/luna-dance-01.mp4',import.meta.url));
+ assert.equal(video.length,1388796);
+ assert.equal(createHash('sha256').update(video).digest('hex'),'9e44db07ceddf7166addc7747b7991f9434ee3d2a26be7878379e6aca54720b0');
+ const view=await readFile(new URL('../src/ui/appView.js',import.meta.url),'utf8');
+ assert.match(view,/data-dance-routine="1"/);
+ assert.doesNotMatch(view,/data-dance-routine="2"/);
+ assert.doesNotMatch(view,/data-dance-routine="3"/);
 });
