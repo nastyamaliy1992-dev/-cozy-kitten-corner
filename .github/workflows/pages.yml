@@ -29,11 +29,11 @@ jobs:
           python-version: '3.11'
       - name: Build Luna dance video
         run: |
-          python -m pip install --quiet 'Pillow>=10,<13'
-          ffmpeg -version | head -1
+          python -m pip install --quiet 'Pillow>=10,<13' imageio-ffmpeg
+          python -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())'
           python scripts/build_dance_video.py
           test -s assets/videos/luna-dance.mp4
-          ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 assets/videos/luna-dance.mp4
+          python -c 'from pathlib import Path; assert Path("assets/videos/luna-dance.mp4").stat().st_size > 100000'
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
