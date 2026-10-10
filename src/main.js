@@ -245,8 +245,8 @@ const DANCE_ROUTINES={
  ['macarenaSide',660],['macarenaTurn',800],['danceJump',690],['danceFinish',520]
  ]},
  aram:{title:'Арам-зам-зам',steps:[
- ['aramClap',460],['aramClap',460],['aramReach',570],['aramReach',570],
- ['aramBounce',610],['aramClap',460],['aramClap',460],['aramSpin',690],
+ ['aramClap',460],['aramClapAlt',460],['aramReach',570],['aramReachAlt',570],
+ ['aramBounce',610],['aramClap',460],['aramClapAlt',460],['aramSpin',690],
  ['aramBounce',610],['aramReach',540],['aramSpin',720],['danceFinish',550]
  ]},
  hiphop:{title:'Хип-хоп',steps:[
