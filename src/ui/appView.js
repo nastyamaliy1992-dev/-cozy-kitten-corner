@@ -82,8 +82,8 @@ export function renderGame(state,bubble='',ui={}){
    lake:'<div class="room-action-bar"><button data-action="lake-fish">🎣<small>Ловить рыбу</small></button><button data-action="fish-shop">🎒<small>Снаряжение</small></button></div>'
  };
  const feedingItem=state.activity?.type==='eating'&&state.activity?.itemId?(catalog.find(i=>i.id===state.activity.itemId)||fridgeItems.find(i=>i.id===state.activity.itemId)):null;
- const danceVideo=(state.room==='dance'&&state.activity?.type==='dance'&&['macarena','aram','hiphop'].includes(state.activity?.videoStyle))
-   ?`<video class="dance-video" muted playsinline autoplay preload="auto" src="./assets/videos/${state.activity.videoStyle}.mp4?v=20261010-choreo3" aria-hidden="true"></video>`:'';
+ const danceVideo=(state.room==='dance'&&state.activity?.type==='dance'&&!state.settings?.reduceMotion)
+   ?`<video class="dance-video" muted playsinline autoplay preload="auto" src="./assets/videos/luna-dance.mp4?v=20261010-dance-video2" aria-hidden="true"></video>`:'';
  const feedingLayers=feedingItem?`<div class="feeding-sequence-layer" data-stage="${state.activity?.stage||'feed01'}" aria-hidden="true"><div class="feeding-bowl-layer"></div><div class="feeding-food-layer"><span>${foodIcon(feedingItem)}</span></div><div class="feeding-hand-layer">🤲</div></div>`:'';
  const action=(actions[state.room]||'')+(ui.settingsOpen?settingsPanel(state):'')+(ui.panel==='shop'?shopPanel(state,ui):'')+(ui.panel==='wardrobe'?wardrobePanel(state,ui):'')+(ui.panel==='progress'?progressPanel(state):'')+(ui.panel==='furniture'?furniturePanel(state):'')+(ui.panel==='roomItems'?roomItemsPanel(state,state.room):'');
  const nav=[['living','🏠','Холл'],['kitchen','🍽️','Кухня'],['bedroom','🌙','Спальня'],['bathroom','🛁','Ванная'],['toilet','🚽','Туалет'],['wardrobe','👗','Гардероб'],['playroom','🧶','Игры'],['store','🛍️','Магазин'],['dance','🪩','Танцы'],['school','📚','Школа'],['lake','🎣','Озеро']];
