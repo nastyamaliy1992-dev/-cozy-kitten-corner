@@ -1519,3 +1519,6 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 @media(prefers-reduced-motion:reduce){
  .room-dance.activity-dance .pet-stage .luna-photo{animation:none!important}
 }
+
+.room-dance.activity-dance .pet-stage[data-luna-stage="aramClapAlt"] .luna-photo{animation:lunaAramClap .46s ease-in-out both!important}
+.room-dance.activity-dance .pet-stage[data-luna-stage="aramReachAlt"] .luna-photo{animation:lunaAramReach .56s ease-in-out both!important}
