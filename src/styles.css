@@ -1543,3 +1543,78 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 /* Single Luna dance control, no incorrectly named choreography */
 .room-dance .dance-routines{display:flex!important;justify-content:center!important;align-items:center!important}
 .room-dance .dance-routines button{min-width:76%!important;min-height:54px!important;font-size:17px!important}
+
+
+/* 2026-10-10 toilet / filmed dance calibration.
+   Scene and sprite share a viewport; sitting feet must meet the real seat.
+   Never draw a second fixture over the user's already-open toilet photo. */
+.room-toilet .animated-toilet-lid {display:none!important}
+.room-toilet.activity-toilet[data-luna-stage="toiletSitDown"] .pet-button,
+.room-toilet.activity-toilet[data-luna-stage="toiletSitting"] .pet-button{
+ left:52%!important;
+ bottom:48.5%!important;
+ width:min(43vw,184px)!important;
+ height:min(43vw,184px)!important;
+ transform:translateX(-50%)!important;
+ z-index:42!important;
+ filter:drop-shadow(0 4px 4px #19141a55);
+}
+.room-toilet.activity-toilet[data-luna-stage="toiletSitDown"] .pet-stage,
+.room-toilet.activity-toilet[data-luna-stage="toiletSitting"] .pet-stage{
+ width:100%!important;height:100%!important;
+ transform:none!important;transform-origin:50% 100%!important;
+ animation:none!important;
+}
+.room-toilet.activity-toilet[data-luna-stage="toiletSitDown"] .luna-photo{
+ animation:ckToiletLand .70s ease-in-out both!important;
+}
+.room-toilet.activity-toilet[data-luna-stage="toiletSitting"] .luna-photo{
+ animation:ckToiletSoftBreathe 1.5s ease-in-out infinite alternate!important;
+}
+@keyframes ckToiletLand{
+ from{transform:translateY(-25px) scale(1.05)}
+ to{transform:translateY(0) scale(1)}
+}
+@keyframes ckToiletSoftBreathe{
+ from{transform:translateY(0) scale(1)}
+ to{transform:translateY(2px) scale(1.008)}
+}
+.room-toilet.activity-toilet[data-luna-stage="toiletFinished"] .pet-button{
+ left:52%!important;bottom:42%!important;
+ width:min(46vw,200px)!important;height:min(46vw,200px)!important;
+ transform:translateX(-50%)!important;
+}
+.room-toilet.activity-toilet .speech-bubble{
+ top:25%!important;bottom:auto!important;
+ right:8px!important;left:auto!important;
+ max-width:min(49vw,200px)!important;
+ font-size:clamp(12px,3.3vw,17px)!important;
+}
+.room-dance.activity-dance .pet-button{
+ animation:ckDanceFloorTravel 9.1s ease-in-out 1 both!important;
+ transform-origin:50% 100%!important;
+}
+@keyframes ckDanceFloorTravel{
+ 0%,100%{transform:translate3d(0,0,0) rotate(0)}
+ 8%{transform:translate3d(-35px,-9px,0) rotate(-6deg)}
+ 16%{transform:translate3d(30px,-22px,0) rotate(8deg)}
+ 24%{transform:translate3d(-30px,0,0) rotate(-8deg)}
+ 32%{transform:translate3d(20px,-35px,0) rotate(6deg)}
+ 40%{transform:translate3d(-18px,-12px,0) rotate(-5deg)}
+ 48%{transform:translate3d(35px,-6px,0) rotate(8deg)}
+ 56%{transform:translate3d(-42px,-25px,0) rotate(-12deg)}
+ 64%{transform:translate3d(29px,-5px,0) rotate(8deg)}
+ 72%{transform:translate3d(-20px,-36px,0) rotate(-7deg)}
+ 80%{transform:translate3d(33px,-15px,0) rotate(12deg)}
+ 88%{transform:translate3d(-25px,-24px,0) rotate(-7deg)}
+ 95%{transform:translate3d(12px,-12px,0) rotate(5deg)}
+}
+.room-dance .scene .dance-video{
+ object-fit:cover!important;object-position:center 45%!important;
+ background:transparent!important;
+}
+.room-dance.dance-video-ready .scene .pet-button{opacity:0!important}
+@media(prefers-reduced-motion:reduce){
+ .room-dance.activity-dance .pet-button,
+ .room-toilet.activity-toilet .luna-photo{animation:none!important}
+}
