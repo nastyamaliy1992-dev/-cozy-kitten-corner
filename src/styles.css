@@ -1539,3 +1539,7 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 /* One honest unified dance control: the sprite routines are not named choreography. */
 .room-dance .dance-routines{grid-template-columns:minmax(0,1fr)!important;max-width:320px;margin-inline:auto}
 .room-dance .dance-routines button{font-size:14px!important;min-height:48px!important}
+
+/* Single Luna dance control, no incorrectly named choreography */
+.room-dance .dance-routines{display:flex!important;justify-content:center!important;align-items:center!important}
+.room-dance .dance-routines button{min-width:76%!important;min-height:54px!important;font-size:17px!important}
