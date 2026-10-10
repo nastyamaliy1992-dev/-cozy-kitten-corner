@@ -31,6 +31,10 @@ jobs:
         run: |
           test -s assets/videos/luna-dance-01.mp4
           echo '9e44db07ceddf7166addc7747b7991f9434ee3d2a26be7878379e6aca54720b0  assets/videos/luna-dance-01.mp4' | sha256sum -c -
+      - name: Verify filmed Luna dance 2
+        run: |
+          test -s assets/videos/luna-dance-02.mp4
+          echo 'b5208334978e3c292c0c0aa16d097f95a1c6af1f0142c4cd3decfed96b714221  assets/videos/luna-dance-02.mp4' | sha256sum -c -
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:

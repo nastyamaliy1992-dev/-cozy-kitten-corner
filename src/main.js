@@ -1,4 +1,4 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261011-three-dance-slots1';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261011-two-filmed-dances';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261010-floor-anchor4';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-choreo3';
@@ -246,7 +246,7 @@ const LUNA_DANCE_STEPS=[
 ];
 function runDanceRoutine(danceId=1){
  if(actionLock||state?.room!=='dance')return;
- if(danceId!==1){showBubble('Этот танец скоро появится 🎵',1500);return;}
+ if(![1,2].includes(danceId)){showBubble('Этот танец скоро появится 🎵',1500);return;}
  const frames=LUNA_DANCE_STEPS.map(([stage,ms])=>({stage,ms}));
  state.dance??={moves:0,completed:0};
  state.dance.style='luna';
