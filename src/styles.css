@@ -1522,3 +1522,16 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 
 .room-dance.activity-dance .pet-stage[data-luna-stage="aramClapAlt"] .luna-photo{animation:lunaAramClap .46s ease-in-out both!important}
 .room-dance.activity-dance .pet-stage[data-luna-stage="aramReachAlt"] .luna-photo{animation:lunaAramReach .56s ease-in-out both!important}
+
+/* Videos are only displayed after HTMLVideoElement canplay. UI stays clickable.
+   If browser blocks video, the regular interactive Luna animation is retained. */
+.room-dance .scene .dance-video{
+ display:none;position:absolute;inset:0;width:100%;height:100%;
+ object-fit:cover;object-position:center;z-index:36;
+ pointer-events:none;background:transparent;
+}
+.room-dance.dance-video-ready .scene .dance-video{display:block}
+.room-dance.dance-video-ready .scene .pet-button{opacity:0;pointer-events:none}
+.room-dance .dance-routines,.room-dance .dance-status,.room-dance .dance-actions{
+ z-index:58;position:absolute;
+}
