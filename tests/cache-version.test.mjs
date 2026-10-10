@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 const previousVersion = '20261010-school-play2';
 const roomVersion = '20261010-toilet-photo2';
 const stateVersion = '20261010-floor-anchor4';
-const currentVersion = '20261010-dance-video3';
+const currentVersion = '20261010-dance-video4';
 const poseVersion = '20261010-choreo3';
 const petVersion = '20261010-fullbody5';
 
@@ -60,7 +60,7 @@ test('Telegram dance video is a visible, tappable player started by user action'
   .map(p=>readFile(new URL('../'+p,import.meta.url),'utf8')));
  assert.match(view,/const danceVideo=\(state\.room==='dance'&&!state\.settings\?\.reduceMotion\)/);
  assert.match(view,/<video class="dance-video" controls playsinline webkit-playsinline/);
- assert.match(view,/luna-dance\.mp4\?v=20261010-dance-video3/);
+ assert.match(view,/luna-dance\.mp4\?v=20261010-dance-video4/);
  assert.match(view,/data-stop-dance/);
  assert.match(main,/const started=video\.play\(\)/);
  assert.match(main,/shell\?\.classList\.add\('dance-video-ready'\)/);
