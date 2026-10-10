@@ -1618,3 +1618,15 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
  .room-dance.activity-dance .pet-button,
  .room-toilet.activity-toilet .luna-photo{animation:none!important}
 }
+
+
+/* Telegram / iOS: a visible video must accept taps on the native Play control.
+   Previously pointer-events:none made fallback controls impossible to use. */
+.room-dance.dance-video-ready .scene .dance-video{
+ display:block!important;
+ pointer-events:auto!important;
+ z-index:38!important;
+}
+.room-dance.dance-video-ready .dance-routines{
+ pointer-events:auto!important;
+}
