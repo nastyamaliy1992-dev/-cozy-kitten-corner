@@ -1,7 +1,7 @@
 import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-fullbody5';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261010-floor-anchor4';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
-import { startRoomMusic,stopMusic,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-dance-beat5';
+import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-dance-beat5';
 import { buyItem,equipItem,applyFurniture,catalog,grantPremiumItem } from './core/shop.js?v=20261010-school-play2';
 import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels,levelData } from './core/progression.js';
 import { castLine,catchFish } from './core/fishing.js';
@@ -237,6 +237,48 @@ function runDanceMove(kind='left'){
   {stage:'arrived',ms:100},...(choreography[kind]||choreography.left),{stage:'happy',ms:390}
  ],{onFrame:f=>{if(f.stage==='happy'&&finished)giggleSound();else if(f.stage.startsWith('dance'))sfx('step')}});
 }
+
+const DANCE_ROUTINES={
+ macarena:{title:'Макарена',steps:[
+ ['macarenaArms',680],['macarenaArmsHigh',680],['macarenaHands',680],['macarenaHips',680],
+ ['macarenaSide',690],['macarenaTurn',700],['macarenaArms',680],['macarenaHips',700],
+ ['macarenaSide',660],['macarenaTurn',800],['danceJump',690],['danceFinish',520]
+ ]},
+ aram:{title:'Арам-зам-зам',steps:[
+ ['aramClap',460],['aramClap',460],['aramReach',570],['aramReach',570],
+ ['aramBounce',610],['aramClap',460],['aramClap',460],['aramSpin',690],
+ ['aramBounce',610],['aramReach',540],['aramSpin',720],['danceFinish',550]
+ ]},
+ hiphop:{title:'Хип-хоп',steps:[
+ ['hiphopBounce',490],['hiphopSlide',670],['hiphopPop',610],['hiphopSlideBack',670],
+ ['hiphopWave',660],['hiphopBounce',530],['hiphopSpin',790],['hiphopFreeze',590],
+ ['hiphopSlide',620],['hiphopPop',580],['hiphopJump',720],['danceFinish',610]
+ ]}
+};
+function runDanceRoutine(style='macarena'){
+ if(actionLock||state.room!=='dance')return;
+ const routine=DANCE_ROUTINES[style]||DANCE_ROUTINES.macarena;
+ state.dance??={moves:0,completed:0};
+ state.dance.style=style;
+ state.dance.moves=(state.dance.moves||0)+routine.steps.length;
+ state.needs.mood=Math.min(100,state.needs.mood+7);
+ state.needs.energy=Math.max(0,state.needs.energy-3);
+ persist();
+ setDanceStyle(style);
+ startRoomMusic('dance');
+ showBubble('Танец «'+routine.title+'»! 🎶',1800);
+ const frames=routine.steps.map(([stage,ms])=>({stage,ms}));
+ runLunaSequence('dance',frames,{onFrame:(frame,index)=>{
+   if(index%2===0)sfx('step');
+   if(frame.stage==='danceFinish'){happyJingle();giggleSound();showBubble('Браво! '+routine.title+' ✨',1400)}
+ },onDone:()=>{
+   state.dance.completed=(state.dance.completed||0)+1;
+   state.economy.xp+=20;
+   state.economy.coins+=15;
+   persist();showBubble('Танец пройден! +15 🪙 · +20 XP',2200);
+ }});
+}
+
 function bindGame(){document.querySelector('[data-action="pet-now"]')?.addEventListener('click',()=>petDirect());const pet=document.querySelector('.pet-button');let petStart=null,petMoved=false,strokeTotal=0,lastStrokeSound=0;pet?.addEventListener('pointerdown',e=>{if(actionLock)return;e.preventDefault();petStart={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY};petMoved=false;strokeTotal=0;pet.classList.add('is-stroking');pet.setPointerCapture?.(e.pointerId);if(['soap','shampoo'].includes(state.activity?.type)){bubbleSound();giggleSound()}else{purr(2.2);state.activity={type:'petting',stage:'stroking',startedAt:Date.now()};document.querySelector('.game-shell')?.classList.add('activity-petting')}});pet?.addEventListener('pointermove',e=>{if(!petStart)return;e.preventDefault();const step=Math.hypot(e.clientX-petStart.lastX,e.clientY-petStart.lastY);const d=Math.hypot(e.clientX-petStart.x,e.clientY-petStart.y);petStart.lastX=e.clientX;petStart.lastY=e.clientY;strokeTotal+=step;if(d>8||strokeTotal>12){if(!petMoved&&!['soap','shampoo'].includes(state.activity?.type))syncLunaFrame('petting','petBliss');petMoved=true;pet.style.setProperty('--stroke-x',Math.max(-12,Math.min(12,(e.clientX-petStart.x)/5))+'px');const now=Date.now();if(['soap','shampoo'].includes(state.activity?.type)){state.activity.scrub=Math.min(100,(state.activity.scrub||0)+Math.max(1,Math.round(step/2.3)));const pct=document.querySelector('.foam-fx i');if(pct)pct.textContent=state.activity.scrub+'%';const foam=document.querySelector('.foam-fx');if(foam){foam.style.setProperty('--foam-progress',state.activity.scrub);foam.style.setProperty('--foam-scale',(.58+state.activity.scrub/180).toFixed(2));foam.style.setProperty('--foam-opacity',(.22+state.activity.scrub/140).toFixed(2))}if(now-lastStrokeSound>430){lastStrokeSound=now;bubbleSound();giggleSound()}if(state.activity.scrub>=100&&!state.activity.completed){state.activity.completed=true;state.needs.cleanliness=Math.min(100,state.needs.cleanliness+32);state.needs.mood=Math.min(100,state.needs.mood+10);applauseSound();giggleSound();speakLuna('Хи-хи! Какая пена!');persist();showBubble('Вот теперь много пены! 🫧😸',1700);petStart=null;setTimeout(()=>{if(state?.room==='bathroom'&&['soap','shampoo'].includes(state.activity?.type)&&state.activity?.completed){state.activity={type:'bathReady',stage:'inTub',startedAt:Date.now()};persist();render()}},1400)}}else if(now-lastStrokeSound>780){lastStrokeSound=now;purr(1.25)}}});pet?.addEventListener('pointerup',()=>{if(!petStart)return;const wasBath=['soap','shampoo'].includes(state.activity?.type);petStart=null;pet.classList.remove('is-stroking');pet.style.removeProperty('--stroke-x');if(wasBath){persist();render();return}const rr=rewardPetting(state);state=rr.state;state.activity={type:'petted',stage:'petBliss',startedAt:Date.now()};persist();purr(2.6);showBubble(rr.rewarded?'Мурр! +3 ⚡ +2 XP':'Мурр! +3 ⚡',1900);render();setTimeout(()=>{if(state&&!state.sleeping&&['petted','petting'].includes(state.activity?.type)){state.activity={type:'idle',stage:'idle',startedAt:Date.now()};persist();render()}},2000)});const clearPetGesture=()=>{petStart=null;petMoved=false;pet?.classList.remove('is-stroking');pet?.style.removeProperty('--stroke-x')};pet?.addEventListener('pointercancel',clearPetGesture);pet?.addEventListener('lostpointercapture',clearPetGesture);const toggleFridge=()=>{ui.fridgeOpen=!ui.fridgeOpen;if(ui.fridgeOpen)state=moveLuna(state,'fridge');persist();render();if(ui.fridgeOpen)showBubble('Выбирай еду',900)};document.querySelector('[data-object="fridge"]')?.addEventListener('click',toggleFridge);document.querySelector('[data-action="open-fridge"]')?.addEventListener('click',()=>{if(state.room!=='kitchen'){state.room='kitchen';ui.fridgeOpen=true;persist();render();startRoomMusic('kitchen')}else toggleFridge()});document.querySelector('[data-object="lamp"]')?.addEventListener('click',()=>moveTo('lamp',()=>{state=toggleLamp(state);persist();render()}));document.querySelector('[data-object="bed"]')?.addEventListener('click',()=>moveTo('bed',()=>{
   stopMusic();
   sleepyChime();
@@ -320,6 +362,7 @@ document.querySelector('[data-play-catch]')?.addEventListener('click',()=>{
 });
 
 document.querySelectorAll('[data-dance-move]').forEach(b=>b.addEventListener('click',()=>runDanceMove(b.dataset.danceMove)));
+document.querySelectorAll('[data-dance-routine]').forEach(b=>b.addEventListener('click',()=>runDanceRoutine(b.dataset.danceRoutine)));
 document.querySelector('[data-action="fish-hook"]')?.addEventListener('click',()=>{
  if(actionLock||state.activity?.type!=='fishGame')return;
  const phase=((Date.now()-(state.activity.startedAt||Date.now()))%2200)/2200,hit=phase>=.28&&phase<=.72;
