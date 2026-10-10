@@ -1535,3 +1535,7 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .room-dance .dance-routines,.room-dance .dance-status,.room-dance .dance-actions{
  z-index:58;position:absolute;
 }
+
+/* One honest unified dance control: the sprite routines are not named choreography. */
+.room-dance .dance-routines{grid-template-columns:minmax(0,1fr)!important;max-width:320px;margin-inline:auto}
+.room-dance .dance-routines button{font-size:14px!important;min-height:48px!important}
