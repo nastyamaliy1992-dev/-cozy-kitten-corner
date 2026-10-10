@@ -67,7 +67,7 @@ test('Telegram dance video is a visible, tappable player started by user action'
   .map(p=>readFile(new URL('../'+p,import.meta.url),'utf8')));
  assert.match(view,/const danceVideo=\(state\.room==='dance'&&!state\.settings\?\.reduceMotion\)/);
  assert.match(view,/<video class="dance-video" controls playsinline webkit-playsinline preload="auto"/);
- assert.match(view,/\$\{danceClip\}\?v=20261011-dance-fullframe-controls2/);
+ assert.match(view,/\$\{danceClip\}\?v=20261011-telegram-video-fix1/);
  assert.match(view,/data-stop-dance/);
  assert.match(main,/const started=video\.play\(\)/);
  assert.match(main,/shell\?\.classList\.add\('dance-video-ready'\)/);
