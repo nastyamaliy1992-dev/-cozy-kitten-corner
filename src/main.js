@@ -1,14 +1,14 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-fullbody5';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261010-choreo3';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261010-floor-anchor4';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
-import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-dance-beat5';
+import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-choreo3';
 import { buyItem,equipItem,applyFurniture,catalog,grantPremiumItem } from './core/shop.js?v=20261010-school-play2';
 import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels,levelData } from './core/progression.js';
 import { castLine,catchFish } from './core/fishing.js';
 import { ensureSchool, startLesson, answerLesson, unlockLesson } from './core/school.js?v=20261010-school-play2';
 import { initTelegram,bindTelegramBack,haptic,openBotPurchase,readTelegramPurchaseGrant,clearTelegramPurchaseGrant } from './core/telegram.js';
 import { preloadRoomBackgrounds } from './data/roomAssets.js?v=20261010-toilet-photo2';
-import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261010-fullbody5';
+import { preloadLunaFrames,lunaAssetFor,sequenceFrameSources } from './data/lunaAsset.js?v=20261010-choreo3';
 const telegram=initTelegram();
 preloadLunaFrames();
 let launchIntroPending=false;
