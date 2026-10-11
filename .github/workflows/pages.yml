@@ -43,6 +43,18 @@ jobs:
         run: |
           test -s assets/videos/luna-dance-02-mobile.mp4
           echo '79e2881fbb88dbe7f0cdd872308de97115b075e98b16eaa5646a72c50a9816c0  assets/videos/luna-dance-02-mobile.mp4' | sha256sum -c -
+      - name: Build inline Telegram dance animations and audio
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+          for clip in 01 02; do
+            ffmpeg -hide_banner -loglevel error -y -i "assets/videos/luna-dance-${clip}-mobile.mp4" -an -vf 'fps=12,scale=480:-2:flags=bicubic' -c:v libwebp_anim -lossless 0 -compression_level 2 -quality 60 -loop 0 "assets/videos/luna-dance-${clip}.webp"
+            ffmpeg -hide_banner -loglevel error -y -i "assets/videos/luna-dance-${clip}-mobile.mp4" -vn -c:a aac -b:a 96k -movflags +faststart "assets/videos/luna-dance-${clip}.m4a"
+            test -s "assets/videos/luna-dance-${clip}.webp"
+            test -s "assets/videos/luna-dance-${clip}.m4a"
+          done
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:

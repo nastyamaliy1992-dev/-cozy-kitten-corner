@@ -6,7 +6,7 @@ import { readFile } from 'node:fs/promises';
 const previousVersion = '20261010-school-play2';
 const roomVersion = '20261010-toilet-photo2';
 const stateVersion = '20261010-floor-anchor4';
-const currentVersion = '20261011-dance-fullframe-controls2';
+const currentVersion = '20261011-telegram-inline-dance3';
 const poseVersion = '20261010-choreo3';
 const petVersion = '20261010-fullbody5';
 
@@ -136,4 +136,21 @@ test('full body Luna dance is uncropped and compact controls do not cover the ki
  assert.match(main,/video\.addEventListener\('playing'/);
  assert.match(main,/video\.controls=false/);
  assert.match(main,/dance-video-playing/);
+});
+
+
+test('Telegram keeps dances inside room instead of sending user to external video links',async()=>{
+ const [main,css,workflow]=await Promise.all(['src/main.js','src/styles.css','.github/workflows/pages.yml']
+   .map(p=>readFile(new URL('../'+p,import.meta.url),'utf8')));
+ assert.match(main,/const inlineAnimation=\(\)=>/);
+ assert.match(main,/if\(inTelegram\)\{inlineAnimation\(\);return;\}/);
+ assert.match(main,/dance-animated-frame/);
+ assert.match(main,/stopInlineDance\(\)/);
+ assert.doesNotMatch(main,/open\.target='_blank'/);
+ assert.doesNotMatch(main,/open\.href=link/);
+ assert.match(css,/\.room-dance\.dance-webp-mode \.scene \.dance-video\{display:none!important/);
+ assert.match(css,/\.room-dance \.scene \.dance-animated-frame/);
+ assert.match(workflow,/Build inline Telegram dance animations and audio/);
+ assert.match(workflow,/libwebp_anim/);
+ assert.match(workflow,/luna-dance-\$\{clip\}\.m4a/);
 });

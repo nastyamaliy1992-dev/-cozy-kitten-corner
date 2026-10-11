@@ -1721,3 +1721,14 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .room-dance.dance-video-playing .scene .dance-video {
   pointer-events:none!important;
 }
+
+/* Telegram inline dance fallback: no browser links, no native video overlay. */
+.room-dance.dance-webp-mode .scene .dance-video{display:none!important;visibility:hidden!important}
+.room-dance .scene .dance-animated-frame{
+ position:absolute;inset:0;width:100%;height:100%;
+ object-fit:contain;object-position:center center;
+ display:block;z-index:39;pointer-events:none;
+}
+.room-dance.dance-webp-mode .scene .pet-button{opacity:0!important;pointer-events:none!important}
+.room-dance .dance-status{display:none!important}
+.room-dance.activity-dance .dance-routines{top:8px!important;bottom:auto!important}
