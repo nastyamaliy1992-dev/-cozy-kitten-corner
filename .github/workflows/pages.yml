@@ -23,6 +23,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Validate JavaScript before publication
+        run: |
+          set -e
+          find src -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          node --test tests/*.test.mjs
       - name: Verify approved Luna feet-locked dance video
         run: |
           test -s assets/videos/luna-dance.mp4

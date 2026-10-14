@@ -1,4 +1,4 @@
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261011-telegram-inline-dance3';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261014-dance-runtime-stable4';
 import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261010-floor-anchor4';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
 import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261010-choreo3';
@@ -285,7 +285,6 @@ function runDanceRoutine(danceId=1){
   happyJingle();applauseSound();
   showBubble('Браво, Луна! +15 🪙 · +20 XP',2200);
  };
- let triedOriginal=false;
  const failed=()=>{
   if(completed||!state||state.room!=='dance')return;
   completed=true;
@@ -313,10 +312,10 @@ function runDanceRoutine(danceId=1){
    activeDanceTimer=setTimeout(award,Math.max(1000,5200-(Date.now()-playbackStart)));
   };
   scene.appendChild(cat);
-  cat.src='./assets/videos/luna-dance-0'+danceId+'.webp?v=20261011-telegram-inline-dance3&play='+playbackStart;
+  cat.src='./assets/videos/luna-dance-0'+danceId+'.webp?v=20261014-dance-runtime-stable4&play='+playbackStart;
   stopMusic();
   if(state.settings?.musicEnabled!==false&&state.settings?.musicVolume!==0){
-   const audio=new Audio('./assets/videos/luna-dance-0'+danceId+'.m4a?v=20261011-telegram-inline-dance3');
+   const audio=new Audio('./assets/videos/luna-dance-0'+danceId+'.m4a?v=20261014-dance-runtime-stable4');
    audio.volume=Math.max(0,Math.min(1,state.settings?.musicVolume??0.85));
    activeDanceAudio=audio;
    try{const startedAudio=audio.play();startedAudio?.catch?.(()=>{if(!completed)startRoomMusic('dance');});}
@@ -334,7 +333,7 @@ function runDanceRoutine(danceId=1){
   if(completed||state?.room!=='dance')return;
   if(triedOriginal){inlineAnimation();return;}
   triedOriginal=true;
-  video.src='./assets/videos/luna-dance-0'+danceId+'.mp4?v=20261011-telegram-inline-dance3-original-retry';
+  video.src='./assets/videos/luna-dance-0'+danceId+'.mp4?v=20261014-dance-runtime-stable4-original-retry';
   video.load();
   try{const resumed=video.play();resumed?.catch?.(()=>{if(video.error)inlineAnimation();});}
   catch{inlineAnimation();}
@@ -343,18 +342,6 @@ function runDanceRoutine(danceId=1){
  video.playsInline=true;
  video.muted=state.settings?.musicEnabled===false||state.settings?.musicVolume===0;
  try{video.volume=Math.max(0,Math.min(1,state.settings?.musicVolume??0.85));}catch{}
- const retryOriginal=()=>{
-  if(completed||state?.room!=='dance')return;
-  if(triedOriginal){fallback();return;}
-  triedOriginal=true;
-  // If Telegram cannot decode the iPhone-safe Baseline MP4, retry the original export.
-  video.src='./assets/videos/luna-dance-0'+danceId+'.mp4?v=20261011-telegram-inline-dance3-original-retry';
-  video.load();
-  showBubble('Пробую второй формат видео…',2200);
-  try{const resumed=video.play();if(resumed?.catch)resumed.catch(()=>{
-   if(!video.error)showBubble('Нажми ▶ на самом видео',2600);
-  });}catch{showBubble('Нажми ▶ на самом видео',2600)}
- };
  // Hide iOS's large native playback overlay once playback really starts.
  // Keep native controls available if it pauses or autoplay is blocked.
  video.addEventListener('playing',()=>{

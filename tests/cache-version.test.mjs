@@ -6,7 +6,7 @@ import { readFile } from 'node:fs/promises';
 const previousVersion = '20261010-school-play2';
 const roomVersion = '20261010-toilet-photo2';
 const stateVersion = '20261010-floor-anchor4';
-const currentVersion = '20261011-telegram-inline-dance3';
+const currentVersion = '20261014-dance-runtime-stable4';
 const poseVersion = '20261010-choreo3';
 const petVersion = '20261010-fullbody5';
 
@@ -153,4 +153,15 @@ test('Telegram keeps dances inside room instead of sending user to external vide
  assert.match(workflow,/Build inline Telegram dance animations and audio/);
  assert.match(workflow,/libwebp_anim/);
  assert.match(workflow,/luna-dance-\$\{clip\}\.m4a/);
+});
+
+test('dance player has one retry handler and no removed browser-link fallback', async () => {
+ const source=await readFile(new URL('../src/main.js',import.meta.url),'utf8');
+ const block=source.split('function runDanceRoutine(danceId=1){')[1]?.split('\nfunction bindGame(){')[0];
+ assert.ok(block,'dance routine must exist');
+ assert.equal((block.match(/const retryOriginal=\(\)=>/g)||[]).length,1);
+ assert.equal((block.match(/let triedOriginal=false/g)||[]).length,1);
+ assert.doesNotMatch(block,/\bfallback\(\)/);
+ assert.doesNotMatch(block,/open\.target=['"]_blank/);
+ assert.match(block,/if\(inTelegram\)\{inlineAnimation\(\);return;\}/);
 });
