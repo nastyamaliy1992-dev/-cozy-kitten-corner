@@ -430,18 +430,20 @@ document.querySelector('[data-action="bath-finish"]')?.addEventListener('click',
 document.querySelectorAll('[data-play-action]').forEach(b=>b.addEventListener('click',()=>runPlayAction(b.dataset.playAction)));
 document.querySelector('[data-play-catch]')?.addEventListener('click',async()=>{
  if(!state?.playChallenge||state.room!=='playroom'||actionLock)return;
- const challenge=state.playChallenge,kind=challenge.kind,round=challenge.hits;
+ const challenge=state.playChallenge,kind=challenge.kind,round=challenge.hits,startedAt=challenge.startedAt;
  actionLock=true;
  document.querySelector('.room-playroom.game-shell')?.classList.add('play-chasing');
  document.querySelector('[data-play-catch]')?.setAttribute('disabled','');
  try{
   sfx('play');
   await animateToyChase(document.querySelector('.room-playroom .scene'),kind,round,{reduceMotion:state.settings?.reduceMotion===true});
-  if(!state||state.room!=='playroom'||state.playChallenge!==challenge)return;
-  challenge.hits++;
+  if(!state||state.room!=='playroom'||state.playChallenge?.startedAt!==startedAt){actionLock=false;return;}
+  // The HUD life ticker clones game state every 10 seconds: never mutate stale objects.
+  const currentChallenge=state.playChallenge;
+  currentChallenge.hits++;
   state.needs.mood=Math.min(100,state.needs.mood+3);
   if(state.settings?.haptics!==false)haptic('light');
-  if(challenge.hits>=3){
+  if(currentChallenge.hits>=3){
    state.playChallenge=null;
    state=play(state);state=track(state,'play');state=unlockAchievement(state,'firstToy').state;
    state.playStats??={ball:0,yarn:0};state.playStats[kind]=(state.playStats[kind]||0)+1;
@@ -453,13 +455,15 @@ document.querySelector('[data-play-catch]')?.addEventListener('click',async()=>{
   }else{
    state.activity={type:'playGame',stage:'playReady',playKind:kind,startedAt:Date.now()};
    persist();actionLock=false;render();
-   showBubble('Умница! Бросай снова: '+challenge.hits+'/3 🐾',1600);
+   showBubble('Умница! Бросай снова: '+currentChallenge.hits+'/3 🐾',1600);
   }
  }catch{
   actionLock=false;
-  state.playChallenge=null;
-  state.activity={type:'idle',stage:'idle',startedAt:Date.now()};
-  persist();render();
+  if(state){
+   state.playChallenge=null;
+   state.activity={type:'idle',stage:'idle',startedAt:Date.now()};
+   persist();render();
+  }
   showBubble('Игрушка потерялась — попробуй ещё',1800);
  }
 });

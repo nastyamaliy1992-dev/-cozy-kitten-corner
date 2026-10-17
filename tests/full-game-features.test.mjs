@@ -86,3 +86,12 @@ test('all room graphics use same enhancement and dance video stays uncropped',as
  assert.match(css,/\.room-dance \.room-background/);
  assert.match(css,/object-fit:contain!important/);
 });
+
+
+test('toy catching survives ten-second state refresh without losing progress or locking the game',async()=>{
+ const main=await readFile(new URL('../src/main.js',import.meta.url),'utf8');
+ assert.match(main,/state\.playChallenge\?\.startedAt!==startedAt/);
+ assert.match(main,/const currentChallenge=state\.playChallenge/);
+ assert.match(main,/actionLock=false;return;/);
+ assert.doesNotMatch(main,/state\.playChallenge!==challenge/);
+});
