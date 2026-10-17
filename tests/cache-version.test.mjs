@@ -5,8 +5,8 @@ import { readFile } from 'node:fs/promises';
 
 const previousVersion = '20261010-school-play2';
 const roomVersion = '20261010-toilet-photo2';
-const stateVersion = '20261018-full-pass1';
-const currentVersion = '20261018-full-pass1';
+const stateVersion = '20261018-full-pass2';
+const currentVersion = '20261018-full-pass2';
 const poseVersion = '20261010-choreo3';
 const petVersion = '20261010-fullbody5';
 
@@ -28,8 +28,8 @@ test('latest UI and pose assets refresh while dance photo stays correctly wired'
   assert.match(roomAssets, /assets\/rooms\/dance-final-20261010\.webp/);
   assert.match(main, new RegExp(`state\\.js\\?v=${stateVersion}`));
   assert.match(main, new RegExp(`lunaAsset\\.js\\?v=${poseVersion}`));
-  assert.ok(main.includes('audio.js?v=20261018-full-pass1'));
-  assert.ok(main.includes('shop.js?v=20261018-full-pass1'));
+  assert.ok(main.includes('audio.js?v=20261018-full-pass2'));
+  assert.ok(main.includes('shop.js?v=20261018-full-pass2'));
   assert.match(appView, new RegExp(`pet\\.js\\?v=${petVersion}`));
   assert.match(appView, new RegExp(`shop\\.js\\?v=${previousVersion}`));
   assert.match(pet, new RegExp(`lunaAsset\\.js\\?v=${poseVersion}`));

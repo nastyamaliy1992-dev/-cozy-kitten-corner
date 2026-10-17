@@ -22,8 +22,24 @@ export function startRoomMusic(room){ensure();if(ctx.state==='suspended')ctx.res
    tone(a/2,.23,.10,'sine','music');
    setTimeout(()=>{tone(b,.36,.16,'triangle','music');tone(b/2,.24,.09,'sine','music')},730);
  }else{
-   tone(a,1.5,.16,'sine','music');
-   setTimeout(()=>tone(b,1.05,.07,'triangle','music'),180);
+   // Gentle harmony with a slow bass pulse and bright soft chimes.
+   // Reduced volume prevents masking kitten sounds and dialogue.
+   const notesCopy=notes;
+   const third=notesCopy[(i+2)%notesCopy.length];
+   const fifth=notesCopy[(i+4)%notesCopy.length];
+   const calm=currentRoom==='bedroom'||currentRoom==='bathroom'||currentRoom==='lake';
+   tone(a/2,1.30,calm?.075:.10,'sine','music');
+   tone(a,1.04,calm?.065:.09,'sine','music');
+   setTimeout(()=>{
+     if(currentRoom!==room||settings.musicEnabled===false)return;
+     tone(third,.65,calm?.04:.06,'sine','music');
+   },370);
+   setTimeout(()=>{
+     if(currentRoom!==room||settings.musicEnabled===false)return;
+     tone(fifth,.66,calm?.039:.063,'sine','music');
+     if(!calm)tone(b/2,.51,.042,'triangle','music');
+   },880);
+
  }
  i++;
 };play();timer=setInterval(play,1450)}

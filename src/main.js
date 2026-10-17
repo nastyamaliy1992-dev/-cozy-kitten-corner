@@ -1,9 +1,9 @@
-import { animateToyChase } from './ui/toyChase.js?v=20261018-full-pass1';
-import { renderWelcome,renderGame } from './ui/appView.js?v=20261018-full-pass1';
-import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261018-full-pass1';
+import { animateToyChase } from './ui/toyChase.js?v=20261018-full-pass2';
+import { renderWelcome,renderGame } from './ui/appView.js?v=20261018-full-pass2';
+import { createInitialState,restoreState,tickState,petKitten,feedKitten,consumeFoodUnit,finishMeal,consumeDrinkUnit,finishDrink,setSleeping,drink,bathe,useToilet,play,getWant,wantSpeech,toggleLamp,rewardPetting,moveLuna,grantStarterPack,roomEntryActivity,actionFrameDuration } from './core/state.js?v=20261018-full-pass2';
 import { saveGame } from './core/persistence.js';import { t } from './data/localization.js';
-import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261018-full-pass1';
-import { buyItem,equipItem,unequipItem,applyFurniture,catalog,grantPremiumItem } from './core/shop.js?v=20261018-full-pass1';
+import { startRoomMusic,stopMusic,setDanceStyle,sfx,purr,waterSound,flushSound,fartSound,applauseSound,happyJingle,sleepyChime,eatSound,biteSound,chewSound,swallowSound,lickSound,meow,configureAudio,unlockAudio,speakLuna,splashSound,bubbleSound,giggleSound,sadWhimper,drumSound,glamourJingle,introTheme,playSequenceFrameSound } from './core/audio.js?v=20261018-full-pass2';
+import { buyItem,equipItem,unequipItem,applyFurniture,catalog,grantPremiumItem } from './core/shop.js?v=20261018-full-pass2';
 import { dailyReward,claimQuest,track,unlockAchievement,addDrawing,processLevels,levelData } from './core/progression.js';
 import { castLine,catchFish } from './core/fishing.js';
 import { ensureSchool, startLesson, answerLesson, unlockLesson } from './core/school.js?v=20261010-school-play2';
@@ -305,10 +305,10 @@ function runDanceRoutine(danceId=1){
    activeDanceTimer=setTimeout(award,Math.max(1000,5200-(Date.now()-playbackStart)));
   };
   scene.appendChild(cat);
-  cat.src='./assets/videos/luna-dance-0'+danceId+'.webp?v=20261018-full-pass1&play='+playbackStart;
+  cat.src='./assets/videos/luna-dance-0'+danceId+'.webp?v=20261018-full-pass2&play='+playbackStart;
   stopMusic();
   if(state.settings?.musicEnabled!==false&&state.settings?.musicVolume!==0){
-   const audio=new Audio('./assets/videos/luna-dance-0'+danceId+'.m4a?v=20261018-full-pass1');
+   const audio=new Audio('./assets/videos/luna-dance-0'+danceId+'.m4a?v=20261018-full-pass2');
    audio.volume=Math.max(0,Math.min(1,state.settings?.musicVolume??0.85));
    activeDanceAudio=audio;
    try{const startedAudio=audio.play();startedAudio?.catch?.(()=>{if(!completed)startRoomMusic('dance');});}
@@ -326,7 +326,7 @@ function runDanceRoutine(danceId=1){
   if(completed||state?.room!=='dance')return;
   if(triedOriginal){inlineAnimation();return;}
   triedOriginal=true;
-  video.src='./assets/videos/luna-dance-0'+danceId+'.mp4?v=20261018-full-pass1-original-retry';
+  video.src='./assets/videos/luna-dance-0'+danceId+'.mp4?v=20261018-full-pass2-original-retry';
   video.load();
   try{const resumed=video.play();resumed?.catch?.(()=>{if(video.error)inlineAnimation();});}
   catch{inlineAnimation();}
@@ -626,7 +626,7 @@ document.querySelectorAll('[data-action="shop"]').forEach(b=>b.addEventListener(
 document.querySelector('[data-clear-outfit]')?.addEventListener('click',()=>{
  state=unequipItem(state);persist();render();showBubble('Луна сняла наряд',1100);
 });
-document.querySelectorAll('[data-equip]').forEach(b=>b.addEventListener('click',()=>{state=equipItem(state,b.dataset.equip);state=unlockAchievement(state,'firstOutfit').state;state.activity={type:'dress',stage:'dressHappy',itemId:b.dataset.equip,startedAt:Date.now()};persist();giggleSound();glamourJingle();applauseSound();showBubble('Какой наряд! Смотри на Луну! ✨',1800);ui.panel=null;render();setTimeout(()=>{if(state.room==='wardrobe'&&state.activity?.type==='dress'){state.activity={type:'idle',stage:'idle',startedAt:Date.now()};persist();render()}},1600)}));document.querySelector('[data-daily]')?.addEventListener('click',()=>{const r=dailyReward(state);state=r.state;persist();showBubble(r.ok?`Подарок получен! ♥`:'Сегодня уже получено');render()});document.querySelectorAll('[data-quest]').forEach(b=>b.addEventListener('click',()=>{const r=claimQuest(state,b.dataset.quest);state=r.state;persist();showBubble(r.ok?'Награда получена! ♥':'Задание ещё не готово');render()}));document.querySelector('[data-action="help"]')?.addEventListener('click',()=>{ui.settingsOpen=false;render();setTimeout(()=>showBubble('Проведи пальцем по Luna или нажми «Гладить». Комнаты слева, магазин — 🛍️.',3600),30)});document.querySelector('[data-action="support"]')?.addEventListener('click',()=>{ui.settingsOpen=false;render();setTimeout(()=>showBubble('Поддержка Cozy Kitten Corner ♥ Если что-то не работает — пришли скрин.',3600),30)});document.querySelectorAll('[data-action="settings"]').forEach(el=>el.addEventListener('click',()=>{ui.settingsOpen=!ui.settingsOpen;render()}));document.querySelectorAll('[data-setting]').forEach(el=>el.addEventListener('change',e=>{const k=e.currentTarget.dataset.setting;state.settings[k]=e.currentTarget.type==='checkbox'?e.currentTarget.checked:e.currentTarget.type==='range'?Number(e.currentTarget.value):e.currentTarget.value;configureAudio(state.settings);persist();render()}));
+document.querySelectorAll('[data-equip]').forEach(b=>b.addEventListener('click',()=>{state=equipItem(state,b.dataset.equip);state=unlockAchievement(state,'firstOutfit').state;state.activity={type:'dress',stage:'dressHappy',itemId:b.dataset.equip,startedAt:Date.now()};persist();giggleSound();glamourJingle();applauseSound();showBubble('Какой наряд! Смотри на Луну! ✨',1800);ui.panel='wardrobe';render();setTimeout(()=>{if(state.room==='wardrobe'&&state.activity?.type==='dress'){state.activity={type:'idle',stage:'idle',startedAt:Date.now()};persist();render()}},1600)}));document.querySelector('[data-daily]')?.addEventListener('click',()=>{const r=dailyReward(state);state=r.state;persist();showBubble(r.ok?`Подарок получен! ♥`:'Сегодня уже получено');render()});document.querySelectorAll('[data-quest]').forEach(b=>b.addEventListener('click',()=>{const r=claimQuest(state,b.dataset.quest);state=r.state;persist();showBubble(r.ok?'Награда получена! ♥':'Задание ещё не готово');render()}));document.querySelector('[data-action="help"]')?.addEventListener('click',()=>{ui.settingsOpen=false;render();setTimeout(()=>showBubble('Проведи пальцем по Luna или нажми «Гладить». Комнаты слева, магазин — 🛍️.',3600),30)});document.querySelector('[data-action="support"]')?.addEventListener('click',()=>{ui.settingsOpen=false;render();setTimeout(()=>showBubble('Поддержка Cozy Kitten Corner ♥ Если что-то не работает — пришли скрин.',3600),30)});document.querySelectorAll('[data-action="settings"]').forEach(el=>el.addEventListener('click',()=>{ui.settingsOpen=!ui.settingsOpen;render()}));document.querySelectorAll('[data-setting]').forEach(el=>el.addEventListener('change',e=>{const k=e.currentTarget.dataset.setting;state.settings[k]=e.currentTarget.type==='checkbox'?e.currentTarget.checked:e.currentTarget.type==='range'?Number(e.currentTarget.value):e.currentTarget.value;configureAudio(state.settings);persist();render()}));
 document.querySelector('[data-action="sound"]')?.addEventListener('click',()=>{soundOn=!soundOn;state.settings.musicEnabled=soundOn;configureAudio(state.settings);persist();if(soundOn){startRoomMusic(state.room);showBubble('Музыка включена')}else{stopMusic();showBubble('Музыка выключена')}});
 document.querySelector('[data-action="sleep"]')?.addEventListener('click',()=>{if(actionLock)return;state=setSleeping(state,!state.sleeping);persist();showBubble(state.sleeping?t('goodNight',lang()):'Доброе утро!')})}
 setInterval(()=>{if(state){state=tickState(state,10);const want=getWant(state),now=Date.now();if(want&&(want!==lastWant||now-lastWantAt>90000)){lastWant=want;lastWantAt=now;meow(want);speakLuna(wantSpeech[want]);showBubble(wantSpeech[want],2400)}persist();updateHud()}},10000);if(state){preloadRoomBackgrounds(state.room);setTimeout(()=>{if(state){showBubble('Добро пожаловать! Нажми на экран — Luna тебя поприветствует ♥',2600)}},500)}else preloadRoomBackgrounds('living');
