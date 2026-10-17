@@ -1732,3 +1732,84 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .room-dance.dance-webp-mode .scene .pet-button{opacity:0!important;pointer-events:none!important}
 .room-dance .dance-status{display:none!important}
 .room-dance.activity-dance .dance-routines{top:8px!important;bottom:auto!important}
+
+/* 2026-10-18: keep original room photos, lift contrast/light without fake pixel filters. */
+.game-shell .room-background{
+ image-rendering:auto!important;
+ filter:brightness(1.075) contrast(1.07) saturate(1.11)!important;
+ backface-visibility:hidden;
+}
+.room-dance .room-background{filter:brightness(1.025) contrast(1.025) saturate(1.045)!important}
+.game-shell .luna-photo{
+ image-rendering:auto!important;
+ -webkit-backface-visibility:hidden;backface-visibility:hidden;
+ filter:brightness(1.045) contrast(1.07) saturate(1.045) drop-shadow(0 9px 11px #17122355)!important;
+}
+.game-shell .real-room::after{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background:radial-gradient(ellipse at 60% 32%,#fff8e30d,transparent 56%),linear-gradient(180deg,#fff8ee0b,transparent 35%);
+}
+/* Garments move with Luna; genuine SVG fabric, sleeves, skirt, collars and shoes. */
+.game-shell .luna-wearables{position:absolute!important;inset:0!important;pointer-events:none!important;z-index:41!important;transform:scaleX(var(--luna-facing,1))}
+.luna-wearables .luna-outfit-svg{
+ display:block;position:absolute;inset:0;width:100%;height:100%;
+ overflow:visible;filter:drop-shadow(0 3px 2px #211c3750);pointer-events:none;
+}
+.luna-wearables .outfit-slot-body{z-index:2}
+.luna-wearables .outfit-slot-neck,.luna-wearables .outfit-slot-feet{z-index:3}
+.luna-wearables .outfit-slot-head,.luna-wearables .outfit-slot-eyes{z-index:4}
+.wardrobe-top-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0}
+.wardrobe-top-actions button,.wardrobe-remove button,.drawing-again{
+ border:1px solid #dcc0ff66;background:#48375ce8;color:#fff;border-radius:10px;
+ font-size:12px;padding:9px;min-height:35px;font-weight:800;
+}
+.wardrobe-help,.wardrobe-tip{color:#d9d0e8;font-size:12px;margin:6px 0}
+.wardrobe-remove{display:flex;flex-wrap:wrap;gap:6px}
+.wardrobe-choice{display:flex;align-items:center;gap:5px;flex-direction:column}
+.wardrobe-miniature{width:65px;height:74px;border-radius:12px;display:block;position:relative;background:radial-gradient(circle,#e0d6e9,#8a729b)}
+.wardrobe-miniature .luna-outfit-svg{position:absolute;inset:0;width:100%;height:100%}
+/* Three-round toy chase: ball jumps, yarn rolls; Luna runs, catches, returns. */
+.room-playroom.play-chasing .pet-button{opacity:0!important;pointer-events:none!important}
+.room-playroom .toy-chase-layer{position:absolute;inset:0;pointer-events:none;z-index:46;overflow:hidden}
+.toy-chase-cat{
+ position:absolute;left:50%;bottom:12%;height:min(65vw,300px);width:min(60vw,280px);
+ object-fit:contain;transform:translateX(-50%);transform-origin:50% 90%;
+ filter:drop-shadow(0 9px 7px #22202755);
+}
+.toy-chase-object{
+ position:absolute;left:50%;bottom:14%;width:clamp(48px,11vw,70px);
+ height:clamp(48px,11vw,70px);object-fit:contain;transform:translateX(-50%);
+ filter:drop-shadow(0 7px 5px #1b172b70);
+}
+.toy-chase-shadow{position:absolute;left:50%;bottom:11%;width:35%;height:25px;background:radial-gradient(ellipse,#14102262,transparent 70%);transform:translateX(-50%)}
+.toy-chase-sparkles{position:absolute;bottom:38%;left:60%;font-size:24px;opacity:0;transform:translateX(-50%)}
+.toy-chase-sparkles.active{opacity:1;animation:ckCatchSpark .5s ease-out both}
+.toy-chase-thread{position:absolute;left:38%;bottom:16%;width:34%;height:22px;border-bottom:3px dotted #c5b7e5;opacity:.8}
+@keyframes ckCatchSpark{0%{transform:translateX(-50%) scale(.2);opacity:0}50%{opacity:1}100%{transform:translateX(-50%) scale(1.2);opacity:0}}
+.room-playroom .toy-throw-button{
+ position:absolute;z-index:57;right:10px;bottom:160px;display:flex;gap:7px;
+ align-items:center;justify-content:center;padding:8px 10px;
+ border:1px solid #ffe5b4a8;border-radius:13px;
+ background:linear-gradient(#69518e,#41355d);color:#fff;font-weight:850;
+ box-shadow:0 5px 15px #18102c70;
+}
+.room-playroom .toy-throw-button img{height:30px;width:30px}
+.room-playroom .toy-throw-button:disabled{opacity:.55}
+.room-playroom .play-challenge-status{bottom:108px!important;padding:7px!important;font-size:12px!important}
+/* Drawing paper: artwork is drawn while Lua moves the pencil. */
+.room-playroom .drawing-live{
+ position:absolute;right:5px;top:31%;width:min(37%,170px);
+ z-index:42;pointer-events:none;display:grid;gap:5px;text-align:center;
+ padding:6px;background:#221936c9;border:1px solid #ffffff33;border-radius:12px;
+ font-size:12px;font-weight:800;color:#fff;
+}
+.drawing-paper{display:block;width:100%;height:auto;filter:drop-shadow(0 5px 5px #0004)}
+.drawing-live .drawing-stroke{stroke-dasharray:530;stroke-dashoffset:530;animation:ckDrawLine 4.7s ease-out forwards}
+.drawing-live .drawing-star{opacity:0;animation:ckDrawStars .7s ease-out 4.5s forwards}
+@keyframes ckDrawLine{0%{stroke-dashoffset:530;fill-opacity:0}70%{stroke-dashoffset:0;fill-opacity:0}100%{stroke-dashoffset:0;fill-opacity:.74}}
+@keyframes ckDrawStars{to{opacity:1}}
+.drawing-gallery{max-height:58dvh!important}
+.drawing-gallery p{margin:4px 0 10px;font-size:13px;color:#eae0f4}
+.drawing-gallery-art{max-width:215px;margin:0 auto 8px;text-align:center}
+.drawing-gallery-art span{display:block;font-weight:850;font-size:12px}
+.drawing-again{display:block;width:100%}

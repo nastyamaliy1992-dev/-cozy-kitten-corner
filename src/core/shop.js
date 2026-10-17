@@ -55,6 +55,14 @@ export function itemIcon(i){const id=i.id||'',n=(i.name||'').toLowerCase();if(id
 export const categories=[...new Set(catalog.map(x=>x.category))];
 const wearable=i=>['pajamas','outfits','costumes','hats','glasses','accessories','shoes','collars','seasonal','rare','premium'].includes(i.category);
 export function buyItem(state,id){const n=structuredClone(state),item=catalog.find(x=>x.id===id);if(!item)return{state:n,ok:false,reason:'missing'};if(item.currency==='XTR')return{state:n,ok:false,reason:'premium'};n.inventory.owned??=[];n.inventory.food??={};n.inventory.clothes??=[];n.inventory.furniture??=[];const stackable=['food','drinks','treats','fishing'].includes(item.category);if(n.inventory.owned.includes(id)&&!stackable)return{state:n,ok:false,reason:'owned'};if(n.economy.level<item.level)return{state:n,ok:false,reason:'level'};if(n.economy.coins<item.price)return{state:n,ok:false,reason:'coins'};n.economy.coins-=item.price;if(stackable){n.inventory.food[id]=(n.inventory.food[id]||0)+1}else{n.inventory.owned.push(id);if(wearable(item))n.inventory.clothes.push(id);if(['furniture','beds','kitchen','decor'].includes(item.category))n.inventory.furniture.push(id)}n.economy.xp+=4;n.activity={type:'celebrate',stage:'jump',itemId:id,startedAt:Date.now()};n.needs.mood=Math.min(100,n.needs.mood+5);return{state:n,ok:true,item}}
+export function unequipItem(state,slot=null){
+ const n=structuredClone(state);
+ n.inventory??={};
+ n.inventory.equipped??={};
+ if(slot===null)n.inventory.equipped={};
+ else delete n.inventory.equipped[slot];
+ return n;
+}
 export function equipItem(state,id){const n=structuredClone(state),item=catalog.find(x=>x.id===id);if(!item||!n.inventory.clothes.includes(id))return n;if(!n.inventory.equipped||typeof n.inventory.equipped!=='object')n.inventory.equipped={};n.inventory.equipped[item.slot||'body']=id;return n}
 export function applyFurniture(state,id,room=state.room){const n=structuredClone(state);if(!n.inventory.furniture?.includes(id))return n;n.roomDecor??={};n.roomDecor[room]??=[];if(!n.roomDecor[room].includes(id))n.roomDecor[room].push(id);return n}
 export function ownedInteractive(state,category){return catalog.filter(x=>x.category===category&&state.inventory.owned?.includes(x.id))}

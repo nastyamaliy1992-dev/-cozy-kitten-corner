@@ -2,7 +2,7 @@ let ctx=null,timer=null,currentRoom=null,danceStyle='macarena';
 const danceMelodies={macarena:[523.25,659.25,783.99,659.25,587.33,523.25],aram:[392,440,523.25,587.33,523.25,440],hiphop:[261.63,311.13,392,349.23,311.13,261.63]};
 export function setDanceStyle(style){if(danceMelodies[style])danceStyle=style;}
 let musicBus=null,sfxBus=null,voiceBus=null;
-let settings={musicEnabled:true,sfxEnabled:true,voiceEnabled:true,musicVolume:.35,sfxVolume:.7,voiceVolume:.65};
+let settings={musicEnabled:true,sfxEnabled:true,voiceEnabled:true,voiceStyle:'cat',musicVolume:.35,sfxVolume:.7,voiceVolume:.65};
 const roomNotes={dance:[523.25,659.25,783.99,880,783.99,659.25],living:[261.63,329.63,392],kitchen:[293.66,369.99,440],bathroom:[220,277.18,329.63],toilet:[246.94,311.13,369.99],bedroom:[196,246.94,293.66],wardrobe:[277.18,349.23,415.3],playroom:[329.63,415.3,493.88],school:[392,493.88,587.33,783.99],lake:[174.61,220,261.63],store:[349.23,440,523.25]};
 function ensure(){if(ctx)return;ctx=new (window.AudioContext||window.webkitAudioContext)();musicBus=ctx.createGain();sfxBus=ctx.createGain();voiceBus=ctx.createGain();musicBus.connect(ctx.destination);sfxBus.connect(ctx.destination);voiceBus.connect(ctx.destination);applyVolumes()}
 function applyVolumes(){if(!ctx)return;musicBus.gain.setTargetAtTime((settings.musicEnabled===false?0:Math.min(1,settings.musicVolume*(currentRoom==='dance'?.96:.62))),ctx.currentTime,.08);sfxBus.gain.setTargetAtTime((settings.sfxEnabled===false?0:settings.sfxVolume*.56),ctx.currentTime,.05);voiceBus.gain.setTargetAtTime((settings.voiceEnabled===false?0:settings.voiceVolume*.56),ctx.currentTime,.05)}
@@ -41,7 +41,7 @@ export function biteSound(){noise(.075,.095,2400);tone(210,.10,.13,'triangle');s
 export function chewSound(){noise(.08,.055,1200);tone(145,.09,.075,'triangle')}
 export function swallowSound(){tone(235,.09,.085,'sine');setTimeout(()=>tone(155,.18,.10,'sine'),75)}
 export function lickSound(){noise(.11,.035,3200);tone(430,.13,.055,'sine')}
-export function meow(kind='want'){const map={food:[420,520],sleep:[350,300],toilet:[480,390],bath:[520,440],play:[620,760],fish:[560,690],happy:[650,820],sad:[390,320],annoyed:[330,430],want:[440,540]};const n=map[kind]||map.want;tone(n[0],.22,.2,'triangle','voice');setTimeout(()=>tone(n[1],.3,.18,'triangle','voice'),170)}
+export function meow(kind='want'){const map={food:[430,530],sleep:[300,360],toilet:[440,510],bath:[480,590],play:[540,710],fish:[520,650],happy:[600,770],sad:[370,420],annoyed:[360,460],want:[420,550]};const n=map[kind]||map.want;softMeow(n[0],n[1])}
 export function happyJingle(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.24,.12,'triangle'),i*115))}
 export function splashSound(){noise(.55,.19,2900);setTimeout(()=>noise(.32,.13,2200),190)}
 export function bubbleSound(){for(let i=0;i<7;i++)setTimeout(()=>tone(720+i*38,.09,.07,'sine'),i*85)}
@@ -84,28 +84,46 @@ export function playSequenceFrameSound(type,stage){
 export function unlockAudio(){ensure();if(ctx?.state==='suspended')return ctx.resume();return Promise.resolve()}
 // Prefer the enhanced neural/local female Russian voices already installed on the device.
 // Never claim cloud-quality speech: the browser chooses which voices it exposes.
-export function speakLuna(text,lang='ru-RU'){
- if(settings.voiceEnabled===false||!text||!('speechSynthesis' in window))return;
+// Soft, filtered cat voice is the default. Human speech is optional and uses device voices.
+function softMeow(f1=480,f2=610){
  try{
-  const synth=window.speechSynthesis;
-  const available=synth.getVoices?.()||[];
-  const prefix=lang.slice(0,2).toLowerCase();
-  const candidates=available.filter(v=>v.lang?.toLowerCase().startsWith(prefix));
+  ensure();
+  const now=ctx.currentTime;
+  const o=ctx.createOscillator(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();
+  o.type='sine';filter.type='lowpass';filter.frequency.value=1350;
+  o.frequency.setValueAtTime(f1,now);
+  o.frequency.exponentialRampToValueAtTime(Math.max(140,f2),now+.18);
+  o.frequency.exponentialRampToValueAtTime(Math.max(135,f1*.7),now+.42);
+  gain.gain.setValueAtTime(.001,now);
+  gain.gain.exponentialRampToValueAtTime(.19,now+.05);
+  gain.gain.exponentialRampToValueAtTime(.001,now+.48);
+  o.connect(filter);filter.connect(gain);gain.connect(voiceBus);
+  o.start(now);o.stop(now+.49);
+ }catch{}
+}
+export function speakLuna(text,lang='ru-RU'){
+ if(settings.voiceEnabled===false||settings.voiceStyle==='silent'||!text)return;
+ if(settings.voiceStyle!=='speech'){
+  softMeow(460,680);
+  try{window.dispatchEvent(new CustomEvent('luna-subtitle',{detail:{text}}));}catch{}
+  return;
+ }
+ if(!('speechSynthesis' in window)){softMeow();return;}
+ try{
+  const synth=window.speechSynthesis,prefix=lang.slice(0,2).toLowerCase();
+  const candidates=(synth.getVoices?.()||[]).filter(v=>v.lang?.toLowerCase().startsWith(prefix));
   const rank=v=>{
    const name=(v.name||'').toLowerCase();
    return (/enhanced|premium|neural|high quality|улучшенн/.test(name)?100:0)
-    +(/milena|алёна|alyona|alena|katya|irina|svetlana|female|сири|siri/.test(name)?40:0)
+    +(/milena|алёна|alyona|alena|katya|irina|svetlana|female|siri/.test(name)?40:0)
     -(/compact|low quality|male|yuri|pavel|alexander/.test(name)?70:0)
     +(v.localService?6:0);
   };
   candidates.sort((a,b)=>rank(b)-rank(a));
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang=lang;u.rate=.94;u.pitch=1.03;
-  u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));
-  if(candidates[0])u.voice=candidates[0];
-  u.onstart=()=>duckMusic(true);
-  u.onend=()=>duckMusic(false);
-  u.onerror=()=>duckMusic(false);
+  if(!candidates.length||rank(candidates[0])<15){softMeow();window.dispatchEvent(new CustomEvent('luna-subtitle',{detail:{text}}));return;}
+  const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.95;u.pitch=1.05;
+  u.volume=Math.max(0,Math.min(1,settings.voiceVolume??.65));u.voice=candidates[0];
+  u.onstart=()=>duckMusic(true);u.onend=()=>duckMusic(false);u.onerror=()=>duckMusic(false);
   synth.cancel();synth.speak(u);
- }catch{}
+ }catch{softMeow();}
 }
