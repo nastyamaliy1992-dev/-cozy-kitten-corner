@@ -28,8 +28,8 @@ test('latest UI and pose assets refresh while dance photo stays correctly wired'
   assert.match(roomAssets, /assets\/rooms\/dance-final-20261010\.webp/);
   assert.match(main, new RegExp(`state\\.js\\?v=${stateVersion}`));
   assert.match(main, new RegExp(`lunaAsset\\.js\\?v=${poseVersion}`));
-  assert.match(main,/audio\\.js\\?v=20261018-full-pass1/);
-  assert.match(main, /shop\\.js\\?v=20261018-full-pass1/);
+  assert.ok(main.includes('audio.js?v=20261018-full-pass1'));
+  assert.ok(main.includes('shop.js?v=20261018-full-pass1'));
   assert.match(appView, new RegExp(`pet\\.js\\?v=${petVersion}`));
   assert.match(appView, new RegExp(`shop\\.js\\?v=${previousVersion}`));
   assert.match(pet, new RegExp(`lunaAsset\\.js\\?v=${poseVersion}`));

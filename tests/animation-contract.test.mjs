@@ -133,8 +133,10 @@ test('welcome sequence waves and speaks the requested greeting with soft voice s
   ]);
   assert.match(main, /stage:'greetingWave'/);
   assert.match(main, /Привет, я Луна\. Я тебя ждала!/);
-  assert.match(audio, /u\.rate=\.94/);
-  assert.match(audio, /u\.pitch=1\.03/);
+  assert.ok(audio.includes("voiceStyle!=='speech'"));
+  assert.ok(audio.includes('softMeow'));
+  assert.ok(audio.includes('u.rate=.95'));
+  assert.ok(audio.includes('u.pitch=1.05'));
 });
 
 test('kitchen action frames stay above the food panel', async () => {
