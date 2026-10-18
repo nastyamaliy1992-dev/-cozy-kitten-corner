@@ -1813,3 +1813,10 @@ button:active{transform:scale(.96)}button:disabled{cursor:not-allowed;filter:sat
 .drawing-gallery-art{max-width:215px;margin:0 auto 8px;text-align:center}
 .drawing-gallery-art span{display:block;font-weight:850;font-size:12px}
 .drawing-again{display:block;width:100%}
+
+/* Wardrobe is the ONLY room allowed to display clothing on Luna.
+   An additional defensive CSS rule also protects existing cached HTML. */
+.game-shell:not(.room-wardrobe) .luna-wearables,
+.game-shell:not(.room-wardrobe) .luna-outfit-svg{
+ display:none!important;
+}

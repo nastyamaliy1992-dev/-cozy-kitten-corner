@@ -2,7 +2,13 @@ import { loadSave, saveGame } from './persistence.js';
 const clamp=v=>Math.max(0,Math.min(100,v));
 const recalc=n=>{n.needs.happiness=Math.round((n.needs.hunger+n.needs.thirst+n.needs.cleanliness+n.needs.mood+n.needs.energy+n.needs.toilet+n.needs.health)/7);return n};
 export function createInitialState(name,lang='ru'){return {schemaVersion:2,createdAt:Date.now(),updatedAt:Date.now(),name,room:'living',sleeping:false,sleepStartedAt:null,lastSeenAt:Date.now(),needs:{hunger:78,thirst:82,cleanliness:88,mood:86,energy:80,toilet:84,health:100,happiness:88},economy:{coins:250,xp:0,level:1},inventory:{food:{dryFood:4,wetFood:2,fishTreat:1},clothes:[],furniture:[],owned:[],equipped:{}},bedroom:{lampOn:true},petting:{lastXpAt:0},settings:{language:lang,reduceMotion:false,musicVolume:.35,sfxVolume:.7,voiceVolume:.65,voiceStyle:'cat',haptics:true,subtitles:true,graphics:'high',batterySaver:false,notifications:false,purchaseConfirm:true},movement:{x:50,y:78,target:null,facing:1},dance:{moves:0,completed:0},onboarding:{introSeen:false,starterClaimed:false}}}
-export function restoreState(){const s=loadSave();if(!s)return null;const now=Date.now(),m=Math.max(0,now-(s.lastSeenAt||s.updatedAt||now))/60000,n=structuredClone(s);n.movement??={x:50,y:78,target:null,facing:1};n.inventory??={food:{},clothes:[],furniture:[],owned:[],equipped:{}};n.inventory.food??={};n.inventory.clothes??=[];n.inventory.furniture??=[];n.inventory.owned??=[];n.onboarding??={introSeen:true,starterClaimed:true};
+export function restoreState(){const s=loadSave();if(!s)return null;const now=Date.now(),m=Math.max(0,now-(s.lastSeenAt||s.updatedAt||now))/60000,n=structuredClone(s);n.movement??={x:50,y:78,target:null,facing:1};n.inventory??={food:{},clothes:[],furniture:[],owned:[],equipped:{}};n.inventory.food??={};n.inventory.clothes??=[];n.inventory.furniture??=[];n.inventory.owned??=[];n.inventory.equipped??={};n.onboarding??={introSeen:true,starterClaimed:true};
+// Remove old auto-applied wardrobe layers once, without deleting the purchased garments.
+// The player can choose clothing again exclusively inside the wardrobe.
+if(!n.onboarding.wardrobeOnlyReset20261018){
+ n.inventory.equipped={};
+ n.onboarding.wardrobeOnlyReset20261018=true;
+}
 if(!n.onboarding.interactiveStarterGranted){
   n.onboarding.interactiveStarterGranted=true;
   const starterOwned=['bath_soap','bath_shampoo_basic','bath_bomb_pink','sleep_pajama_moon','collar_moon','rod_bamboo','fish_bucket','toy_0'];

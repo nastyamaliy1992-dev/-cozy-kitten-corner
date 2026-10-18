@@ -95,3 +95,52 @@ test('toy catching survives ten-second state refresh without losing progress or 
  assert.match(main,/actionLock=false;return;/);
  assert.doesNotMatch(main,/state\.playChallenge!==challenge/);
 });
+
+test('outfit is entirely absent outside the wardrobe, even if equipped or previewed',()=>{
+ const rooms=['living','kitchen','bedroom','bathroom','toilet','playroom','store','dance','school','lake'];
+ for(const room of rooms){
+  const state=createInitialState('Луна');
+  state.room=room;
+  state.inventory.clothes=['sleep_pajama_moon','collar_moon'];
+  state.inventory.equipped={body:'sleep_pajama_moon',neck:'collar_moon'};
+  const output=renderGame(state,'',{previewItem:'outfit_1'});
+  assert.doesNotMatch(output,/class="luna-wearables"/,room);
+  assert.doesNotMatch(output,/class="luna-outfit-svg[^"]*" viewBox="0 0 300 400"[^>]*data-wear-id="sleep_pajama_moon"/,room);
+ }
+});
+test('selected clothing displays only in wardrobe and can still be removed',()=>{
+ const state=createInitialState('Луна');
+ state.room='wardrobe';
+ state.inventory.clothes=['sleep_pajama_moon'];
+ state.inventory.equipped={body:'sleep_pajama_moon'};
+ const html=renderGame(state,'',{panel:'wardrobe'});
+ assert.match(html,/class="luna-wearables"/);
+ assert.match(html,/data-unequip="body"/);
+ assert.match(html,/data-clear-outfit/);
+});
+test('old automatically worn sweater resets once without deleting purchased clothes',async()=>{
+ const {restoreState}=await import('../src/core/state.js');
+ const {saveGame}=await import('../src/core/persistence.js');
+ const previous=globalThis.localStorage;
+ const store=new Map();
+ globalThis.localStorage={
+  getItem(k){return store.get(k)||null},
+  setItem(k,v){store.set(k,String(v))},
+  removeItem(k){store.delete(k)}
+ };
+ try{
+  const before=createInitialState('Луна');
+  before.inventory.clothes=['sleep_pajama_moon','collar_moon'];
+  before.inventory.owned=['sleep_pajama_moon','collar_moon'];
+  before.inventory.equipped={body:'sleep_pajama_moon',neck:'collar_moon'};
+  saveGame(before);
+  const after=restoreState();
+  assert.deepEqual(after.inventory.equipped,{});
+  assert.ok(after.inventory.clothes.includes('sleep_pajama_moon'));
+  assert.ok(after.inventory.owned.includes('sleep_pajama_moon'));
+  assert.equal(after.onboarding.wardrobeOnlyReset20261018,true);
+  after.inventory.equipped={neck:'collar_moon'};
+  saveGame(after);
+  assert.equal(restoreState().inventory.equipped.neck,'collar_moon');
+ }finally{globalThis.localStorage=previous}
+});
