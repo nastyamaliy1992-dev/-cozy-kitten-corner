@@ -29,17 +29,21 @@ function schoolPanel(state){
  </section>`;
 }
 function wardrobePanel(state,ui={}){
- const ids=state.inventory.clothes||[],eq=state.inventory.equipped||{};
- const collection=ids.map(id=>catalog.find(i=>i.id===id)).filter(Boolean);
- return `<div class="game-panel wardrobe-panel"><div class="panel-head"><b>👗 Примерочная Луны</b><button data-close-panel>×</button></div>
- <div class="wardrobe-help">Выбирай вещи — Луна надевает их прямо на себя.</div>
- <div class="wardrobe-top-actions"><button data-action="wardrobe-shop">🛍️ Новая одежда</button><button data-clear-outfit>Снять всё</button></div>
- <div class="equipped-summary">${Object.entries(eq).map(([slot,id])=>{const i=catalog.find(x=>x.id===id);return i?`<span>✓ ${i.name}</span>`:''}).join('')||'<span>Луна без наряда</span>'}</div>
- <div class="catalog-grid">${collection.length?collection.map(i=>{const slot=i.slot||'body',on=eq[slot]===i.id;
- return `<button class="wardrobe-choice ${on?'equipped':''}" data-equip="${i.id}"><span class="wardrobe-miniature">${outfitLayer(slot,i)}</span><b>${i.name}</b><small>${on?'✓ Надето':'Надеть'}</small></button>`;
- }).join(''):'<p>В магазине можно выбрать одежду.</p>'}</div>
- <p class="wardrobe-tip">Чтобы снять одну вещь, нажми на её название ниже.</p>
- <div class="wardrobe-remove">${Object.entries(eq).map(([slot,id])=>{const i=catalog.find(x=>x.id===id);return i?`<button data-unequip="${slot}">× ${i.name}</button>`:''}).join('')}</div></div>`;
+ const owned=new Set(state.inventory.clothes||[]);
+ const eq=state.inventory.equipped||{};
+ const clothes=catalog.filter(i=>['outfits','pajamas','costumes','seasonal'].includes(i.category)&&i.slot==='body');
+ const current=eq.body;
+ return `<div class="game-panel wardrobe-panel"><div class="panel-head"><b>✨ Гардероб Луны</b><button data-close-panel>×</button></div>
+ <div class="wardrobe-help">Выбери образ: Луна примерит его сразу. Купленные наряды остаются с ней в других комнатах.</div>
+ <div class="wardrobe-top-actions"><button data-action="wardrobe-shop">🛍️ Весь магазин</button><button data-clear-outfit>Снять всё</button></div>
+ <div class="equipped-summary"><span>${current?'Надето: '+(catalog.find(i=>i.id===current)?.name||'наряд'):'Выбери наряд для Луны'}</span></div>
+ <div class="catalog-grid wardrobe-fashion-grid">${clothes.map(i=>{
+ const has=owned.has(i.id),on=current===i.id,preview=ui.previewItem===i.id;
+ return `<div class="wardrobe-fashion-card ${on?'equipped':''} ${preview?'previewing':''}">
+ <button class="wardrobe-choice" data-preview="${i.id}" aria-label="Примерить ${i.name}"><span class="wardrobe-miniature">${outfitLayer('body',i)}</span><b>${i.name}</b><small>${on?'✓ Надето':has?'✓ В коллекции':i.price+' 🪙'}</small></button>
+ ${has?`<button class="wardrobe-fashion-action" data-equip="${i.id}">${on?'✓ Надето':'Надеть'}</button>`:`<button class="wardrobe-fashion-action" data-buy-preview="${i.id}">Купить · ${i.price} 🪙</button>`}
+ </div>`}).join('')}</div>
+ <div class="wardrobe-remove">${Object.entries(eq).map(([slot,id])=>{const i=catalog.find(x=>x.id===id);return i?`<button data-unequip="${slot}">Снять: ${i.name} ×</button>`:''}).join('')}</div></div>`;
 }
 function roomItemsPanel(state,room){const owned=state.inventory.owned||[];const wanted=room==='bathroom'?catalog.filter(i=>i.category==='bath'&&owned.includes(i.id)):room==='playroom'?catalog.filter(i=>['toys','art'].includes(i.category)&&owned.includes(i.id)):room==='bedroom'?catalog.filter(i=>i.category==='pajamas'&&owned.includes(i.id)):[];return `<div class="game-panel room-items-panel"><div class="panel-head"><b>${room==='bathroom'?'🛁 Для ванной':room==='playroom'?'🧶 Игры':'🌙 Пижамы'}</b><button data-close-panel>×</button></div><div class="catalog-grid">${wanted.length?wanted.map(i=>`<button data-use-item="${i.id}"><span class="shop-item-icon">${i.interaction==='soap'?'🧼':i.interaction==='bathBomb'?'🫧':i.category==='art'?'🎨':i.category==='pajamas'?'🌙':'🧶'}</span><b>${i.name}</b><small>Использовать</small></button>`).join(''):'<p>Сначала купи подходящие вещи в магазине.</p>'}</div></div>`}
 function furniturePanel(state){const ids=state.inventory.furniture||[];return `<div class="game-panel"><div class="panel-head"><b>Декор комнаты</b><button data-close-panel>×</button></div><div class="catalog-grid">${ids.length?ids.map(id=>{const i=catalog.find(x=>x.id===id);return i?`<button data-place="${id}"><b>${i.name}</b><small>Разместить</small></button>`:''}).join(''):'<p>Мебель и декор можно купить в магазине.</p>'}</div></div>`}
@@ -69,7 +73,7 @@ export function renderGame(state,bubble='',ui={}){
  const previewItem=catalog.find(x=>x.id===ui.previewItem);
  if(previewItem&&state.room==='wardrobe'){const slot=previewItem.slot||'body';equippedItems=equippedItems.filter(x=>x.slot!==slot);equippedItems.push({slot,item:previewItem});}
  const bakedActionFrame=['eating','drink','sleepSequence','bath','bathReady','soap','shampoo','shower','bathBomb','towel','toilet','draw','fishGame','fishCatch'].includes(state.activity?.type);
- const wearables=state.room==='wardrobe'&&!bakedActionFrame&&equippedItems.length?`<div class="luna-wearables" aria-label="Надетая одежда">${equippedItems.map(({slot,item})=>outfitLayer(slot,item)).join('')}</div>`:'';
+ const wearables=!bakedActionFrame&&equippedItems.length?`<div class="luna-wearables" aria-label="Надетая одежда">${equippedItems.map(({slot,item})=>outfitLayer(slot,item)).join('')}</div>`:'';
  const feedConfirm=selectedFood?`<div class="feed-confirm"><span class="feed-confirm-icon">${foodIcon(selectedFood)}</span><div><b>${selectedFood.name}</b><small>Осталось: ${food[selectedFood.id]||0}</small></div><button data-action="feed-selected" data-food="${selectedFood.id}" ${feedingBusy?'disabled':''}>Покормить</button></div>`:'';
  const kitchenSpread=`<div class="kitchen-spread" aria-label="Еда на столе"><div class="kitchen-table-title"><b>🍽️ Стол Луны</b><button data-action="open-fridge" ${feedingBusy?'disabled':''}>Холодильник</button></div><div class="kitchen-plates">${fridgeItems.map(i=>`<button class="food-plate ${ui.selectedFood===i.id?'selected':''}" data-action="${i.category==='drinks'?'serve-drink':'select-food'}" data-food="${i.id}" ${feedingBusy?'disabled':''}><span class="plate-dish">${foodIcon(i)}</span><b>${i.name}</b><small>Осталось: ${food[i.id]||0}</small></button>`).join('')||'<button class="empty-table" data-action="shop">🛍️ Еда закончилась — купить ещё</button>'}</div>${feedConfirm}</div>`;
  const fridgePanel=ui.fridgeOpen?`<div class="fridge-panel open"><div class="fridge-head"><b>Холодильник</b><button class="fridge-close" data-action="open-fridge" aria-label="Закрыть">×</button></div><div class="food-choice">${fridgeItems.map(i=>`<button class="food-card ${ui.selectedFood===i.id?'selected':''}" data-action="${i.category==='drinks'?'serve-drink':'select-food'}" data-food="${i.id}" ${feedingBusy?'disabled':''}><span class="food-emoji">${foodIcon(i)}</span><b>${i.name}</b><small>×${food[i.id]||0}</small></button>`).join('')||'<small>Холодильник пуст — загляни в магазин.</small>'}</div>${feedConfirm}</div>`:'';
