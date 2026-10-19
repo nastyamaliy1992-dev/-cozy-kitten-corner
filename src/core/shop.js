@@ -1,5 +1,17 @@
 const make=(id,name,category,price,rarity='Common',level=1,effect=null,currency='coins',extra={})=>({id,name,image:null,category,price,currency,rarity,unlockLevel:level,level,room:extra.room||null,slot:extra.slot||null,asset:extra.asset||null,interaction:extra.interaction||null,effect,quantity:1,owned:false,equipped:false,placed:false,isNew:true,destination:category,...extra});
 export const catalog=[
+make('fashion_rose','Пудровый спортивный костюм','outfits',95,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
+make('fashion_knit','Молочный вязаный комплект','outfits',110,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
+make('fashion_graphite','Графитовый спортивный костюм','outfits',120,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
+make('fashion_denim','Джинсовый комбинезон','outfits',115,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
+make('fashion_black','Чёрный городской комплект','outfits',135,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
+make('fashion_trench','Бежевый тренч','outfits',145,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
+make('fashion_flower','Платье с нежными цветами','outfits',125,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
+make('fashion_lilac','Лавандовый трикотаж','outfits',105,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
+make('fashion_puffer','Кремовый пуховик','outfits',155,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
+make('fashion_leather','Кожаная куртка','outfits',160,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
+make('fashion_teddy','Пижама с мишками','pajamas',85,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
+make('fashion_ivory','Молочный спортивный комплект','outfits',115,'Uncommon',1,null,'coins',{room:'wardrobe',slot:'body',interaction:'wear'}),
 make('food_salmon','Лосось','food',20,'Common',1,{hunger:28}),make('food_tuna','Тунец','food',22,'Common',1,{hunger:28}),make('food_chicken','Курица','food',18),make('food_meat','Мясо','food',24),make('food_steak','Стейк','food',38,'Uncommon',3),make('food_sausage','Сосиски','food',16),make('food_cheese','Сыр','food',15),make('food_bread','Хлеб','food',10),make('food_pie','Пирожок','food',14),make('food_salad','Салат','food',18),make('food_pasta','Паста','food',24),make('food_seafood','Паста с морепродуктами','food',34,'Uncommon',2),make('food_soup','Суп','food',18),make('food_cutlet','Макароны с котлетой','food',28),make('food_mash','Пюре с курицей','food',26),
 make('drink_water','Вода','drinks',8),make('drink_milk','Молоко','drinks',14),make('drink_berry','Ягодный напиток','drinks',18,'Uncommon',2),
 make('treat_cookie','Печенье-лапка','treats',16),make('treat_cake','Торт','treats',45,'Rare',4),make('treat_icecream','Мороженое','treats',28,'Uncommon',2),make('treat_candy','Конфеты','treats',20),
